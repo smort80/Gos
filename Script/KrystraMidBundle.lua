@@ -9,7 +9,7 @@ require ('KLib')
   local DAC = false
   local IOW = false
 
-AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version","KrystraMidBundle.lua",0.02)
+AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version","KrystraMidBundle.lua",1.00)
 
    class "Leblanc"
       ---//==================================================\\---
