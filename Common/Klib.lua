@@ -1,10 +1,10 @@
-Version = "4.01"  
-LVersion = " 6.1"
+Version = "1.00"  
+LVersion = " 6.2"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
 list = "Leblanc , Lissandra , Viktor, Akali, Diana"
  link = "Go to http://forum.botoflegends.com/forum/20-champion-scripts/ then you can see my topic "..Scriptname.." on the first or second page."
- date = "26.12.2015"
+ date = "02.02.2016"
 
 ---//==================================================\\---
 --|| > English Translation details               ||--
@@ -423,104 +423,6 @@ function DrawLineHPBar(damage, text, unit, enemyTeam)
 end
 
 
-function DrawLineHPBar2(damage, text, unit, line)
-  local thedmg = 0
-  if damage >= unit.maxHealth then
-    thedmg = unit.maxHealth-1
-  else
-    thedmg=damage
-  end
-  local StartPos = GetHPBarPos(unit)
-  local EndPos = GetHPBarPos(unit)
-  local Real_X = StartPos.x+240
-  local Offs_X = (Real_X + ((unit.health-thedmg)/unit.maxHealth) * (EndPos.x-500 - StartPos.x - 2))
-  if Offs_X < Real_X then
-    Offs_X = Real_X
-  end
-  DrawLine(Offs_X-150, StartPos.y-(line*15), StartPos.x-20, StartPos.y-(line*15), 10, ARGB(140, 0, 0, 0))
-end
-local floor = math.floor
-function DrawRectangleButton(x, y, w, h, color)
-    local points = {}
-    points[1] = Vector(floor(x), floor(y))
-    points[2] = Vector(floor(x + w), floor(y))
-  local points2 = {}
-  points2[1] = Vector(floor(x), floor(y - h/2))
-  points2[2] = Vector(floor(x + w), floor(y - h/2))
-  points2[3] = Vector(floor(x + w), floor(y + h/2))
-  points2[4] = Vector(floor(x), floor(y + h/2))
-  local t = GetCursorPos()
-  polygon = Polygon(Point(points2[1].x, points2[1].y), Point(points2[2].x, points2[2].y), Point(points2[3].x, points2[3].y), Point(points2[4].x, points2[4].y))
-  if polygon:contains(Point(t.x, t.y)) then
-    DrawLines2(points, floor(h), color)
-  else
-    DrawLines2(points, floor(h), ARGB(150, 235, 183, 63 ))
-  end
-end
-function _GetDistanceSqr(p1, p2)
-    p2 = p2 or player
-    if p1 and p1.networkID and (p1.networkID ~= 0) and p1.visionPos then p1 = p1.visionPos end
-    if p2 and p2.networkID and (p2.networkID ~= 0) and p2.visionPos then p2 = p2.visionPos end
-    return GetDistanceSqr(p1, p2)
-    
-end
-function CountObjectsNearPos(pos, range, radius, objects)
-    local n = 0
-    for i, object in ipairs(objects) do
-        local r = radius --+ object.boundingRadius
-        if _GetDistanceSqr(pos, object) <= math.pow(r, 2) then
-            n = n + 1
-        end
-    end
-
-    return n
-end
-
-function GetBestCircularFarmPosition(range, radius, objects)
-    local BestPos 
-    local BestHit = 0
-    local objects = minionManager.objects
-    for i, object in ipairs(objects) do
-        local hit = CountObjectsNearPos(Vector(object), range, width, objects, team)
-        if hit > BestHit then
-            BestHit = hit
-            BestPos = object--Vector(object)
-            if BestHit == #objects then
-               break
-            end
-         end
-    end
-    return BestPos, BestHit
-end
- function CountObjectsOnLineSegment(StartPos, EndPos, width, objects)
-    local n = 0
-    for i, object in ipairs(objects) do
-        local pointSegment, pointLine, isOnSegment = VectorPointProjectionOnLineSegment(StartPos, EndPos, object)
-        local w = width --+ object.boundingRadius
-        if isOnSegment and GetDistanceSqr(pointSegment, object) < math.pow(w, 2) and GetDistanceSqr(StartPos, EndPos) > GetDistanceSqr(StartPos, object) then
-            n = n + 1
-        end
-    end
-    return n
-end
-    
-
-function GetBestLineFarmPosition(range, width, objects)
-    local BestPos 
-    local BestHit = 0
-    for i, object in ipairs(objects) do
-        local EndPos = Vector(myHero) + range * (Vector(object) - Vector(myHero)):normalized()
-        local hit = CountObjectsOnLineSegment(myHero, EndPos, width, objects)
-        if hit > BestHit then
-            BestHit = hit
-            BestPos = object--Vector(object)
-            if BestHit == #objects then
-               break
-            end
-         end
-    end
-    return BestPos, BestHit
-end
 function CurrentTimeInMillis()
   return (os.clock() * 1000);
 end
