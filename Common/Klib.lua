@@ -3,7 +3,7 @@ LVersion = " 6.2"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
 list = "Leblanc , Lissandra , Viktor, Akali, Diana"
- link = "Go to http://forum.botoflegends.com/forum/20-champion-scripts/ then you can see my topic "..Scriptname.." on the first or second page."
+ link = "Go to ../ then you can see my topic "..Scriptname.." on the first or second page."
  date = "02.02.2016"
 
 ---//==================================================\\---
