@@ -2517,6 +2517,7 @@ class "Lissandra"
     --DrawRectangleButton(rs.x*0.467, rs.y/2.375, rs.x*.047, rs.y*.041, ARGB(255, 255, 255, 255))
    FillRect((rs.x/2)-size+10, (rs.y/2)-150, 80, 30, ARGB(150, 235, 183, 63))
     DrawText(tostring("OK"),size, (rs.x/2)-size+10, (rs.y/2)-150, ARGB(255,0, 0, 0)) 
+     end
  for _, target in pairs(GetEnemyHeroes()) do
     if ValidTarget(target, 15000) then
       if target.visible and not target.dead and self.Config.other.damage:Value() then
