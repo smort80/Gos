@@ -9,7 +9,7 @@ require ('KLib')
   local DAC = false
   local IOW = false
 
-AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version","KrystraMidBundle.lua",1.00)
+AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.01)
 
    class "Leblanc"
       ---//==================================================\\---
@@ -673,13 +673,13 @@ end
  function Leblanc:items()
     if self.Config.item.usebg:Value() and self.Config.Keys.combokey:Value() then
    for _ = ITEM_1, ITEM_7 do
-    if ( myHero:CanUseSpell(_) == 0 and myHero:GetSpellData(_).name == "BilgewaterCutlass" )then CastSpell(_)
+    if ( myHero:CanUseSpell(_) == 0 and myHero:GetSpellData(_).name == "BilgewaterCutlass" )then CastTargetSpell(target, _)
   end
   end
   end
   if self.Config.item.usehg:Value() and self.Config.Keys.combokey:Value() then
    for _ = ITEM_1, ITEM_7 do
-    if ( myHero:CanUseSpell(_) == 0 and myHero:GetSpellData(_).name == "HextechGunblade" )then CastSpell(_)
+    if ( myHero:CanUseSpell(_) == 0 and myHero:GetSpellData(_).name == "HextechGunblade" )then CastTargetSpell(target, _)
   end
   end
   end
@@ -2199,13 +2199,13 @@ end
  function Diana:items()
     if self.Config.item.usebg:Value() and self.Config.Keys.combokey:Value() then
    for _ = ITEM_1, ITEM_7 do
-    if ( myHero:CanUseSpell(_) == 0 and myHero:GetSpellData(_).name == "BilgewaterCutlass" )then CastSpell(_)
+    if ( myHero:CanUseSpell(_) == 0 and myHero:GetSpellData(_).name == "BilgewaterCutlass" )then CastTargetSpell(target, _)
   end
   end
   end
   if self.Config.item.usehg:Value() and self.Config.Keys.combokey:Value() then
    for _ = ITEM_1, ITEM_7 do
-    if ( myHero:CanUseSpell(_) == 0 and myHero:GetSpellData(_).name == "HextechGunblade" )then CastSpell(_)
+    if ( myHero:CanUseSpell(_) == 0 and myHero:GetSpellData(_).name == "HextechGunblade" )then CastTargetSpell(target, _)
   end
   end
   end
@@ -3348,13 +3348,13 @@ end
  function Lissandra:items()
     if self.Config.item.usebg:Value() and self.Config.Keys.combokey:Value() then
    for _ = ITEM_1, ITEM_7 do
-    if ( myHero:CanUseSpell(_) == 0 and myHero:GetSpellData(_).name == "BilgewaterCutlass" )then CastSpell(_)
+    if ( myHero:CanUseSpell(_) == 0 and myHero:GetSpellData(_).name == "BilgewaterCutlass" )then CastTargetSpell(target, _)
   end
   end
   end
   if self.Config.item.usehg:Value() and self.Config.Keys.combokey:Value() then
    for _ = ITEM_1, ITEM_7 do
-    if ( myHero:CanUseSpell(_) == 0 and myHero:GetSpellData(_).name == "HextechGunblade" )then CastSpell(_)
+    if ( myHero:CanUseSpell(_) == 0 and myHero:GetSpellData(_).name == "HextechGunblade" )then CastTargetSpell(target, _)
   end
   end
   end
@@ -3673,7 +3673,6 @@ end
    function Akali:UpdateBuff(unit,buff)
       if unit and unit.team ~= myHero.team and unit.type == myHero.type then
          if buff.Name == "AkaliMota" then
-         print "check 2"
   Qbuff = true
   end
       end
@@ -3695,6 +3694,17 @@ end
   end
   if self.Config.Keys.escapekey:Value()  then 
   self:walk()
+  end
+    for i, minion in pairs(minionManager.objects) do
+        if IsReady(_R) then
+                  if ValidTarget(minion) and minion ~= nil and GetTeam(minion) == MINION_ENEMY then
+   if self.Config.Keys.escapekey:Value()and self.Config.escape.useR:Value() then 
+   if GetDistance(minion, GetMousePos()) < 250 then
+  CastTargetSpell(minion, _R)
+ end
+end
+end
+end
   end
   end
  --[[function Akali:ProcessSpell(unit, spell)
@@ -3780,13 +3790,13 @@ end
  function Akali:items()
     if self.Config.item.usebg:Value() and self.Config.Keys.combokey:Value() then
    for _ = ITEM_1, ITEM_7 do
-    if ( myHero:CanUseSpell(_) == 0 and myHero:GetSpellData(_).name == "BilgewaterCutlass" )then CastSpell(_)
+    if ( myHero:CanUseSpell(_) == 0 and myHero:GetSpellData(_).name == "BilgewaterCutlass" )then CastTargetSpell(target, _)
   end
   end
   end
   if self.Config.item.usehg:Value() and self.Config.Keys.combokey:Value() then
    for _ = ITEM_1, ITEM_7 do
-    if ( myHero:CanUseSpell(_) == 0 and myHero:GetSpellData(_).name == "HextechGunblade" )then CastSpell(_)
+    if ( myHero:CanUseSpell(_) == 0 and myHero:GetSpellData(_).name == "HextechGunblade" )then CastTargetSpell(target, _)
   end
   end
   end
@@ -3985,14 +3995,14 @@ end
         self.Config.combo:Boolean("useE", loc_eng[4], true)
         self.Config.combo:Boolean("useR", loc_eng[5], true)
           self.Config.combo:Boolean("useI", loc_eng[6], true)
-        self.Config.combo:Slider("Mana",loc_eng[8], 10, 10, 100, 1)
+        self.Config.combo:Slider("Mana","Energy Manager", 10, 10, 100, 1)
      
       
         
         self.Config:Menu( "harass",loc_eng[9])
         self.Config.harass:Boolean("useQ", loc_eng[10], true)
         self.Config.harass:Boolean("useE", loc_eng[12], true)
-        self.Config.harass:Slider("Mana",loc_eng[8], 30, 10, 100, 1)
+        self.Config.harass:Slider("Mana","Energy Manager", 30, 10, 100, 1)
       
     self.Config:Menu("skilllogic",loc_eng[99])
       self.Config.skilllogic:Menu( "Wlogic",loc_eng[101]) 
@@ -4012,10 +4022,9 @@ end
         self.Config.farm.laneclear:Slider("ecount",loc_eng[182], 2, 1, 10, 1)
         self.Config.farm.laneclear:Info("blank", "")
         self.Config.farm.laneclear:Info("blank", "")
-        self.Config.farm.laneclear:Info("info2", loc_eng[184])
-        self.Config.farm.laneclear:Slider("QMana",loc_eng[185], 30, 10, 100, 1)
-        self.Config.farm.laneclear:Slider("WMana",loc_eng[186], 30, 10, 100, 1)
-        self.Config.farm.laneclear:Slider("EMana",loc_eng[187], 30, 10, 100, 1)
+        self.Config.farm.laneclear:Info("info2", "           [Energy Manager]")
+        self.Config.farm.laneclear:Slider("QMana","Q skill Energy Manager", 30, 10, 100, 1)
+        self.Config.farm.laneclear:Slider("EMana","E skill Energy Manager", 30, 10, 100, 1)
 
     self.Config.farm:Menu("jungleclear",loc_eng[20])
         self.Config.farm.jungleclear:Boolean("useQ",loc_eng[21],true)
@@ -4023,10 +4032,10 @@ end
       self.Config.farm.jungleclear:Boolean("useR",loc_eng[24],false)
         self.Config.farm.jungleclear:Info("blank", "")
         self.Config.farm.jungleclear:Info("blank", "")
-        self.Config.farm.jungleclear:Info("info2", loc_eng[184])
-        self.Config.farm.jungleclear:Slider("QMana",loc_eng[185], 30, 10, 100, 1)
-        self.Config.farm.jungleclear:Slider("EMana",loc_eng[187], 30, 10, 100, 1)
-        self.Config.farm.jungleclear:Slider("RMana",loc_eng[186], 30, 10, 100, 1)
+        self.Config.farm.jungleclear:Info("info2", "           [Energy Manager]")
+        self.Config.farm.jungleclear:Slider("QMana","Q skill Energy Manager", 30, 10, 100, 1)
+        self.Config.farm.jungleclear:Slider("EMana","E skill Energy Manager", 30, 10, 100, 1)
+        self.Config.farm.jungleclear:Slider("RMana","R skill Energy Manager", 30, 10, 100, 1)
         
            self.Config.farm:Menu("lasthit",loc_eng[25])
          self.Config.farm.lasthit:Boolean("autolasthit",loc_eng[189],false)
@@ -4034,9 +4043,9 @@ end
          self.Config.farm.lasthit:Boolean("useE",loc_eng[28],true)
         self.Config.farm.lasthit:DropDown("lasthitlogic",loc_eng[191], 1, {loc_eng[172],loc_eng[174]})
         self.Config.farm.lasthit:Info("blank", "")
-        self.Config.farm.lasthit:Info("info2", loc_eng[184])
-        self.Config.farm.lasthit:Slider("QMana",loc_eng[185], 30, 10, 100, 1)
-        self.Config.farm.lasthit:Slider("EMana",loc_eng[186], 30, 10, 100, 1)
+        self.Config.farm.lasthit:Info("info2", "           [Energy Manager]")
+        self.Config.farm.lasthit:Slider("QMana","Q skill Energy Manager", 30, 10, 100, 1)
+        self.Config.farm.lasthit:Slider("EMana","E skill Energy Manager", 30, 10, 100, 1)
         
         
     self.Config:Menu( "killsteal",loc_eng[35])
@@ -4049,6 +4058,7 @@ end
       
       self.Config:Menu("escape",loc_eng[30])
       self.Config.escape:Boolean("useW",loc_eng[32],true)
+            self.Config.escape:Boolean("useR",loc_eng[34],false)
         
    self.Config:Menu( "item",loc_eng[42])
         self.Config.item:Menu( "autopot",loc_eng[192])
@@ -4106,8 +4116,6 @@ end
         self.Config.other:Boolean("targetcal",loc_eng[76],true)  
         
         self.Config:Menu("targetsel",loc_eng[77])
-        self.Config.targetsel:Info("infoK2", ""   )
-        self.Config.targetsel:Info("infoK", ""   )
         self.Config.targetsel:Boolean("ts",loc_eng[78], false)
 
          self.Config:Menu("orb","Orbwalker Settings")
@@ -4307,6 +4315,7 @@ CastSkillShot(_R, wPred.PredPos.x, wPred.PredPos.y, wPred.PredPos.z)
 end
 end
  function Viktor:CastI(unit)
+     local Ignite = (GetCastName(GetMyHero(),SUMMONER_1):lower():find("summonerdot") and SUMMONER_1 or (GetCastName(GetMyHero(),SUMMONER_2):lower():find("summonerdot") and SUMMONER_2 or nil))
     if Ignite then
      if IsReady(Ignite) then
       CastTargetSpell(unit, Ignite)
@@ -4412,25 +4421,21 @@ end
       end
     end
        function Viktor:needr()
-   for _, unit in pairs(GetEnemyHeroes()) do
-    if (IsReady(_R) and (myHero.mana / myHero.maxMana > self.Config.combo.Mana:Value() /100 ) and self.Config.combo.useR:Value() and self.Config.combo.combokey:Value() and GetDistance(unit)<700 ) then
-        local damagewithr =self:GetRDmg(unit)+self:GetQDmg(unit) +self:GetEDmg(unit) 
-        local damagewithnor = self:GetQDmg(unit) +self:GetEDmg(unit) 
-        local health=unit.health
+    if (IsReady(_R) and (myHero.mana / myHero.maxMana > self.Config.combo.Mana:Value() /100 ) and self.Config.combo.useR:Value() and self.Config.combo.combokey:Value() and GetDistance(target)<700 ) then
+        local damagewithr =self:GetRDmg(target)+self:GetQDmg(target) +self:GetEDmg(target) 
+        local damagewithnor = self:GetQDmg(target) +self:GetEDmg(target) 
+        local health=target.health
        if(health<damagewithr )then
        self:CastR(target)
        end
     end
     end
-    end
        function Viktor:killr()
-         for _, unit in pairs(GetEnemyHeroes()) do
-    if (IsReady(_R) and (myHero.mana / myHero.maxMana > self.Config.combo.Mana:Value() /100 ) and self.Config.combo.useR:Value() and self.Config.combo.combokey:Value() and GetDistance(unit)<700 ) then
-        local dmgR =self:GetRDmg(unit)
-        local health=unit.health
+    if (IsReady(_R) and (myHero.mana / myHero.maxMana > self.Config.combo.Mana:Value() /100 ) and self.Config.combo.useR:Value() and self.Config.combo.combokey:Value() and GetDistance(target)<700 ) then
+        local dmgR =self:GetRDmg(target)
+        local health=target.health
         if(health<dmgR )then
           self:CastR(target)
-       end
        end
     end
     end
@@ -4537,9 +4542,9 @@ function Viktor:GetEDmg(target)
   end
    if not ebuff and IsReady(_E) then 
   local FinalDamage = (25 + (GetCastLevel(myHero, _E) * 45) + (GetBonusAP(myHero)*.7))
-  return myHero:CalcMagicDamage(target, FinalDamage)
+  return CalcDamage(myHero,target, 0,FinalDamage)
   elseif ebuff and IsReady(_E) then
-  local FinalDamage =.4*((25 + (GetCastLevel(myHero, _E) * 45) + (GetBonusAP(myHero)*.7)))
+  local FinalDamage =(25 + (GetCastLevel(myHero, _E) * 45) + (GetBonusAP(myHero)*.7)) + (25 + (GetCastLevel(myHero, _E) * 45) + (GetBonusAP(myHero)*.7))*0.4
   return CalcDamage(myHero,target, 0,FinalDamage)
   else
     return 0
@@ -4630,6 +4635,7 @@ end
       end   
   function Viktor:LastHit()
        for _, target in pairs(minionManager.objects) do
+                 -- print (self:GetEDmg(target))
          if IsObjectAlive(target) and GetTeam(target) == MINION_ENEMY then
   if self.Config.farm.lasthit.lasthitlogic:Value() == 1 then
               local Qdamage = self:GetQDmg(target)
@@ -4952,13 +4958,13 @@ end
  function Viktor:items()
     if self.Config.item.usebg:Value() and self.Config.combo.combokey:Value() then
    for _ = ITEM_1, ITEM_7 do
-    if ( myHero:CanUseSpell(_) == 0 and myHero:GetSpellData(_).name == "BilgewaterCutlass" )then CastSpell(_)
+    if ( myHero:CanUseSpell(_) == 0 and myHero:GetSpellData(_).name == "BilgewaterCutlass" )then CastTargetSpell(target, _)
   end
   end
   end
   if self.Config.item.usehg:Value() and self.Config.combo.combokey:Value() then
    for _ = ITEM_1, ITEM_7 do
-    if ( myHero:CanUseSpell(_) == 0 and myHero:GetSpellData(_).name == "HextechGunblade" )then CastSpell(_)
+    if ( myHero:CanUseSpell(_) == 0 and myHero:GetSpellData(_).name == "HextechGunblade" )then CastTargetSpell(target, _)
   end
   end
   end
