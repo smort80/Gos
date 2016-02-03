@@ -1,10 +1,14 @@
-Version = "1.00"  
+
+
+Version = "1.01"  
 LVersion = " 6.2"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
 list = "Leblanc , Lissandra , Viktor, Akali, Diana"
- link = "Go to ../ then you can see my topic "..Scriptname.." on the first or second page."
- date = "02.02.2016"
+ link = "http://gamingonsteroids.com/topic/10502-beta-stage-krystra-mid-series-leblanc-viktor-lissandra-diana-akali-multi-prediction-orbwalk-support-expert-drawings-and-much-more/"
+ date = "03.02.2016"
+
+AutoUpdate("/Lonsemaria/Gos/master/Common/Klib.lua","/Lonsemaria/Gos/master/Version/Klib.version",COMMON_PATH.."Klib.lua",0.01)
 
 ---//==================================================\\---
 --|| > English Translation details               ||--
@@ -28,7 +32,7 @@ loc_eng = {
 --General Menu(Vıp Settings) // 19 // 47
 "VIP Settings","Use Packet Casting","To use vip settings, Packet Casting should be open.", "Auto Level Settings","Use Auto Level",
 "Select Skill Order","Skin Hack Settings","Use Skin Hack","Make sure that using packet casting is ON.",
-"To use vip settings, You need to be a VIP user on BOL community.","Select Skin",
+"To use vip settings, You need to be a VIP user on   community.","Select Skin",
 "Focus Q>W>E", "Focus Q>E>W","Focus W>Q>E","Focus W>E>Q","Focus E>W>Q", "Focus E>Q>W", "Smart" ,
 --General Menu(Draw Settings) // 12 // 65
 "Draw Settings","Skill Drawing Settings","Q Skill Drawings","W Skill Drawings","E Skill Drawings","R Skill Drawings","Auto Attack Range",
@@ -103,7 +107,7 @@ loc_tr = {
 --General Menu(Vıp Settings) // 19
 "VIP Ayarlari","Packet Casting Kullan","Vip ayarlarini kullanmak icin packet casting acik olmalidir.", "Otomatik Seviye Ayarlari","Otomatik Seviye",
 "Yetenek Duzeninin Secin","Kostum Hack Ayarlari","Kostum Hack Kullan","Packet Casting acik oldugundan emin olunuz",
-"Vip ayarlarini kullanmak icin BOL Vip uyesi olmaniz gerekmektedir.","Kostum sec",
+"Vip ayarlarini kullanmak icin   Vip uyesi olmaniz gerekmektedir.","Kostum sec",
 "Q>W>E ", "Q>E>W","W>Q>E","W>E>Q","E>W>Q", "E>Q>W", "Akilli" ,
 --General Menu(Draw Settings) // 11
 "Cizim Ayarlari","Yetenek Cizim Ayarlari","Q Yetenek menzilini ciz","W Yetenek menzilini ciz","E Yetenek menzilini ciz","R Yetenek menzilini ciz","Otomatik Saldiri Menzili",
@@ -653,7 +657,7 @@ skinMeta = {
 ["Udyr"]         = {"Classic", "Black Belt", "Primal", "Spirit Guard", "Definitely Not"},
 ["Urgot"]        = {"Classic", "Giant Enemy Crabgot", "Butcher", "Battlecast"},
   -- V 
-["Varus"]        = {"Classic", "Blight Crystal", "Arclight", "Arctic Ops", "Heartseeker", "Swiftbolt"},
+["Varus"]        = {"Classic", "Blight Crystal", "Arclight", "Arctic Ops", "Heartseeker", "Swift t"},
 ["Vayne"]        = {"Classic", "Vindicator", "Aristocrat", "Dragonslayer", "Heartseeker", "SKT T1", "Arclight", "Chroma Pack: Green", "Chroma Pack: Red", "Chroma Pack: Silver"},
 ["Veigar"]       = {"Classic", "White Mage", "Curling", "Veigar Greybeard", "Leprechaun", "Baron Von", "Superb Villain", "Bad Santa", "Final Boss"},
 ["Velkoz"]       = {"Classic", "Battlecast", "Arclight"},
