@@ -9,7 +9,7 @@ require ('KLib')
   local DAC = false
   local IOW = false
 
-AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.01)
+AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.02)
 
    class "Leblanc"
       ---//==================================================\\---
@@ -2908,8 +2908,15 @@ end
   for _, unit in pairs(GetEnemyHeroes()) do
       local health = unit.health
       local dmgE = self:GetEDmg(unit)
-        if(GetDistance(target) <= self.E.range and  IsReady(_E) and health<dmgE and self.Config.killsteal.useE:Value()    and self.Config.killsteal.ks:Value() )then
-          self:CastE(unit)  
+        if(GetDistance(unit) <= self.E.range and  IsReady(_E) and health<dmgE and self.Config.killsteal.useE:Value()    and self.Config.killsteal.ks:Value() )then
+           local Ticker = GetTickCount()
+  if (global_ticks + 2000) < Ticker then
+  if (IsReady(_E) and GetDistance(unit) <= self.E.range) then
+      CastSkillShot(_E, unit.x,unit.y, unit.z)
+     global_ticks = Ticker
+          DelayAction(function() CastSpell(_E) end, 2)
+      end
+      end
         end
         local dmgQ = self:GetQDmg(unit)
         if(GetDistance(target) <= self.Q.range and  IsReady(_Q) and health<dmgQ and self.Config.killsteal.useQ:Value()  and self.Config.killsteal.ks:Value()  )then
@@ -3164,6 +3171,7 @@ end
         self.Config:Menu( "killsteal",loc_eng[35])
         self.Config.killsteal:Boolean("ks",loc_eng[36],true)
         self.Config.killsteal:Boolean("useQ", loc_eng[37], true)
+        self.Config.killsteal:Boolean("useW", loc_eng[38], true)
         self.Config.killsteal:Boolean("useE", loc_eng[39], true)
         self.Config.killsteal:Boolean("useR", loc_eng[40], true)
         self.Config.killsteal:Boolean("useI", loc_eng[41], true)
