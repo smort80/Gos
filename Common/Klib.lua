@@ -8,7 +8,7 @@ list = "Leblanc , Lissandra , Viktor, Akali, Diana"
  link = "http://gamingonsteroids.com/topic/10502-beta-stage-krystra-mid-series-leblanc-viktor-lissandra-diana-akali-multi-prediction-orbwalk-support-expert-drawings-and-much-more/"
  date = "09.02.2016"
 
-AutoUpdate("/Lonsemaria/Gos/master/Common/Klib.lua","/Lonsemaria/Gos/master/Version/Klib.version",COMMON_PATH.."Klib.lua",0.02)
+AutoUpdate("/Lonsemaria/Gos/master/Common/Klib.lua","/Lonsemaria/Gos/master/Version/Klib.version",COMMON_PATH.."KLib.lua",0.02)
 
 ---//==================================================\\---
 --|| > English Translation details               ||--
