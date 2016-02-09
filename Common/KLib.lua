@@ -1,6 +1,6 @@
 
 
-Version = "1.04"  
+Version = "1.05"  
 LVersion = " 6.2"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
