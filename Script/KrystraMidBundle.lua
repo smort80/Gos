@@ -8,7 +8,7 @@ end
 local lastTimeTickCalled = 0
 local DAC = false
 local IOW = false
-Version = "1.07"  
+Version = "1.08"  
 LVersion = " 6.3"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
