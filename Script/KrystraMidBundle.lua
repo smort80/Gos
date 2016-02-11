@@ -16,7 +16,7 @@ list = "Leblanc , Lissandra , Viktor, Akali, Diana, Yasuo"
  link = "http://gamingonsteroids.com/topic/10502-beta-stage-krystra-mid-series-leblanc-viktor-lissandra-diana-akali-multi-prediction-orbwalk-support-expert-drawings-and-much-more/"
  date = "09.02.2016"
 
-AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.06)
+AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",Version)
 
 ---//==================================================\\---
 --|| > English Translation details               ||--
