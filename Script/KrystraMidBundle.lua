@@ -8,7 +8,7 @@ end
 local lastTimeTickCalled = 0
 local DAC = false
 local IOW = false
-Version = "1.11"
+Version = "1.12"
 LVersion = " 6.3"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
@@ -16,7 +16,7 @@ list = "Leblanc , Lissandra , Viktor, Akali, Diana, Yasuo,Zed"
 link = "http://gamingonsteroids.com/topic/10502-beta-stage-krystra-mid-series-leblanc-viktor-lissandra-diana-akali-multi-prediction-orbwalk-support-expert-drawings-and-much-more/"
 date = "20.02.2016"
 
-AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.11)
+AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.12)
 
 ---//==================================================\\---
 --|| > English Translation details               ||--
@@ -750,7 +750,7 @@ function Leblanc:combomode()
                       if IsReady(_W) then
                         if  self.Config.farm.laneclear.useW:Value()   then
                           local BestPos, BestHit =  GetFarmPosition(self.W.range, self.W.width, MINION_ENEMY)
-                          if BestPos ~= nil  and  BestHit >= NumberOfHits then
+                          if BestPos   and  BestHit >= NumberOfHits then
                             CastSkillShot(_W, BestPos)
                           end
                         end
@@ -761,7 +761,7 @@ function Leblanc:combomode()
                       if IsReady(_R) then
                         if self.Config.Keys.laneclearkey:Value()  and self.Config.farm.laneclear.useR:Value() and GetCastName(myHero,_R) == 'LeblancSlideM'  then
                           local BestPos, BestHit = GetFarmPosition(self.RW.range, self.RW.width, MINION_ENEMY)
-                          if BestPos ~= nil and BestHit >= NumberOfHits then
+                          if BestPos  and BestHit >= NumberOfHits then
                             CastSkillShot(_R, BestPos)
                           end
                         end
@@ -820,7 +820,7 @@ function Leblanc:combomode()
                       if IsReady(_W) then
                         if  self.Config.farm.jungleclear.useW:Value()   then
                           local BestPos, BestHit =  GetFarmPosition(self.W.range, self.W.width, MINION_JUNGLE)
-                          if BestPos ~= nil  and  BestHit >= 1 then
+                          if BestPos   and  BestHit >= 1 then
                             CastSkillShot(_W, BestPos)
                           end
                         end
@@ -830,7 +830,7 @@ function Leblanc:combomode()
                       if IsReady(_R) then
                         if self.Config.Keys.jungleclearkey:Value()  and self.Config.farm.jungleclear.useR:Value() and GetCastName(myHero,_R) == 'LeblancSlideM'  then
                           local BestPos, BestHit = GetFarmPosition(self.RW.range, self.RW.width, MINION_JUNGLE)
-                          if BestPos ~= nil and BestHit >= 1 then
+                          if BestPos  and BestHit >= 1 then
                             CastSkillShot(_R, BestPos)
                           end
                         end
@@ -2570,7 +2570,7 @@ function Leblanc:combomode()
             if NumberOfHits >= 1 and #minionManager.objects >= NumberOfHits then
               if self.Config.farm.jungleclear.useQ:Value() and (myHero.mana / myHero.maxMana >=  self.Config.farm.jungleclear.QMana:Value() /100 )  then
                 local BestPos, BestHit =  GetLineFarmPosition(self.Q.range, self.Q.width, MINION_ENEMY)
-                if BestPos ~= nil and  BestHit >= NumberOfHits then
+                if BestPos  and  BestHit >= NumberOfHits then
                   CastSkillShot(_Q, BestPos)
                 end
               end
@@ -2600,7 +2600,7 @@ function Leblanc:combomode()
             if NumberOfHits >= 1 and #minionManager.objects >= NumberOfHits then
               if self.Config.farm.laneclear.useQ:Value() and (myHero.mana / myHero.maxMana >=  self.Config.farm.laneclear.QMana:Value() /100 )  then
                 local BestPos, BestHit =  GetLineFarmPosition(self.Q.range, self.Q.width, MINION_ENEMY)
-                if BestPos ~= nil and  BestHit >= NumberOfHits then
+                if BestPos and  BestHit >= NumberOfHits then
                   CastSkillShot(_Q, BestPos)
                 end
               end
@@ -3268,7 +3268,7 @@ function Leblanc:combomode()
                 if IsReady(_Q) then
                   if  self.Config.farm.laneclear.useQ:Value()   then
                     local BestPos, BestHit =  GetLineFarmPosition(self.Q.range, self.Q.width, MINION_ENEMY)
-                    if BestPos ~= nil  and  BestHit >= NumberOfHits then
+                    if BestPos   and  BestHit >= NumberOfHits then
                       CastSkillShot(_Q, BestPos)
                     end
                   end
@@ -3278,7 +3278,7 @@ function Leblanc:combomode()
                 local NumberOfHits = self.Config.farm.laneclear.ecount:Value()
                 if self.Config.farm.laneclear.useE:Value()   then
                   local BestPos, BestHit = GetLineFarmPosition(self.E.range, self.E.width, MINION_ENEMY)
-                  if BestPos ~= nil and  BestHit >= NumberOfHits then
+                  if BestPos and  BestHit >= NumberOfHits then
                     local Ticker = GetTickCount()
                     if (global_ticks + 2000) < Ticker then
                       if (myHero:CanUseSpell(_E) == READY ) then
@@ -3311,7 +3311,7 @@ function Leblanc:combomode()
                 if IsReady(_Q) then
                   if  self.Config.farm.jungleclear.useQ:Value()   then
                     local BestPos, BestHit =  GetFarmPosition(self.Q.range, self.Q.width, MINION_JUNGLE)
-                    if BestPos ~= nil  and  BestHit >= NumberOfHits then
+                    if BestPos  and  BestHit >= NumberOfHits then
                       CastSkillShot(_Q, BestPos)
                     end
                   end
@@ -3321,7 +3321,7 @@ function Leblanc:combomode()
                 local NumberOfHits = 1
                 if self.Config.farm.jungleclear.useE:Value()   then
                   local BestPos, BestHit = GetLineFarmPosition(self.E.range, self.E.width, MINION_JUNGLE)
-                  if BestPos ~= nil and  BestHit >= NumberOfHits then
+                  if BestPos  and  BestHit >= NumberOfHits then
                     local Ticker = GetTickCount()
                     if (global_ticks + 2000) < Ticker then
                       if (myHero:CanUseSpell(_E) == READY ) then
@@ -6039,7 +6039,7 @@ if GetCastName(myHero,_Q)  == "yasuoq3w"  then
   if IsReady(_Q) then
     if  self.Config.farm.laneclear.useQ3:Value()   then
       local BestPos, BestHit =  GetLineFarmPosition(self.Q3.range, self.Q3.width, MINION_ENEMY)
-      if BestPos ~= nil  and  BestHit >= NumberOfHits then
+      if BestPos   and  BestHit >= NumberOfHits then
         CastSkillShot(_Q, BestPos)
       end
     end
@@ -6088,7 +6088,7 @@ if GetCastName(myHero,_Q)  == "yasuoq3w"  then
   if IsReady(_Q) then
     if  self.Config.farm.jungleclear.useQ3:Value()   then
       local BestPos, BestHit =  GetLineFarmPosition(self.Q3.range, self.Q3.width, MINION_JUNGLE)
-      if BestPos ~= nil  and  BestHit >= 1 then
+      if BestPos   and  BestHit >= 1 then
         CastSkillShot(_Q, BestPos)
       end
     end
@@ -6788,16 +6788,16 @@ end
   function Zed:LaneClear()
     if not ValidTarget(ClosestMinion(GetOrigin(myHero), MINION_ENEMY),  1000) then return end
  for i, minion in pairs(minionManager.objects) do
-                      if ValidTarget(minion, 1000) and minion ~= nil and GetTeam(minion) == MINION_ENEMY then
+                      if ValidTarget(minion, 1000)  and GetTeam(minion) == MINION_ENEMY then
                          if  not Wpos~= nil then
                         if MinionsAround(myHero, 290, MINION_ENEMY) >= self.Config.farm.laneclear.ecount:Value() then
-                        if self.Config.farm.laneclear.useE:Value() and ( myHero.mana / myHero.maxMana >= self.Config.farm.laneclear.EMana:Value() /100 ) and GetDistance(minion) <= 290 then
+                        if self.Config.farm.laneclear.useE:Value() and ( myHero.mana / myHero.maxMana >= self.Config.farm.laneclear.EMana:Value() /100 )  then
                              CastSpell(_E)
                         end
                       end
                     elseif Wpos~= nil then
  if MinionsAround(Wpos, 290, MINION_ENEMY) >= self.Config.farm.laneclear.ecount:Value() then
-                        if self.Config.farm.laneclear.useE:Value() and ( myHero.mana / myHero.maxMana >= self.Config.farm.laneclear.EMana:Value() /100 ) and GetDistance(minion) <= 290 then
+                        if self.Config.farm.laneclear.useE:Value() and ( myHero.mana / myHero.maxMana >= self.Config.farm.laneclear.EMana:Value() /100 )  then
                              CastSpell(_E)
                         end
                       end
@@ -6812,12 +6812,12 @@ end
                       end
                                end
                   end
+                  if IsReady(_Q) then
                     if (myHero.mana / myHero.maxMana >= self.Config.farm.laneclear.QMana:Value() /100 ) then
                       local NumberOfHits = self.Config.farm.laneclear.qcount:Value()
-                      if IsReady(_Q) then
                         if self.Config.Keys.laneclearkey:Value()  and self.Config.farm.laneclear.useQ:Value()  then
                           local BestPos, BestHit = GetLineFarmPosition(self.Q.range, self.Q.width, MINION_ENEMY)
-                          if BestPos ~= nil and BestHit >= NumberOfHits then
+                          if BestPos  and BestHit >= NumberOfHits then
                             CastSkillShot(_Q, BestPos)
                           end
                         end
@@ -6871,7 +6871,7 @@ function Zed:JungleClear()
                       if IsReady(_Q) then
                         if self.Config.Keys.laneclearkey:Value()  and self.Config.farm.jungleclear.useQ:Value()  then
                           local BestPos, BestHit = GetLineFarmPosition(self.Q.range, self.Q.width, MINION_JUNGLE)
-                          if BestPos ~= nil and BestHit >= 1 then
+                          if BestPos  and BestHit >= 1 then
                             CastSkillShot(_Q, BestPos)
                           end
                         end
@@ -7436,7 +7436,7 @@ end
       self.Config.combo:Boolean("useI", loc_eng[6], true)
       self.Config.combo:Info("blank", ""   )
       self.Config.combo:Info("blank", "Extra Settings"   )
-       self.Config.combo:Boolean("secondw", "Use second W to Chase", true)
+       self.Config.combo:Boolean("secondw", "Use second W to Chase", false)
       self.Config.combo:Boolean("useitem", "Use Items After R", true)
       self.Config.combo:Boolean("wgap", "Use W to Gap Close", false)
       self.Config.combo:Slider("Mana","Energy Manager %"   , 10, 10, 100, 1)
