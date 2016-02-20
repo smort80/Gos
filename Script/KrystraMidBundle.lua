@@ -8,15 +8,15 @@ end
 local lastTimeTickCalled = 0
 local DAC = false
 local IOW = false
-Version = "1.09"
+Version = "1.11"
 LVersion = " 6.3"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
-list = "Leblanc , Lissandra , Viktor, Akali, Diana, Yasuo"
+list = "Leblanc , Lissandra , Viktor, Akali, Diana, Yasuo,Zed"
 link = "http://gamingonsteroids.com/topic/10502-beta-stage-krystra-mid-series-leblanc-viktor-lissandra-diana-akali-multi-prediction-orbwalk-support-expert-drawings-and-much-more/"
-date = "09.02.2016"
+date = "20.02.2016"
 
-AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.09)
+AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.11)
 
 ---//==================================================\\---
 --|| > English Translation details               ||--
@@ -6906,8 +6906,12 @@ function Zed:JungleClear()
       end
     elseif self:buffcheck()== false then
       if(GetDistance(target) <= self.W.range and self.Config.combo.useW:Value() and  IsReady(_W))then
-        local Wposition =   GetOrigin(myHero) + (Vector(target) - GetOrigin(myHero)):normalized() * 700
-        DelayAction(function () self:CastW( Wposition) end, 0.21)
+                 if not self.Config.combo.secondw:Value() then
+                          local Wposition =   GetOrigin(myHero) + (Vector(target) - GetOrigin(myHero)):normalized() * 700
+          DelayAction(function ()  self:CastW(Wposition) end, 0.21)
+        elseif self.Config.combo.secondw:Value() then
+           DelayAction(function ()    CastSkillShot(_W, target) end, 0.21)
+         end
       end
     end
 
@@ -7432,6 +7436,7 @@ end
       self.Config.combo:Boolean("useI", loc_eng[6], true)
       self.Config.combo:Info("blank", ""   )
       self.Config.combo:Info("blank", "Extra Settings"   )
+       self.Config.combo:Boolean("secondw", "Use second W to Chase", true)
       self.Config.combo:Boolean("useitem", "Use Items After R", true)
       self.Config.combo:Boolean("wgap", "Use W to Gap Close", false)
       self.Config.combo:Slider("Mana","Energy Manager %"   , 10, 10, 100, 1)
