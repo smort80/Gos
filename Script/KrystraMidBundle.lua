@@ -8,7 +8,7 @@ end
 local lastTimeTickCalled = 0
 local DAC = false
 local IOW = false
-Version = "1.13"
+Version = "1.14"
 LVersion = " 6.3"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
@@ -16,7 +16,7 @@ list = "Leblanc , Lissandra , Viktor, Akali, Diana, Yasuo,Zed"
 link = "http://gamingonsteroids.com/topic/10502-beta-stage-krystra-mid-series-leblanc-viktor-lissandra-diana-akali-multi-prediction-orbwalk-support-expert-drawings-and-much-more/"
 date = "20.02.2016"
 
-AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.13)
+AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.14)
 
 ---//==================================================\\---
 --|| > English Translation details               ||--
@@ -5236,6 +5236,7 @@ local rangeQ = false
 local espin = false
 local knockedup = 0
 local startTime = 0
+local egap = false
 function Yasuo:__init()
 self.Q = { delay = 0.25, speed = math.huge ,width = 40, range = 475  } --aoe false, Col false, lınear
 self.Q3 = { delay = 0.25, speed = 1200 ,width = 120, range = 900 } --aoe false, Col false, lınear
@@ -5825,7 +5826,7 @@ end
 
 function Yasuo:Combo()
 if  GetCastName(myHero,_Q)  == "yasuoq3w"  then
-  if(GetDistance(target) <= self.Q3.range and self.Config.combo.useQ3:Value()  and IsReady(_Q))then
+  if(GetDistance(target) <= self.Q3.range and self.Config.combo.useQ3:Value()  and  not egap  and IsReady(_Q))then
     self:CastQ3(target)
   end
 else
@@ -5871,6 +5872,8 @@ if self.Config.misc.Gapclose.UseEGap:Value() then
     mPos= self:getNearestMinion(unit)
     if IsReady(_E) and mPos then
       CastTargetSpell(mPos, _E)
+          egap = true
+          DelayAction(function ()   egap = false end, 1)
     end
   end
 end
