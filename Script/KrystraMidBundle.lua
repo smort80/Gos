@@ -8,7 +8,7 @@ end
 local lastTimeTickCalled = 0
 local DAC = false
 local IOW = false
-Version = "1.12"
+Version = "1.13"
 LVersion = " 6.3"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
@@ -16,7 +16,7 @@ list = "Leblanc , Lissandra , Viktor, Akali, Diana, Yasuo,Zed"
 link = "http://gamingonsteroids.com/topic/10502-beta-stage-krystra-mid-series-leblanc-viktor-lissandra-diana-akali-multi-prediction-orbwalk-support-expert-drawings-and-much-more/"
 date = "20.02.2016"
 
-AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.12)
+AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.13)
 
 ---//==================================================\\---
 --|| > English Translation details               ||--
@@ -2206,10 +2206,6 @@ function Leblanc:combomode()
                     local dmgQ = self:GetQDmg(unit)
                     if(GetDistance(target) <= self.Q.range and  IsReady(_Q) and health<dmgQ and self.Config.killsteal.useQ:Value() and self.Config.killsteal.ks:Value() )then
                       self:CastQ(unit)
-                    end
-                    local dmgW = self:GetWDmg(unit)
-                    if(GetDistance(target) <= self.W.range and  IsReady(_W) and health<dmgW and self.Config.killsteal.useW:Value()   and self.Config.killsteal.ks:Value())then
-                      self:CastW(unit)
                     end
                     local dmgI =(50+ ((myHero.level)*20))
                     if(health<dmgI and self.Config.killsteal.useI:Value() and self.Config.killsteal.ks:Value() and GetDistance(unit)<600)then
@@ -5242,7 +5238,7 @@ local knockedup = 0
 local startTime = 0
 function Yasuo:__init()
 self.Q = { delay = 0.25, speed = math.huge ,width = 40, range = 475  } --aoe false, Col false, lınear
-self.Q3 = { delay = 0.25, speed = math.huge ,width = 120, range = 900 } --aoe false, Col false, lınear
+self.Q3 = { delay = 0.25, speed = 1200 ,width = 120, range = 900 } --aoe false, Col false, lınear
 self.W = { range = 400  }
 self.E = { range = 475 }
 self.R = { range = 1200  }
