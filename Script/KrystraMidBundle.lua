@@ -8,7 +8,7 @@ end
 local lastTimeTickCalled = 0
 local DAC = false
 local IOW = false
-Version = "1.14"
+Version = "1.15"
 LVersion = " 6.3"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
@@ -16,7 +16,7 @@ list = "Leblanc , Lissandra , Viktor, Akali, Diana, Yasuo,Zed"
 link = "http://gamingonsteroids.com/topic/10502-beta-stage-krystra-mid-series-leblanc-viktor-lissandra-diana-akali-multi-prediction-orbwalk-support-expert-drawings-and-much-more/"
 date = "20.02.2016"
 
-AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.14)
+AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.15)
 
 ---//==================================================\\---
 --|| > English Translation details               ||--
@@ -6473,6 +6473,7 @@ local Rbuff = false
 local GW = 0
 local startTime = 0
 local startTimer = 0
+local wgapclose = false
 function Zed:__init()
   self.Q = { delay = 0.25, speed = 1700 ,width = 50, range = 900  }
 self.W = { range = 700  ,speed = 1750 ,width = 250 }
@@ -6507,6 +6508,7 @@ target = GetGameTarget()
 end
 mousePos = GetMousePos()
 Blg = GetItemSlot(myHero,3144) > 0 and GetItemSlot(myHero,3144) or nil
+Yahu = GetItemSlot(myHero,3142) > 0 and GetItemSlot(myHero,3142) or nil
 Tia = GetItemSlot(myHero,3077) > 0 and GetItemSlot(myHero,3077) or nil
 Rhyd = GetItemSlot(myHero,3074) > 0 and GetItemSlot(myHero,3074) or nil
 Thyd = GetItemSlot(myHero,3053) > 0 and GetItemSlot(myHero,3053) or nil
@@ -6944,10 +6946,19 @@ function Zed:JungleClear()
    if not IsInDistance(target,850) and  ValidTarget(target,1250)  and self.Config.combo.useW:Value() then
      local Wposition =   GetOrigin(myHero) + (Vector(target) - GetOrigin(myHero)):normalized() * 700 
        CastSkillShot(_W, Wposition)
+       wgapclose = true
+       DelayAction(function ()  wgapclose = false end, 5)
       end
     end
     end
 
+if  self.Config.item.yahu.yahug:Value() then
+  if Yahu and IsReady(Yahu) and IsInDistance(target, self.Config.item.yahu.yahud:Value()) then
+    if  wgapclose  then
+     DelayAction(function ()CastTargetSpell(target, Yahu)end, 0.35)
+end
+end
+end
 
 if    self.Config.combo.turnback.swaphp:Value()  then
   if  (myHero.health / myHero.maxHealth <=  self.Config.combo.turnback.currenthp:Value() /100 ) then
@@ -6964,6 +6975,12 @@ if    self.Config.combo.turnback.swaphp:Value()  then
 if  self.Config.item.bg.usebg:Value()   then
 if Blg and IsReady(Blg) and ValidTarget(target, 550 ) then
      DelayAction(function ()CastTargetSpell(target, Blg)end, 0.35)
+end
+end
+
+if  self.Config.item.yahu.yahuc:Value()   then
+if Yahu and IsReady(Yahu) and ValidTarget(target, 550 ) then
+     DelayAction(function ()CastTargetSpell(target, Yahu)end, 0.35)
 end
 end
 
@@ -7005,6 +7022,12 @@ if not IsReady(_R) then
 if  self.Config.item.bg.usebg:Value()  then
 if Blg and IsReady(Blg) and ValidTarget(target, 550 ) then
   DelayAction(function () CastTargetSpell(target, Blg)end, 0.35)
+end
+end
+
+if  self.Config.item.yahu.yahuc:Value()   then
+if Yahu and IsReady(Yahu) and ValidTarget(target, 550 ) then
+     DelayAction(function ()CastTargetSpell(target, Yahu)end, 0.35)
 end
 end
 
@@ -7519,6 +7542,10 @@ end
       self.Config.item.thydra:Slider("minthydra","Minimum Minion to Titanic Hydra"   , 1, 1, 6, 1)
       self.Config.item:Menu( "bg","Bilgewater Settings")
       self.Config.item.bg:Boolean("usebg", loc_eng[46],  false)
+             self.Config.item:Menu( "yahu","Youmuu's Ghostblade Settings")
+      self.Config.item.yahu:Boolean("yahuc", "Use in combo" ,  false)
+       self.Config.item.yahu:Boolean("yahug", "Use after gapclose" ,  false)
+              self.Config.item.yahu:Slider("yahud","Minimum distance ( Gap close )"   , 550, 100, 1000, 1)
       self.Config.item:Menu( "btk","Blade of the Ruined King Settings")
       self.Config.item.btk:Boolean("usebtk", "Use Blade of the Ruined King",  false)
       self.Config.item:Menu( "randuin","Randuin's Omen Settings")
