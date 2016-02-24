@@ -8,7 +8,7 @@ end
 local lastTimeTickCalled = 0
 local DAC = false
 local IOW = false
-Version = "1.15"
+Version = "1.16"
 LVersion = " 6.3"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
@@ -16,7 +16,7 @@ list = "Leblanc , Lissandra , Viktor, Akali, Diana, Yasuo,Zed"
 link = "http://gamingonsteroids.com/topic/10502-beta-stage-krystra-mid-series-leblanc-viktor-lissandra-diana-akali-multi-prediction-orbwalk-support-expert-drawings-and-much-more/"
 date = "20.02.2016"
 
-AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.15)
+AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.16)
 
 ---//==================================================\\---
 --|| > English Translation details               ||--
@@ -3365,8 +3365,8 @@ function Leblanc:combomode()
               self.Config.skilllogic.Rlogic:Boolean("infoR", loc_eng[156])
 
               self.Config:Menu("escape",loc_eng[30])
-              self.Config.escape:Boolean("useW",loc_eng[31],true)
-              self.Config.escape:Boolean("useE",loc_eng[32],true)
+              self.Config.escape:Boolean("useW",loc_eng[32],true)
+              self.Config.escape:Boolean("useE",loc_eng[33],true)
 
               self.Config:Menu( "farm",loc_eng[14])
 
