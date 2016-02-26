@@ -9,14 +9,14 @@ local lastTimeTickCalled = 0
 local DAC = false
 local IOW = false
 Version = "1.16"
-LVersion = " 6.3"
+LVersion = " 6.4"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
 list = "Leblanc , Lissandra , Viktor, Akali, Diana, Yasuo,Zed"
 link = "http://gamingonsteroids.com/topic/10502-beta-stage-krystra-mid-series-leblanc-viktor-lissandra-diana-akali-multi-prediction-orbwalk-support-expert-drawings-and-much-more/"
 date = "20.02.2016"
 
-AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.16)
+AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.17)
 
 ---//==================================================\\---
 --|| > English Translation details               ||--
@@ -5506,22 +5506,22 @@ self.Config:Info("infoK","Leauge Of Legends Version: "..LVersion.. "" )
 
 end
 function Yasuo:UpdateBuff(unit,buff)
-if unit and unit.isMe and buff and buff.Name == "yasuodashscalar" then
+if unit and unit.isMe and buff and buff.Name == "YasuoDashScalar" then
   estack[GetNetworkID(unit)] = buff.Count
 end
 if unit and unit.team == myHero.team and unit.type == myHero.type then
-  if buff.Name == "yasuoq3w" then
+  if buff.Name == "YasuoQ3W" then
     rangeQ = true
     startTime = os.clock() + 10
   end
 end
 end
 function Yasuo:RemoveBuff(unit,buff)
-if unit and unit.isMe and buff and buff.Name == "yasuodashscalar" then
+if unit and unit.isMe and buff and buff.Name == "YasuoDashScalar" then
   estack[GetNetworkID(unit)] = 0
 end
 if unit and unit.team == myHero.team and unit.type == myHero.type then
-  if buff.Name == "yasuoq3w" then
+  if buff.Name == "YasuoQ3W" then
     rangeQ = false
   end
 end
@@ -5645,7 +5645,7 @@ if self.Config.other.targetcal:Value() and not myHero.dead then
     end
   end
 end
-if  GetCastName(myHero,_Q)  == "yasuoq3w"  then
+if  GetCastName(myHero,_Q)  == "YasuoQ3W"  then
   if  self.Config.other.q3draw:Value() and not myHero.dead then
     local drawpos=WorldToScreen(1,myHero.x, myHero.y, myHero.z)
     DrawText("Storm Duration :"..math.round(startTime - os.clock(), 2).."s",15,drawpos.x,drawpos.y,GoS.White)
@@ -5689,7 +5689,7 @@ elseif  ValidTarget(Gtarget, 925) and not self.selectedTar then
 elseif (ValidTarget(Gtarget, 925) and self.selectedTar) then
   target = GetGameTarget()
 end
-q3ready = GetCastName(myHero,_Q)  == "yasuoq3w"
+q3ready = GetCastName(myHero,_Q)  == "YasuoQ3W"
 mousePos = GetMousePos()
 Tia = GetItemSlot(myHero,3077) > 0 and GetItemSlot(myHero,3077) or nil
 Rhyd = GetItemSlot(myHero,3074) > 0 and GetItemSlot(myHero,3074) or nil
@@ -5745,7 +5745,7 @@ if self.Config.misc.autoq.useQ:Value() then
 end
 end
 function Yasuo:autoQ()
-if  GetCastName(myHero,_Q)  == "yasuoq3w"  then return end
+if  GetCastName(myHero,_Q)  == "YasuoQ3W"  then return end
 for i, minion in pairs(minionManager.objects) do
   if  GetTeam(minion) == MINION_ENEMY then
     if ValidTarget(minion) and minion ~= nil then
@@ -5813,7 +5813,7 @@ if(GetDistance(target) <= self.Q3.range and self.Config.harass.useQ3:Value() and
 end
 end
 function Yasuo:harass()
-if  GetCastName(myHero,_Q)  == "yasuoq3w"  then
+if  GetCastName(myHero,_Q)  == "YasuoQ3W"  then
   if(GetDistance(target) <= self.Q3.range and self.Config.harass.useQ3:Value()  and IsReady(_Q))then
     self:CastQ3(target)
   end
@@ -5825,7 +5825,7 @@ end
 end
 
 function Yasuo:Combo()
-if  GetCastName(myHero,_Q)  == "yasuoq3w"  then
+if  GetCastName(myHero,_Q)  == "YasuoQ3W"  then
   if(GetDistance(target) <= self.Q3.range and self.Config.combo.useQ3:Value()  and  not egap  and IsReady(_Q))then
     self:CastQ3(target)
   end
@@ -5891,7 +5891,7 @@ for _, unit in pairs(GetEnemyHeroes()) do
     self:CastQ(unit)
   end
   local dmgQ3 =self:GetQDmg(unit)
-  if  GetCastName(myHero,_Q)  == "yasuoq3w"  then
+  if  GetCastName(myHero,_Q)  == "YasuoQ3W"  then
     if(GetDistance(target) <= self.Q3.range and  IsReady(_R) and health<dmgQ3 and self.Config.killsteal.useQ3:Value() and self.Config.killsteal.ks:Value())then
       self:CastQ3(unit)
     end
@@ -5954,7 +5954,7 @@ elseif self.Config.pred.selectpred:Value() == 3 then
 end
 end
 function Yasuo:CastQ3(unit)
-if GetCastName(myHero,_Q)  == "yasuoq3w"  then
+if GetCastName(myHero,_Q)  == "YasuoQ3W"  then
   if self.Config.pred.selectpred:Value() == 1 then
     local QPred = GetPrediction(unit, self.Q3)
     if IsReady(_Q) then
@@ -6033,7 +6033,7 @@ for i, minion in pairs(minionManager.objects) do
     end
   end
 end
-if GetCastName(myHero,_Q)  == "yasuoq3w"  then
+if GetCastName(myHero,_Q)  == "YasuoQ3W"  then
   local NumberOfHits = self.Config.farm.laneclear.q3count:Value()
   if IsReady(_Q) then
     if  self.Config.farm.laneclear.useQ3:Value()   then
@@ -6083,7 +6083,7 @@ for i, minion in pairs(minionManager.objects) do
     end
   end
 end
-if GetCastName(myHero,_Q)  == "yasuoq3w"  then
+if GetCastName(myHero,_Q)  == "YasuoQ3W"  then
   if IsReady(_Q) then
     if  self.Config.farm.jungleclear.useQ3:Value()   then
       local BestPos, BestHit =  GetLineFarmPosition(self.Q3.range, self.Q3.width, MINION_JUNGLE)
@@ -8727,7 +8727,7 @@ end
     }},
     ["Yasuo"] = {charName = "Yasuo", skillshots = {
       ["Steel Tempest"] = {spellKey = _Q, name = "Steel Tempest", isTrueRange = true, spellName = "SteelTempest", spellDelay = 250, projectileName = "Yasuo_Q_WindStrike.troy", range = 475, radius = 50, type = "LINE"},
-      ["yasuoq3w"] = {spellKey = _Q, name = "Steel Tempest3", checkName = true, spellName = "yasuoq3w", spellDelay = 250, projectileName = "Yasuo_Q_wind_mis.troy", projectileSpeed = 1500, range = 900, radius = 100, type = "LINE", fuckedUp = false, blockable = true, danger = 1},
+      ["YasuoQ3W"] = {spellKey = _Q, name = "Steel Tempest3", checkName = true, spellName = "yasuoq3w", spellDelay = 250, projectileName = "Yasuo_Q_wind_mis.troy", projectileSpeed = 1500, range = 900, radius = 100, type = "LINE", fuckedUp = false, blockable = true, danger = 1},
     }},
     ["Yorick"] = {charName = "Yorick", skillshots = {
       ["YorickDecayed"] = { spellKey = _W, spellName = "YorickDecayed", name = "YorickDecayed", range = 600, radius = 100, type = "CIRCULAR"},
