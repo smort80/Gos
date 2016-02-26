@@ -8,7 +8,7 @@ end
 local lastTimeTickCalled = 0
 local DAC = false
 local IOW = false
-Version = "1.16"
+Version = "1.18"
 LVersion = " 6.4"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
@@ -16,7 +16,7 @@ list = "Leblanc , Lissandra , Viktor, Akali, Diana, Yasuo,Zed"
 link = "http://gamingonsteroids.com/topic/10502-beta-stage-krystra-mid-series-leblanc-viktor-lissandra-diana-akali-multi-prediction-orbwalk-support-expert-drawings-and-much-more/"
 date = "20.02.2016"
 
-AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.17)
+AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.18)
 
 ---//==================================================\\---
 --|| > English Translation details               ||--
@@ -705,14 +705,14 @@ function Leblanc:combomode()
                     MoveToXYZ(mousePos)
                   end
                   function Leblanc:autowback()
-                    if GetCastName(myHero,_W) == "leblancslidereturn" then
+                    if GetCastName(myHero,_W) == "LeblancSlideReturn" then
                       if self.Config.combo.turnw.wbackhp:Value() == 1 and self.Config.Keys.combokey:Value() then
                         if myHero.health <= (myHero.maxHealth * self.Config.combo.turnw.hp:Value() / 100) then
                           CastSpell(_W)
                         end
                       end
                     end
-                    if GetCastName(myHero,_W) == "leblancslidereturn" then
+                    if GetCastName(myHero,_W) == "LeblancSlideReturn" then
                       if self.Config.combo.turnw.wbackcp:Value() == 1 and self.Config.Keys.combokey:Value() then
                         if self.Config.combo.turnw.enemy:Value() == 1 then
                           if EnemiesAround(myHeroPos() , 550) >= 2 then
@@ -1703,7 +1703,7 @@ function Leblanc:combomode()
             --|| > Leblanc Used Checks                          ||--
             ---\\==================================================//---
             function Leblanc:wUsed()
-              if GetCastName(myHero,_W) == "leblancslidereturn" then
+              if GetCastName(myHero,_W) == "LeblancSlideReturn" then
                 return true
               else
                 return false
@@ -2116,6 +2116,7 @@ function Leblanc:combomode()
                 function Diana:Tick()
                   self:Checks()
                   self:autoq()
+                  print (abuff)
                   self:Antiafk()
                   self:autolevel()
                   self:skinhack()
@@ -2243,7 +2244,7 @@ function Leblanc:combomode()
                   if unit and unit.team ~= myHero.team and unit.type == myHero.type then
                     if buff.Name == "dianamoonlight" then
 
-                      abuff = true
+                      abuff = false
                     end
                   end
                 end
@@ -3679,6 +3680,7 @@ function Leblanc:combomode()
       end
       function Akali:Tick()
         self:Checks()
+        print (Qbuff)
         self:autopot()
         self:autoq()
         self:Autostealth()
@@ -4465,6 +4467,7 @@ function Leblanc:combomode()
     end
     function Viktor:Tick()
       self:Checks()
+      print (ebuff)
       self:Hasebuff()
       self:Antiafk()
       self:autolevel()
@@ -6886,7 +6889,7 @@ function Zed:JungleClear()
 
     if  Rpos~= nil and target~= nil then
       if  self.Config.combo.rlogic:Value() == 1 then
-        Wcastpos = (Vector(target)+ (Vector(target)  - Rpos):normalized() * 700)
+        Wcastpos = (Vector(target)+ (Vector(target)  - Rpos):normalized() * 600)
       elseif self.Config.combo.rlogic:Value() == 2 then
         Wcastpos = (Vector(target)+ (Vector(target)  - Rpos):normalized() * 350):perpendicular()
       elseif self.Config.combo.rlogic:Value() == 3 then
@@ -7222,7 +7225,7 @@ end
     end
   end
   function Zed:CastW( pos)
-    if  GetCastName(myHero,_W)  == "zedw2" then return end
+    if  GetCastName(myHero,_W)  == "ZedW2" then return end
     if IsReady(_W) then
       local Ticker = GetTickCount()
       if (global_ticks + 6000) < Ticker then
@@ -7233,7 +7236,7 @@ end
     end
   end
   function Zed:CastW2( pos)
-    if GetCastName(myHero,_W)  == "zedw2" then
+    if GetCastName(myHero,_W)  == "ZedW2" then
       if IsReady(_W) then
         CastSkillShot(_W, pos)
       end
@@ -7268,7 +7271,7 @@ end
     end
   end
   function Zed:CastR2(unit)
-    if GetCastName(myHero,_R)  == "zedr2" then
+    if GetCastName(myHero,_R)  == "ZedR2" then
       if IsReady(_R) then
         CastTargetSpell(unit, _R)
       end
