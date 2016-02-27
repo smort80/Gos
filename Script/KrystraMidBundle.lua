@@ -8,7 +8,7 @@ end
 local lastTimeTickCalled = 0
 local loaddac = false
 local loadiow = false
-Version = "1.22"
+Version = "1.23"
 LVersion = " 6.4"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
@@ -16,7 +16,7 @@ list = "Leblanc , Lissandra , Viktor, Akali, Diana, Yasuo,Zed, Orianna , Twisted
 link = "http://gamingonsteroids.com/topic/10502-beta-stage-krystra-mid-series-leblanc-viktor-lissandra-diana-akali-multi-prediction-orbwalk-support-expert-drawings-and-much-more/"
 date = "27.02.2016"
 
-AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.22)
+AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.23)
 
 ---//==================================================\\---
 --|| > English Translation details               ||--
@@ -6520,6 +6520,15 @@ function TwistedFate:Tick()
   self:autoq()
   self:items()
   self:escape()
+  if self.Config.Keys.bluecard:Value() then
+        self:CastW(self.blue)
+      end
+        if self.Config.Keys.redcard:Value() then
+        self:CastW(self.red)
+      end
+        if self.Config.Keys.yellowcard:Value() then
+        self:CastW(self.yellow)
+      end
   if( self.Config.Keys.lasthitkey:Value() or self.Config.farm.lasthit.autolasthit:Value() )then
     self:LastHit()
   end
