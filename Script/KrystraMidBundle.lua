@@ -6,17 +6,17 @@ if FileExist(COMMON_PATH .. "IPrediction.lua") then
   ipred = true
 end
 local lastTimeTickCalled = 0
-local DAC = false
-local IOW = false
-Version = "1.21"
+local loaddac = false
+local loadiow = false
+Version = "1.22"
 LVersion = " 6.4"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
-list = "Leblanc , Lissandra , Viktor, Akali, Diana, Yasuo,Zed"
+list = "Leblanc , Lissandra , Viktor, Akali, Diana, Yasuo,Zed, Orianna , Twisted Fate "
 link = "http://gamingonsteroids.com/topic/10502-beta-stage-krystra-mid-series-leblanc-viktor-lissandra-diana-akali-multi-prediction-orbwalk-support-expert-drawings-and-much-more/"
-date = "20.02.2016"
+date = "27.02.2016"
 
-AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.21)
+AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.22)
 
 ---//==================================================\\---
 --|| > English Translation details               ||--
@@ -4465,6 +4465,7 @@ function Leblanc:combomode()
     end
     function Viktor:Tick()
       self:Checks()
+      print (ebuff)
       self:Hasebuff()
       self:Antiafk()
       self:autolevel()
@@ -6465,6 +6466,1807 @@ if PopUp1 then
 end
 end
 end
+local ultused = false
+local eStacks = false
+local pickcard= false
+class "TwistedFate"
+function TwistedFate:__init()
+  self.Q = { delay = 0.25, speed = 1000 ,radius = 40, range = 1450  }
+    self.W = { delay = 0.25, speed = 1000 , range = 525  }
+self.R = { range = 5500  }
+Last_LevelSpell = 0
+ Ignite = (GetCastName(GetMyHero(),SUMMONER_1):lower():find("summonerdot") and SUMMONER_1 or (GetCastName(GetMyHero(),SUMMONER_2):lower():find("summonerdot") and SUMMONER_2 or nil))
+self.tsg = TargetSelector(1600,TARGET_LESS_CAST_PRIORITY,DAMAGE_MAGIC,true,false)
+self.ts1 = TargetSelector(525,TARGET_LESS_CAST_PRIORITY,DAMAGE_MAGIC,true,false)
+if ipred then
+qSpell = IPrediction.Prediction({range = 1450, speed = 1000, delay = 0.25, width = 40, type = "linear", name =myHero:GetSpellData(_Q).name, collision = false})
+end
+global_ticks = 0
+            self.blue ="BlueCardLock"
+            self.yellow = "GoldCardLock"
+          self.red = "RedCardLock"
+Callback.Add("Tick", function() self:Tick() end)
+Callback.Add("Load", function() self:onload() end)
+Callback.Add("WndMsg", function(Msg, Key) self:WndMsg(Msg, Key) end)
+Callback.Add("Draw", function() self:Draw() end)
+  Callback.Add("UpdateBuff", function(unit,buff) self:UpdateBuff(unit,buff) end)
+  Callback.Add("RemoveBuff", function(unit,buff) self:RemoveBuff(unit,buff) end)
+Callback.Add("ProcessSpell", function(unit, spell) self:ProcessSpell(unit, spell) end)
+Callback.Add("CreateObj", function(obj) self:CreateObj(obj) end)
+Callback.Add("DeleteObj", function(obj) self:DeleteObj(obj) end)
+self:LoadMenu()
+--AddGapcloseEvent(_Q, 900, false, self.Config.misc.gapClose1.gapClose1w)
+end
+ function TwistedFate:Checks()
+                  Gtarget = self.tsg:GetTarget()
+                      Etarget = self.ts1:GetTarget()
+  if not ValidTarget(Gtarget, 925) or not self.Config.targetsel.ts:Value()  then
+    target = GetCurrentTarget()
+  elseif  ValidTarget(Gtarget, 925) and not self.selectedTar then
+    target = GetCurrentTarget()
+  elseif (ValidTarget(Gtarget, 925) and self.selectedTar) then
+    target = GetGameTarget()
+  end
+                  mousePos = GetMousePos()
+                end
+                      
+function TwistedFate:Tick()
+  self:Checks()
+  self:Antiafk()
+  self:autolevel()
+   self:ulti()
+  self:skinhack()
+  self:autopot()
+  self:autoq()
+  self:items()
+  self:escape()
+  if( self.Config.Keys.lasthitkey:Value() or self.Config.farm.lasthit.autolasthit:Value() )then
+    self:LastHit()
+  end
+  if(self.Config.Keys.combokey:Value() )then
+    self:Combo()
+  end
+  if(self.Config.Keys.harasskey:Value()   ) then
+    self:harass()
+  end
+    if(self.Config.killsteal.ks:Value() ) then
+    self:killsteal()
+  end
+    if(self.Config.Keys.laneclearkey:Value() )then
+    self:LaneClear()
+  end
+  if(self.Config.Keys.jungleclearkey:Value() )then
+    self:JungleClear()
+  end
+ if self.Config.instruct:Value() then
+          self.Config.instruct:Value(false)
+          PopUp1 = true
+        end
+          self:checkothers()
+          self:blockaa()
+  end
+  function TwistedFate:CardUsed(spell)
+ if myHero:GetSpellData(_W).name == spell then 
+  return true 
+else 
+  return false
+end
+  end
+  function TwistedFate:Combo()
+    if not  (myHero.mana / myHero.maxMana >=  self.Config.combo.Mana:Value() /100 ) then return end
+
+if self.Config.combo.card:Value() == 1 then
+  combocard= "BlueCardLock"
+  elseif self.Config.combo.card:Value() == 2 then
+  combocard= "RedCardLock"
+     elseif self.Config.combo.card:Value() == 3 then
+  combocard= "GoldCardLock"
+     end
+
+   if( IsReady(_W) and  GetDistance(target) <= 850 and self.Config.combo.useW:Value()  )then
+      if  self.Config.combo.useblue:Value() and (myHero.mana / myHero.maxMana <=  self.Config.combo.bluemana:Value() /100 )  then
+                self:CastW(self.blue)
+                 AttackUnit(Gtarget)  
+            elseif not  self.Config.combo.useblue:Value() or (myHero.mana / myHero.maxMana  >=   self.Config.combo.bluemana:Value() /100 )  then
+               self:CastW(combocard)
+                 AttackUnit(Gtarget) 
+             end
+              end
+if self.Config.combo.qmode:Value() == 1  then
+  if ValidTarget(Gtarget,1600) and IsReady(_Q) and self.Config.combo.useQ:Value() then
+    if IsImmobile(target) or (  CanUseSpell(myHero, _W) == ONCOOLDOWN and GetCastLevel(myHero, _W) >= 1) then
+      self:CastQ(target)
+    end
+  end
+  elseif self.Config.combo.qmode:Value() == 2 then
+      if ValidTarget(Gtarget,1600) and IsReady(_Q) and self.Config.combo.useQ:Value() then
+         if IsImmobile(target) then
+             self:CastQ(target)
+    end
+  end
+  elseif self.Config.combo.qmode:Value() == 3 then
+    if IsReady(_Q) and self.Config.combo.useQ:Value() then
+         self:CastQ(target)
+       end
+     end
+
+  end
+     function TwistedFate:ProcessSpell(unit, spell)
+                 if unit.isMe and spell.name == "Gate" then 
+                  ultused = true
+                       DelayAction(function()   ultused = false end, 2)
+                end
+
+                 if GetCastLevel(myHero, _W) >= 1 then
+                if Interrupt[unit.charName] ~= nil then
+                  spell = Interrupt[unit.charName].stop[spell.name]
+                  if spell ~= nil then
+                    if self.Config.misc.interrupt[spell.name]:Value() then
+                      if ValidTarget(unit) and GetDistance(unit, myHero) < 525  and IsReady(_W)  and self.Config.misc.interrupt.r:Value() then
+                        self:CastW(self.yellow)
+                              AttackUnit(unit) 
+                      end
+                    end
+                  end
+                end
+              end
+               if unit.type == myHero.type and unit.team ~= myHero.team and isAGapcloserUnit[unit.charName] and GetDistance(unit) < 1000 and spell ~= nil then     
+    if spell.name == (type(isAGapcloserUnit[unit.charName].spell) == 'number' and unit:GetSpellData(isAGapcloserUnit[unit.charName].spell).name or isAGapcloserUnit[unit.charName].spell) and self.Config.misc.gapClose1.gapClose1w[unit.charName] then
+      if spell.target ~= nil and spell.target.name == myHero.name or isAGapcloserUnit[unit.charName].spell == 'blindmonkqtwo' then
+           if self:CardUsed(self.yellow) == true then
+                              AttackUnit(unit) 
+      end
+    end
+  end
+  end
+                end
+   function TwistedFate:LaneClear()
+    if self.Config.farm.laneclear.card:Value() == 1 then
+  lanecard= "BlueCardLock"
+  elseif self.Config.farm.laneclear.card:Value() == 2 then
+  lanecard= "RedCardLock"
+     elseif self.Config.farm.laneclear.card:Value() == 3 then
+  lanecard= "GoldCardLock"
+     end
+    if not ValidTarget(ClosestMinion(GetOrigin(myHero), MINION_ENEMY),  1000) then return end
+ for i, minion in pairs(minionManager.objects) do
+                      if ValidTarget(minion, 1000)  and GetTeam(minion) == MINION_ENEMY then
+                         if IsReady(_W) then
+if self.Config.farm.laneclear.useW:Value() and (myHero.mana / myHero.maxMana >= self.Config.farm.laneclear.WMana:Value() /100 ) then
+          local Wpred = GetPrediction(minion, self.W)
+  if MinionsAround(Wpred.castPos, 100, MINION_ENEMY) >=self.Config.farm.laneclear.reddis:Value() and self.Config.farm.laneclear.usered:Value() then
+    if Wpred then
+     self:CastW(self.red)
+   end
+else
+   self:CastW(lanecard)
+ end
+end
+end
+end
+end
+                  if IsReady(_Q) then
+                    if (myHero.mana / myHero.maxMana >= self.Config.farm.laneclear.QMana:Value() /100 ) then
+                      local NumberOfHits = self.Config.farm.laneclear.qcount:Value()
+                        if self.Config.Keys.laneclearkey:Value()  and self.Config.farm.laneclear.useQ:Value()  then
+                          local BestPos, BestHit = GetLineFarmPosition(self.Q.range, 40, MINION_ENEMY)
+                          if BestPos  and BestHit >= NumberOfHits then
+                            CastSkillShot(_Q, BestPos)
+                          end
+                        end
+                      end
+                    end
+                  end
+function TwistedFate:LastHit()
+        if not ValidTarget(ClosestMinion(GetOrigin(myHero), MINION_ENEMY),  1000) then return end
+      if self.Config.farm.lasthit.card:Value() == 1 then
+  lasthitcard= "BlueCardLock"
+  elseif self.Config.farm.lasthit.card:Value() == 2 then
+  lasthitcard= "RedCardLock"
+     elseif self.Config.farm.lasthit.card:Value() == 3 then
+  lasthitcard= "GoldCardLock"
+     end
+for _, target in pairs(minionManager.objects) do
+  if GetTeam(target) == MINION_ENEMY then
+    if IsObjectAlive(target) then
+      if self.Config.farm.lasthit.lasthitlogic:Value() == 1 then
+            local Qdamage = self:GetQDmg(target)
+        if(IsReady(_Q) and self.Config.farm.lasthit.useQ:Value() and ValidTarget(target,self.Q.range)   and Qdamage >= GetCurrentHP(target)) then
+          self:CastQ(target)
+        end
+        local Wdamage = self:GetWDmg(target)
+        if(IsReady(_W) and self.Config.farm.lasthit.useW:Value() and  ValidTarget(target,525) and (target.health / target.maxHealth < 40 /100 )) then
+                    self:CastW(lasthitcard)
+         if Wdamage >= GetCurrentHP(target) then
+             AttackUnit(target)  
+           end
+        end
+      end
+    end
+  end
+end
+end
+function TwistedFate:JungleClear()
+      if not ValidTarget(ClosestMinion(GetOrigin(myHero), MINION_JUNGLE),  1000) then return end
+      if self.Config.farm.jungleclear.card:Value() == 1 then
+  jlanecard= "BlueCardLock"
+  elseif self.Config.farm.jungleclear.card:Value() == 2 then
+  jlanecard= "RedCardLock"
+     elseif self.Config.farm.jungleclear.card:Value() == 3 then
+  jlanecard= "GoldCardLock"
+     end
+for i, minion in pairs(minionManager.objects) do
+                      if ValidTarget(minion, 1000)  and GetTeam(minion) ==  MINION_JUNGLE then
+                         if IsReady(_W) then
+if self.Config.farm.jungleclear.useW:Value() and (myHero.mana / myHero.maxMana >= self.Config.farm.jungleclear.WMana:Value() /100 ) then
+          local Wpred = GetPrediction(minion, self.W)
+  if MinionsAround(Wpred.castPos, 100, MINION_JUNGLE) >=self.Config.farm.jungleclear.reddis:Value() and self.Config.farm.jungleclear.usered:Value() then
+    if Wpred then
+     self:CastW(self.red)
+   end
+else
+   self:CastW(lanecard)
+ end
+end
+end
+end
+end
+                  if IsReady(_Q) then
+                    if (myHero.mana / myHero.maxMana >= self.Config.farm.jungleclear.QMana:Value() /100 ) then
+                      local NumberOfHits = 1
+                        if self.Config.Keys.jungleclearkey:Value()  and self.Config.farm.jungleclear.useQ:Value()  then
+                          local BestPos, BestHit = GetLineFarmPosition(self.Q.range, 40,MINION_JUNGLE)
+                          if BestPos  and BestHit >= NumberOfHits then
+                            CastSkillShot(_Q, BestPos)
+                          end
+                        end
+                      end
+                    end
+                  end
+                          function TwistedFate:UpdateBuff(unit,buff)
+                   if unit.isMe and buff.Name == "pickacard_tracker" then
+                    pickcard= true
+                  end
+                  end
+                  function TwistedFate:RemoveBuff(unit, buff)
+                      if unit.isMe and buff.Name == "pickacard_tracker" then
+                    pickcard= false
+                  end
+                  end
+  function TwistedFate:CreateObj(obj)
+if not obj then return end
+  if obj and obj.name == "Cardmaster_stackready.troy" then
+  eStacks = "Stacked"
+  end
+end
+
+function TwistedFate:DeleteObj(obj)
+if not obj then return end
+  if obj and obj.name == "Cardmaster_stackready.troy" then
+  eStacks = false
+  end
+end
+
+    function TwistedFate:autoq()
+      if not  self.Config.harass.useautoq:Value() then return end
+               if ValidTarget(target,1450) and IsReady(_Q) and self.Config.harass.useQ:Value() and  (myHero.mana / myHero.maxMana >=  self.Config.harass.WMana:Value() /100 )  then
+                      self:CastQ(target)
+    end
+    end
+  function TwistedFate:harass()
+    if self.Config.harass.card:Value() == 1 then
+  harasscard= "BlueCardLock"
+  elseif self.Config.harass.card:Value() == 2 then
+  harasscard= "RedCardLock"
+     elseif self.Config.harass.card:Value() == 3 then
+  harasscard= "GoldCardLock"
+     end
+ if(IsReady(_W) and  GetDistance(target) <= 650 and self.Config.harass.useW:Value() and  (myHero.mana / myHero.maxMana >=  self.Config.harass.WMana:Value() /100 )  )then
+                self:CastW(harasscard)
+                  AttackUnit(Gtarget)  
+              end
+
+               if ValidTarget(target,1600) and IsReady(_Q) and self.Config.harass.useQ:Value() and  (myHero.mana / myHero.maxMana >=  self.Config.harass.QMana:Value() /100 )  then
+                      self:CastQ(target)
+    end
+  end
+    function TwistedFate:CastQ(unit)
+              if self.Config.pred.selectpred:Value() == 1 then
+                local QPred = GetLinearAOEPrediction(unit, self.Q)
+                if IsReady(_Q) then
+                  if QPred  and QPred.hitChance >= (self.Config.pred.hcgeneral.hcop.hcopq:Value()/100) then
+                    CastSkillShot(_Q, QPred.castPos)
+                  end
+                end
+              elseif self.Config.pred.selectpred:Value() == 2 then
+                if ipred then
+                  local HitChance, y = qSpell:Predict(unit)
+                  if IsReady(_Q) and HitChance >= 3 then
+                    CastSkillShot(_Q, y.x, y.y, y.z)
+                  end
+                end
+              elseif self.Config.pred.selectpred:Value() == 3 then
+                local qPred = GetPredictionForPlayer(myHeroPos(), unit, GetMoveSpeed(unit), 1000, 250, 1450, 40, false, true)
+                if IsReady(_Q) and qPred.HitChance == 1 then
+                  CastSkillShot(_Q, qPred.PredPos.x, qPred.PredPos.y, qPred.PredPos.z)
+                end
+              end
+            end
+              function TwistedFate:CastI(unit)
+    if Ignite then
+      if IsReady(Ignite) then
+        CastTargetSpell(unit, Ignite)
+      end
+    end
+  end
+            function TwistedFate:CastW(spell)
+               if IsReady(_W) then
+                 if myHero:GetSpellData(_W).name == spell then
+                CastSpell(_W)
+              end
+             if myHero:GetSpellData(_W).name == "PickACard"  then
+                local Ticker = GetTickCount()
+      if (global_ticks + 6000) < Ticker then
+                   CastSpell(_W)
+        global_ticks = Ticker
+        DelayAction(function()   CastSpell(_W) end, 6)
+      end
+             end
+            end
+          end
+           function TwistedFate:ulti()
+            if self.Config.combo.UseR:Value() then
+             if ultused then
+     self:CastW(self.yellow)
+    end
+    if self.Config.combo.instaaa:Value() then
+    if ultused and ValidTarget(Gtarget, 525) then
+        AttackUnit(Gtarget)
+      end
+    end
+           end
+         end
+          function TwistedFate:blockaa()
+          if  self.Config.combo.blockaa:Value() then
+            if pickcard then
+              if DAC then
+                DAC:AttacksEnabled(false)
+                elseif IOW then
+                  IOW.attacksEnabled= false
+                end
+              else
+                   if DAC then
+                DAC:AttacksEnabled(true)
+                elseif IOW then
+                  IOW.attacksEnabled = true
+                end
+end
+end
+end
+                function TwistedFate:onload()
+  self:findorb()
+end
+  function TwistedFate:Draw()
+        if self.Config.other.draw.qdraw:Value() and IsReady(_Q) then
+          DrawCircle(myHero.x, myHero.y, myHero.z, 1450,  self.Config.other.width.Qwidth:Value(),0,self.Config.other.color.Qcolor:Value())
+        end
+        if self.Config.other.draw.rdraw:Value() and IsReady(_R) then
+          DrawCircle(myHero.x, myHero.y, myHero.z, 5500, self.Config.other.width.Rwidth:Value(),0, self.Config.other.color.Rcolor:Value())
+        end
+        if self.Config.other.draw.aadraw:Value() then
+          DrawCircle(myHero.x, myHero.y, myHero.z, 525, self.Config.other.width.AAwidth:Value(),0, self.Config.other.color.AAcolor:Value())
+        end
+
+        --[[if self.Config.other.minimap:Value() then
+          if IsReady(_R) then
+            DrawCircleMinimap(myHero.x, myHero.y, myHero.z, 5500, 1, 0, GoS.White)
+          end
+        end]]
+      
+          local rs = GetResolution()
+          if PopUp1 then
+            local w, h1, h2,size  = (rs.x*0.70), (rs.y*.15), (rs.y*.9), rs.y*.02
+            DrawLine(w, h1/1.05, w, h2/1.97, w/1.75, ARGB(255, 0, 0, 0))
+            DrawLine(w, h1, w, h2/1.97, w/1.75, ARGB(150, 235, 183, 63))
+            DrawText(tostring("Welcome to Krystra Mid Series Beta"), rs.y*.028, (rs.x/2.65), (rs.y*.155), ARGB(255, 96, 48, 0))
+            DrawText(tostring("Little informatation about Krystra Mid Series"), rs.y*.015, (rs.x/2.65), (rs.y*.194), ARGB(255, 96, 48, 0))
+            DrawText(tostring("Its a bundle that produced by Krystra"), rs.y*.015, (rs.x/2.65), (rs.y*.210), ARGB(255, 255, 255, 255))
+            DrawText(tostring("Currently it supported only mid champs "), rs.y*.015, (rs.x/2.65), (rs.y*.225), ARGB(255, 255, 255, 255))
+            DrawText(tostring("I focus Quality rather than Quantity"), rs.y*.015, (rs.x/2.65), (rs.y*.240), ARGB(255, 255, 255, 255))
+            DrawText(tostring("I need your feedbacks to improve it"), rs.y*.015, (rs.x/2.65), (rs.y*.255), ARGB(255, 255, 255, 255))
+            DrawText(tostring("I care every single feedback and try to add everything"), rs.y*.015, (rs.x/2.65), (rs.y*.270), ARGB(255, 255, 255, 255))
+            DrawText(tostring("Hope you are enjoy my script.."), rs.y*.015, (rs.x/2.65), (rs.y*.285), ARGB(255, 255, 255, 255))
+            DrawText(tostring("You can change every settings to your like :)"), rs.y*.015, (rs.x/2.65), (rs.y*.300), ARGB(255, 255, 255, 255))
+            DrawText(tostring("Did you like my script > Upvote me on script database and on forum"), rs.y*.015, (rs.x/2.65), (rs.y*.315), ARGB(255, 255, 255, 255))
+            -- DrawText(tostring("Don't forget these are VIP;"), rs.y*.015, (rs.x/2.65), (rs.y*.330), ARGB(255, 96, 48, 0))
+            -- DrawText(tostring("  Anti-Afk"), rs.y*.015, (rs.x/2.65), (rs.y*.345), ARGB(255, 255, 255, 255))
+            -- DrawText(tostring("  Auto Leveler "), rs.y*.015, (rs.x/2.65), (rs.y*.360), ARGB(255, 255, 255, 255))
+            -- DrawText(tostring("  Skin Changer "), rs.y*.015, (rs.x/2.65), (rs.y*.375), ARGB(255, 255, 255, 255))
+            local w1, w2, h1, h2 = (rs.x/2)-50, (rs.x/2)+50, (rs.y*.70), (rs.y*.75)
+            --DrawLine(w1, h1/1.775, w2, h1/1.775, 50, ARGB(255, 0, 0, 0))
+            --DrawRectangleButton(rs.x*0.467, rs.y/2.375, rs.x*.047, rs.y*.041, ARGB(255, 255, 255, 255))
+            FillRect((rs.x/2)-size+10, (rs.y/2)-150, 80, 30, ARGB(150, 235, 183, 63))
+            DrawText(tostring("OK"),size, (rs.x/2)-size+10, (rs.y/2)-150, ARGB(255,0, 0, 0))
+          end
+            for _, target in pairs(GetEnemyHeroes()) do
+              if ValidTarget(target, 15000) then
+                if target.visible and not target.dead and self.Config.other.damage:Value() then
+                  currLine = 1
+                  -- DrawLineHPBar2(self:GetMyDmg(target),"",  target, currLine)
+                  DrawLineHPBar(self:GetMyDmg(target), "Damage " .. math.round(self:GetMyDmg(target)),target,currLine)
+                  currLine = currLine + 1
+                  DrawDmgOverHpBar(target,GetCurrentHP(target),0,self:GetMyDmg(target),0xff00ff00)
+                end
+              end
+            end
+
+            if self.Config.other.targetcal:Value() and not myHero.dead then
+              if target and target ~= nil then
+                --  local target= GetOrigin(target)
+                local drawpos=WorldToScreen(1,target.x, target.y, target.z)
+                local comboText,color = self:GetDraws(target)
+                if comboText then
+                  DrawText(comboText,15,drawpos.x-20,drawpos.y-20,color)
+                end
+              end
+            end
+          end
+           function TwistedFate:GetQDmg(target)
+              if GetCastLevel(myHero, _Q) < 1 then
+                return 0
+              end
+              if IsReady(_Q) then
+                local FinalDamage = (15 + (GetCastLevel(myHero, _Q) * 45) + (GetBonusAP(myHero))*.65)
+                return CalcDamage(myHero,target,0, FinalDamage)
+              else
+                return 0
+              end
+            end
+            function TwistedFate:GetWDmg(target)
+              if GetCastLevel(myHero, _W) < 1 then
+                return 0
+              end
+                if self:CardUsed(self.blue) and IsReady(_W)  then
+                local FinalDamage = (20 + (GetCastLevel(myHero, _W) * 20) + (GetBonusAP(myHero))* .5)+ (myHero.totalDamage) 
+                return CalcDamage(myHero,target,0, FinalDamage)
+              elseif self:CardUsed(self.red)and IsReady(_W)  then
+                local FinalDamage = (15 + (GetCastLevel(myHero, _W) * 15) + (GetBonusAP(myHero))* .5)+ (myHero.totalDamage) 
+                return CalcDamage(myHero,target,0, FinalDamage)
+                   elseif self:CardUsed(self.red)and IsReady(_W)  then
+                local FinalDamage = (7.5 + (GetCastLevel(myHero, _W) * 7.5) + (GetBonusAP(myHero))* .5)+ (myHero.totalDamage) 
+                return CalcDamage(myHero,target,0, FinalDamage)
+              else
+                return 0
+              end
+            end
+                  function TwistedFate:GetW2Dmg(target)
+              if GetCastLevel(myHero, _W) < 1 then
+                return 0
+              end
+                if  IsReady(_W)  then
+       local FinalDamage = (15 + (GetCastLevel(myHero, _W) * 15) + (GetBonusAP(myHero))* .5)+ (myHero.totalDamage) 
+                return CalcDamage(myHero,target,0, FinalDamage)
+              else
+                return 0
+              end
+            end
+            function TwistedFate:GetEDmg(target)
+              if GetCastLevel(myHero, _E) < 1 or not eStacks then
+                return 0
+              end
+              if IsReady(_E) then
+                local FinalDamage = (25 + (GetCastLevel(myHero, _E) * 45) + (GetBonusAP(myHero))* .6)
+                return CalcDamage(myHero,target,0, FinalDamage)
+              else
+                return 0
+              end
+            end
+            function TwistedFate:GetMyDmg(target)
+            if IsReady(_Q) and IsReady(_W) and IsReady(_E) then
+        return self:GetQDmg(target) + self:GetWDmg(target) + self:GetEDmg(target)
+      elseif IsReady(_Q)  and IsReady(_W) then
+        return self:GetQDmg(target) + self:GetWDmg(target) 
+      elseif IsReady(_Q)  and IsReady(_E) then
+        return self:GetQDmg(target) + self:GetEDmg(target) 
+      elseif IsReady(_W) and IsReady(_E) then
+        return self:GetWDmg(target) +self:GetEDmg(target)
+      elseif IsReady(_Q) then
+        return self:GetQDmg(target)
+      elseif IsReady(_E) then
+        return self:GetEDmg(target)
+      elseif IsReady(_W) then
+        return self:GetWDmg(target)
+      elseif IsReady(_Q) and IsReady(_W) then
+        return self:GetQDmg(target) + self:GetWDmg(target)
+      else
+        return 0
+      end
+    end
+            function TwistedFate:GetDraws(target)
+          local qdamage = self:GetQDmg(target)
+      local edamage = self:GetEDmg(target)
+      local rdamage = self:GetWDmg(target)
+      local Idmg=(50+ ((myHero.level)*20))
+
+      if qdamage >target.health then
+        return 'Q', GoS.White
+      elseif qdamage+ Idmg>target.health then
+        return 'Q + Ignite', GoS.White
+      elseif edamage >target.health then
+        return 'E', GoS.White
+      elseif edamage + Idmg>target.health then
+        return 'E + Ignite', GoS.White
+      elseif rdamage  >target.health then
+        return 'W', GoS.White
+      elseif rdamage + Idmg>target.health then
+        return 'W + Ignite', GoS.White
+      elseif rdamage +edamage  >target.health then
+        return 'W + E',GoS.White
+      elseif rdamage +edamage+ Idmg>target.health then
+        return 'W + E + Ignite',GoS.White
+      elseif qdamage+edamage>target.health then
+        return 'Q + E',GoS.White
+      elseif qdamage+rdamage >target.health then
+        return 'Q + W',GoS.White
+      elseif qdamage+edamage+ Idmg>target.health then
+        return 'Q + E + Ignite',GoS.White
+      elseif qdamage+rdamage+ Idmg>target.health then
+        return 'Q + W + Ignite',GoS.White
+      elseif qdamage+edamage+rdamage >target.health then
+        return 'Kill with full combo',GoS.White
+      elseif qdamage+edamage+rdamage+ Idmg>target.health then
+        return 'Full Combo + Ignite',GoS.White
+      else
+        return "Cant Kill yet", GoS.White
+      end
+    end
+    function TwistedFate:escape()
+  if self.Config.Keys.escapekey:Value()  then
+  if self.Config.escape.useW:Value()  then
+    if  IsReady(_W) and ValidTarget(Gtarget,525) then
+      self:CastW(self.yellow)
+      AttackUnit(Etarget)
+end
+end
+      MoveToXYZ(mousePos)
+end
+end
+     function TwistedFate:killsteal()
+      for _, unit in pairs(GetEnemyHeroes()) do
+        local health = unit.health
+        local dmgW = self:GetWDmg(unit)
+        if(GetDistance(unit)<525 and  IsReady(_W) and health<dmgW and self.Config.killsteal.useW:Value()  and self.Config.killsteal.ks:Value())then
+          self:CastW(self.yellow)
+        end
+        local dmgQ = self:GetQDmg(unit)
+        if(GetDistance(unit)<1450 and  IsReady(_Q) and health<dmgQ and self.Config.killsteal.useQ:Value() and self.Config.killsteal.ks:Value() )then
+          self:CastQ(unit)
+        end
+        local dmgI =(50+ ((myHero.level)*20))
+        if(health<dmgI and self.Config.killsteal.useI:Value() and self.Config.killsteal.ks:Value() and GetDistance(unit)<600)then
+          self:CastI(unit)
+        end
+      end
+    end
+      function TwistedFate:Antiafk()
+              if os.clock() < Clock or not self.Config.misc.antiafk.useafk:Value()  then return end
+              Clock = os.clock() + math.random(60,120)
+              MoveToXYZ(myHeroPos())
+            end
+            function TwistedFate:skinhack()
+              if ((CurrentTimeInMillis() - lastTimeTickCalled) > 200) then
+                lastTimeTickCalled = CurrentTimeInMillis()
+                if  self.Config.misc.skinhack.useskin:Value() then
+                  if self.Config.misc.skinhack['selected' .. myHero.charName .. 'Skin'] ~= lastSkin then
+                    lastSkin = self.Config.misc.skinhack['selected' .. myHero.charName .. 'Skin']:Value()
+                    HeroSkinChanger(GetMyHero(),self.Config.misc.skinhack['selected' .. myHero.charName .. 'Skin']:Value()-1)
+                  end
+                end
+              end
+            end
+            local spellLevel = 0
+            function TwistedFate:autolevel()
+              if GetLevelPoints(myHero) >= 1 then
+                if(  self.Config.misc.autolevel.uselevel:Value() and self.Config.misc.autolevel.logic:Value() == 1 and os.clock()-Last_LevelSpell > 0.5 ) then
+                  local levelSequence =    { _Q,_W,_E,_Q,_Q,_R,_Q,_W,_Q,_W,_R,_W,_W,_E,_E,_R,_E,_E}
+                  LevelSpell(levelSequence[GetLevel(myHero)-GetLevelPoints(myHero)+1])
+                  Last_LevelSpell = os.clock()
+                end
+                if(  self.Config.misc.autolevel.uselevel:Value() and self.Config.misc.autolevel.logic:Value() == 2 and os.clock()-Last_LevelSpell > 0.5 ) then
+                  local levelSequence =  { _Q,_W,_E,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
+                  LevelSpell(levelSequence[GetLevel(myHero)-GetLevelPoints(myHero)+1])
+                  Last_LevelSpell = os.clock()
+                end
+                if(   self.Config.misc.autolevel.uselevel:Value() and self.Config.misc.autolevel.logic:Value() == 3 and os.clock()-Last_LevelSpell > 0.5 ) then
+                  local levelSequence =  { _W,_E,_Q,_W,_W,_R,_W,_Q,_W,_Q,_R,_Q,_Q,_E,_E,_R,_E,_E}
+                  LevelSpell(levelSequence[GetLevel(myHero)-GetLevelPoints(myHero)+1])
+                  Last_LevelSpell = os.clock()
+                end
+                if( self.Config.misc.autolevel.uselevel:Value()and self.Config.misc.autolevel.logic:Value() == 4 and os.clock()-Last_LevelSpell > 0.5 ) then
+                  local levelSequence =  { _W,_E,_Q,_W,_W,_R,_W,_E,_W,_E,_R,_E,_E,_Q,_Q,_R,_Q,_Q}
+                  LevelSpell(levelSequence[GetLevel(myHero)-GetLevelPoints(myHero)+1])
+                  Last_LevelSpell = os.clock()
+                end
+                if( self.Config.misc.autolevel.uselevel:Value() and self.Config.misc.autolevel.logic:Value() == 5 and os.clock()-Last_LevelSpell > 0.5 ) then
+                  local levelSequence =  { _E,_Q,_W,_E,_E,_R,_E,_W,_E,_W,_R,_W,_W,_Q,_Q,_R,_Q,_Q}
+                  LevelSpell(levelSequence[GetLevel(myHero)-GetLevelPoints(myHero)+1])
+                  Last_LevelSpell = os.clock()
+                end
+                if(  self.Config.misc.autolevel.uselevel:Value() and self.Config.misc.autolevel.logic:Value() == 6 and os.clock()-Last_LevelSpell > 0.5 ) then
+                  local levelSequence =   { _E,_Q,_W,_E,_E,_R,_E,_Q,_E,_Q,_R,_Q,_Q,_W,_W,_R,_W,_W}
+                  LevelSpell(levelSequence[GetLevel(myHero)-GetLevelPoints(myHero)+1])
+                  Last_LevelSpell = os.clock()
+                end
+                if( self.Config.misc.autolevel.uselevel:Value() and self.Config.misc.autolevel.logic:Value() == 7 and os.clock()-Last_LevelSpell > 0.5 ) then
+                  local levelSequence =   {_W, _Q, _Q, _E, _Q, _R, _Q, _W, _Q, _W, _R, _W, _W, _E, _E, _R, _E, _E}
+                  LevelSpell(levelSequence[GetLevel(myHero)-GetLevelPoints(myHero)+1])
+                  Last_LevelSpell = os.clock()
+                end
+              end
+            end
+            lastPotion = 0
+            function TwistedFate:autopot()
+              if os.clock() - lastPotion < 15 then return end
+              for SLOT = ITEM_1, ITEM_6 do
+                if myHero:GetSpellData(SLOT).name == "RegenerationPotion" and self.Config.item.autopot.enableautopothp:Value() then
+                  if myHero:CanUseSpell(SLOT) == READY and (myHero.health / myHero.maxHealth < self.Config.item.autopot.autopothp:Value() /100 )  then
+                    CastSpell(SLOT)
+                    lastPotion = os.clock()
+                  end
+                end
+              end
+            end
+            function TwistedFate:items()
+              if self.Config.item.usebg:Value() and self.Config.Keys.combokey:Value() then
+                for _ = ITEM_1, ITEM_7 do
+                  if ( myHero:CanUseSpell(_) == 0 and myHero:GetSpellData(_).name == "BilgewaterCutlass" )then CastTargetSpell(target, _)
+                end
+              end
+            end
+            if self.Config.item.usehg:Value() and self.Config.Keys.combokey:Value() then
+              for _ = ITEM_1, ITEM_7 do
+                if ( myHero:CanUseSpell(_) == 0 and myHero:GetSpellData(_).name == "HextechGunblade" )then CastTargetSpell(target, _)
+              end
+            end
+          end
+          if self.Config.item.enableautozhonya:Value() then
+            for _ = ITEM_1, ITEM_7 do
+              if myHero.health <= (myHero.maxHealth * self.Config.item.autozhonya:Value() / 100) and ( myHero:CanUseSpell(_) == 0 and myHero:GetSpellData(_).name == "ZhonyasHourglass" )then CastSpell(_)
+            end
+          end
+        end
+      end
+function TwistedFate:LoadMenu()
+     self.Config=MenuConfig("menu",""..Scriptname.." [" .. myHero.charName.."]" )
+
+              self.Config:Menu( "combo",loc_eng[1])
+              self.Config.combo:Boolean("useQ", loc_eng[2], true)
+              self.Config.combo:DropDown("qmode","Q logic for combo ;",1, {"Smart","Stunned"," Always"})
+              self.Config.combo:Boolean("useW", loc_eng[3], true)
+             self.Config.combo:DropDown("card","Select Card Type ;",3, {"Blue Card","Red Card","Yellow Card"})
+              self.Config.combo:Info("blank", " Extra Settings")
+             -- self.Config.combo:Boolean("usered", "Red Card if hit x enemies", true)
+              --self.Config.combo:Slider("reddis","Red Card x enemies", 3, 2, 5, 1)
+              self.Config.combo:Boolean("UseR", "Gold card while ultimate", true)
+              self.Config.combo:Boolean("instaaa", "Insta AA after ultimate", true)
+              self.Config.combo:Boolean("blockaa", "Block AA in card selection", true)
+              self.Config.combo:Boolean("useblue", "Use Blue Card if Mana <= % ", true)
+              self.Config.combo:Slider("bluemana","Use Blue Card if Mana <= % ", 20, 10, 100, 1)
+              self.Config.combo:Boolean("useI", loc_eng[6], true)
+              self.Config.combo:Slider("Mana",loc_eng[8], 10, 10, 100, 1)
+
+
+              self.Config:Menu( "harass",loc_eng[9])
+              self.Config.harass:Boolean("useautoq", "Use Auto Q Harass", false)
+              self.Config.harass:Boolean("useQ", loc_eng[10], true)
+              self.Config.harass:Slider("QMana","Use Q if Mana Percent => % ", 30, 10, 100, 1)
+              self.Config.harass:Boolean("useW", loc_eng[11], false)
+              self.Config.harass:DropDown("card","Select Card Type ;",1, {"Blue Card","Red Card","Yellow Card"})
+              self.Config.harass:Slider("WMana","Use W if Mana Percent => % ", 30, 10, 100, 1)
+        
+
+
+              self.Config:Menu( "farm",loc_eng[14])
+
+              self.Config.farm:Menu("laneclear",loc_eng[15])
+              self.Config.farm.laneclear:Boolean("useQ",loc_eng[16],true)
+              self.Config.farm.laneclear:Slider("qcount",loc_eng[180], 2, 1, 10, 1)
+              self.Config.farm.laneclear:Boolean("useW",loc_eng[17],true)
+              self.Config.farm.laneclear:DropDown("card","Select Card Type ;",1, {"Blue Card","Red Card","Yellow Card"})
+              self.Config.farm.laneclear:Info("blank","" )
+               self.Config.farm.laneclear:Boolean("usered", "Red Card if hit x minions", true)
+               self.Config.farm.laneclear:Slider("reddis","Red Card x minions", 3, 2, 5, 1)
+              self.Config.farm.laneclear:Info("info2", loc_eng[184])
+              self.Config.farm.laneclear:Slider("QMana",loc_eng[185], 30, 10, 100, 1)
+              self.Config.farm.laneclear:Slider("WMana",loc_eng[186], 30, 10, 100, 1)
+
+              self.Config.farm:Menu("jungleclear",loc_eng[20])
+              self.Config.farm.jungleclear:Boolean("useQ",loc_eng[21],true)
+              self.Config.farm.jungleclear:Boolean("useW",loc_eng[22],true)
+              self.Config.farm.jungleclear:DropDown("card","Select Card Type ;",1, {"Blue Card","Red Card","Yellow Card"})
+              self.Config.farm.jungleclear:Info("blank","" )
+                   self.Config.farm.jungleclear:Boolean("usered", "Red Card if hit x minions", true)
+               self.Config.farm.jungleclear:Slider("reddis","Red Card x minions", 3, 2, 5, 1)
+              self.Config.farm.jungleclear:Info("info2", loc_eng[184])
+              self.Config.farm.jungleclear:Slider("QMana",loc_eng[185], 30, 10, 100, 1)
+              self.Config.farm.jungleclear:Slider("WMana",loc_eng[186], 30, 10, 100, 1)
+
+              self.Config.farm:Menu("lasthit",loc_eng[25])
+              self.Config.farm.lasthit:Boolean("autolasthit",loc_eng[189],false)
+              self.Config.farm.lasthit:Boolean("useQ",loc_eng[26],false)
+              self.Config.farm.lasthit:Boolean("useW",loc_eng[27],true)
+             self.Config.farm.lasthit:DropDown("card","Select Card Type ;",1, {"Blue Card","Red Card","Yellow Card"})             
+              self.Config.farm.lasthit:DropDown("lasthitlogic",loc_eng[191],1, {loc_eng[172],loc_eng[174]})
+              self.Config.farm.lasthit:Info("blank", "")
+              self.Config.farm.lasthit:Info("blank", "")
+              self.Config.farm.lasthit:Info("info2", loc_eng[184])
+              self.Config.farm.lasthit:Slider("QMana",loc_eng[185], 30, 10, 100, 1)
+              self.Config.farm.lasthit:Slider("WMana",loc_eng[186], 30, 10, 100, 1)
+
+              self.Config:Menu( "killsteal",loc_eng[35])
+              self.Config.killsteal:Boolean("ks",loc_eng[36],true)
+              self.Config.killsteal:Boolean("useQ", loc_eng[37], true)
+              self.Config.killsteal:Boolean("useW", loc_eng[38], true)
+              self.Config.killsteal:Boolean("useI", loc_eng[41], true)
+
+                  self.Config:Menu("escape",loc_eng[30])
+      self.Config.escape:Boolean("useW",loc_eng[32],true)
+
+              self.Config:Menu( "item",loc_eng[42])
+              self.Config.item:Menu( "autopot",loc_eng[192])
+              self.Config.item.autopot:Boolean("enableautopothp", loc_eng[193], false)
+              self.Config.item.autopot:Slider("autopothp", loc_eng[194],  10, 0, 100, 1)
+              self.Config.item:Boolean("enableautozhonya", loc_eng[43], false)
+              self.Config.item:Slider("autozhonya", loc_eng[44],  10, 0, 100, 1)
+              self.Config.item:Boolean("usehg", loc_eng[45], false)
+              self.Config.item:Boolean("usebg", loc_eng[46], false)
+
+
+
+              self.Config:Menu("misc",loc_eng[92])
+              self.Config.misc:Menu( "interrupt",loc_eng[93])
+              self.Config.misc.interrupt:Boolean("r", loc_eng[95], true)
+              self.Config.misc.interrupt:Info("info3", loc_eng[98])
+              DelayAction(function()  for i, a in pairs(GetEnemyHeroes()) do
+                if Interrupt[a.charName] ~= nil then
+                  for i, spell in pairs(Interrupt[a.charName].stop) do
+                    self.Config.misc.interrupt:Boolean(spell.spellName, a.charName.." - "..spell.name, true)
+                  end
+                end
+
+              end
+              end, 0.3)
+
+              self.Config.misc:Menu( "gapClose1",loc_eng[219])
+              self.Config.misc.gapClose1:Menu( "gapClose1w","Gap Close - W Settings")
+              self.Config.misc.gapClose1.gapClose1w:Info("info3", loc_eng[98] )
+          DelayAction(function()    for _, enemy in pairs(GetEnemyHeroes()) do
+      if isAGapcloserUnit[enemy.charName] ~= nil then
+        self.Config.misc.gapClose1.gapClose1w:Boolean(enemy.charName, enemy.charName .. " - " .. enemy:GetSpellData(isAGapcloserUnit[enemy.charName].spell).name,true)
+      end
+    end
+        end, 0.3)
+
+              self.Config.misc:Menu( "skinhack","[" .. myHero.charName.. "] - Skinhack Settings")
+              self.Config.misc.skinhack:Boolean("useskin",loc_eng[54], false)
+              self.Config.misc.skinhack:DropDown('selected' .. myHero.charName .. 'Skin', loc_eng[57]  ,  1, skinMeta[myHero.charName])
+              self.Config.misc:Menu( "autolevel","[" .. myHero.charName.. "] - AutoLevel Settings")
+              self.Config.misc.autolevel:Boolean("uselevel",loc_eng[51], false)
+              self.Config.misc.autolevel:DropDown("logic", loc_eng[52] , 7, {loc_eng[58], loc_eng[59],loc_eng[60],loc_eng[61],loc_eng[62], loc_eng[63], loc_eng[64]  })
+              self.Config.misc:Menu( "antiafk","[" .. myHero.charName.. "] - AntiAFK Settings")
+              self.Config.misc.antiafk:Boolean("useafk",loc_eng[196], false)
+
+              Clock = os.clock()
+                self.Config:Menu("other",loc_eng[65])
+              self.Config.other:Menu( "draw",loc_eng[66])
+              self.Config.other.draw:Boolean("qdraw",loc_eng[67],true)
+              self.Config.other.draw:Boolean("rdraw",loc_eng[70],true)
+              self.Config.other.draw:Boolean("aadraw",loc_eng[71],false)
+              self.Config.other:Menu( "color",loc_eng[198])
+              self.Config.other.color:ColorPick("Qcolor", loc_eng[199],{255, 255, 255, 255})
+              self.Config.other.color:ColorPick("Rcolor", loc_eng[202],{255, 255, 255, 255})
+              self.Config.other.color:ColorPick("AAcolor", loc_eng[204],{255, 255,0,0})
+              -- self.Config.other.color:ColorPick("targetselect", loc_eng[205],{255, 255,0,0})
+              self.Config.other:Menu( "width",loc_eng[206])
+              self.Config.other.width:Slider("Qwidth", loc_eng[210],  1, 1, 10, 1)
+              self.Config.other.width:Slider("Rwidth", loc_eng[213],  1, 1, 10, 1)
+              self.Config.other.width:Slider("AAwidth", loc_eng[209], 1, 1, 10, 1)
+              -- self.Config.other.width:Slider("STwidth", loc_eng[208], 1, 1, 10, 1)
+             -- self.Config.other:Boolean("target",loc_eng[75],true)
+              --self.Config.other:Boolean("minimap","Draw R range ( Minimap )",true)
+              self.Config.other:Boolean("damage",loc_eng[214],true)
+              self.Config.other:Boolean("targetcal",loc_eng[76],true)
+              --          self.Config.other:Menu( "perma",loc_eng[73])
+              -- self.Config.other.perma:Boolean("perma",loc_eng[74],true)
+
+              self.Config:Menu("targetsel",loc_eng[77])
+              self.Config.targetsel:Boolean("ts",loc_eng[78],false)
+
+              self.Config:Menu("orb","Orbwalker Settings")
+              self.Config.orb:Menu( "selectorb","Current Orbwalker :")
+
+
+              self.Config:Menu("pred","Prediction Settings")
+              self.Config.pred:DropDown("selectpred","Current Predictions :",   1, {"Open Prediction","IPrediction","Gos Prediction"})
+              self.Config.pred:Menu( "hcgeneral","Hitchance Settings")
+              self.Config.pred.hcgeneral:Menu( "hcop","Open Prediction Hitchance")
+              self.Config.pred.hcgeneral.hcop:Slider("hcopq", "Q Hitchance " , 30, 0, 100, 1)
+              self.Config.pred:Info("blank", "    Currently Open Prediction "   )
+              self.Config.pred:Info("blank", "      is best with this bundle"   )
+
+
+              self.Config:Menu( "Keys",loc_eng[79])
+              self.Config.Keys:Info("infoK3", loc_eng[80])
+              self.Config.Keys:Key("combokey", loc_eng[81],string.byte(" "))
+              self.Config.Keys:Info("infoK4", loc_eng[82])
+              self.Config.Keys:Key("harasskey", loc_eng[83],string.byte("C"))
+              self.Config.Keys:Info("infoK5", loc_eng[84])
+              self.Config.Keys:Key("laneclearkey", loc_eng[85],string.byte("V"))
+              self.Config.Keys:Key("jungleclearkey", loc_eng[86],string.byte("V"))
+              self.Config.Keys:Key("lasthitkey",loc_eng[215],string.byte("X"))
+              self.Config.Keys:Info("infoK6", loc_eng[87])
+              self.Config.Keys:Key("escapekey", loc_eng[88],string.byte("Y"))
+              --self.Config.Keys:Boolean("lasthitkey", "Lasthit Key",string.byte("X"))
+              self.Config.Keys:Info("infoK","    [Card Key Settings]" )
+              self.Config.Keys:Key("bluecard", "Select Blue Card",string.byte("7"))
+              self.Config.Keys:Key("redcard", "Select Red Card",string.byte("8"))
+              self.Config.Keys:Key("yellowcard", "Select Yellow Card",string.byte("9"))
+
+              self.Config.Keys:Info("infoK2", loc_eng[89])
+
+              self.Config:Info("infoK","           "..Scriptname.."" )
+              self.Config:Info("infoK","         Script Version:  "..Version.. "  " )
+              self.Config:Info("infoK","   Script was made by  "..Author.. "" )
+              self.Config:Info("infoK","Leauge Of Legends Version: "..LVersion.. "" )
+              self.Config:Boolean("instruct", loc_eng[216], false)
+
+
+
+    end
+     function TwistedFate:WndMsg(Msg, Key)
+      if self.Config.targetsel.ts:Value() then
+        if Msg == WM_LBUTTONDOWN then
+          local minD = 10
+          local starget = nil
+          for i, enemy in ipairs(GetEnemyHeroes()) do
+            if ValidTarget(enemy) then
+              if GetDistance(enemy, mousePos) <= minD or starget == nil then
+                minD = GetDistance(enemy, mousePos)
+                starget = enemy
+              end
+            end
+          end
+          if starget and minD < 150 then
+            if self.selectedTar and starget.charName == self.selectedTar.charName then
+              self.selectedTar = nil
+              print("<font color=\"#FFFFFF\">Target <b>is no loger selected.</b>:<font color=\"#D3649F\"><b> "..starget.charName.." </b></font>")
+            else
+              self.selectedTar = starget
+              print("<font color=\"#FFFFFF\">New target <b>selected.</b>:<font color=\"#D3649F\"><b> "..starget.charName.." </b></font>")
+            end
+          end
+        end
+      end
+      if Msg == WM_LBUTTONDOWN then
+        if PopUp1 then
+          PopUp1 = false
+        end
+      end
+    end
+class "Orianna"
+function Orianna:__init()
+  self.Q = { delay = 0.25, speed = 1200 ,radius = 175, range = 1700  }
+self.W = { range = 1050, radius = 225 }
+self.E = { range = 1100 }
+self.R = { range = 315 ,radius = 325 }
+Last_LevelSpell = 0
+ Ignite = (GetCastName(GetMyHero(),SUMMONER_1):lower():find("summonerdot") and SUMMONER_1 or (GetCastName(GetMyHero(),SUMMONER_2):lower():find("summonerdot") and SUMMONER_2 or nil))
+self.tsg = TargetSelector(1350,TARGET_LESS_CAST_PRIORITY,DAMAGE_MAGIC,true,false)
+if ipred then
+qSpell = IPrediction.Prediction({range = 825, speed = 1200, delay = 0.25, width = 160, type = "linear", name =myHero:GetSpellData(_Q).name, collision = false})
+end
+Callback.Add("Tick", function() self:Tick() end)
+Callback.Add("Load", function() self:onload() end)
+Callback.Add("WndMsg", function(Msg, Key) self:WndMsg(Msg, Key) end)
+Callback.Add("Draw", function() self:Draw() end)
+  Callback.Add("UpdateBuff", function(unit,buff) self:UpdateBuff(unit,buff) end)
+Callback.Add("ProcessSpell", function(unit, spell) self:ProcessSpell(unit, spell) end)
+self:LoadMenu()
+ self.Ball = myHero
+end
+  function Orianna:onload()
+    self:findorb()
+  end
+function Orianna:Checks()
+  Gtarget = self.tsg:GetTarget()
+  if not ValidTarget(Gtarget, 925) or not self.Config.targetsel.ts:Value()  then
+    target = GetCurrentTarget()
+  elseif  ValidTarget(Gtarget, 925) and not self.selectedTar then
+    target = GetCurrentTarget()
+  elseif (ValidTarget(Gtarget, 925) and self.selectedTar) then
+    target = GetGameTarget()
+  end
+  mousePos = GetMousePos()
+  if myHero.dead then
+  
+    if self.Ball ~= myHero then
+      self.Ball = myHero
+    end
+    
+    return
+  end
+end
+ function Orianna:Tick()
+self:Checks()
+if self.Config.Keys.combokey:Value() then
+    self:Combo()
+  end
+    if(self.Config.Keys.harasskey:Value()   ) then
+    self:harass()
+  end
+    if(self.Config.Keys.escapekey:Value() )then
+    self:escape()
+  end
+  if(self.Config.killsteal.ks:Value() ) then
+    self:killsteal()
+  end
+  if( self.Config.Keys.lasthitkey:Value() or self.Config.farm.lasthit.autolasthit:Value() )then
+  self:LastHit()
+end
+if(self.Config.Keys.jungleclearkey:Value() )then
+  self:JungleClear()
+end
+if(self.Config.Keys.laneclearkey:Value() )then
+  self:LaneClear()
+end
+    self:Antiafk()
+  self:autolevel()
+  self:skinhack()
+  self:autopot()
+  self:items()
+  self:auto()
+  self:autoq()
+  end
+  function Orianna:auto()
+    if not  self.Config.misc.auto.use:Value() then return end
+    if   self.Config.misc.auto.useW:Value() then
+       local num =  self.Config.misc.auto.wcount:Value()
+          if EnemiesAround(self.Ball, 235) >= num then
+       self:CastW(target)
+     end
+   end
+    if   self.Config.misc.auto.useR:Value() then
+       local num =  self.Config.misc.auto.rcount:Value()
+          if EnemiesAround(self.Ball, self.R.range) >= num then
+       self:CastR(target)
+     end
+   end
+  if self.Config.instruct:Value() then
+    self.Config.instruct:Value(false)
+    PopUp1 = true
+  end
+    self:checkothers()
+  end
+  function Orianna:autoq()
+    if not  self.Config.harass.useautoq:Value() then return end
+      if(GetDistance(target) <= 825  and (myHero.mana / myHero.maxMana >=  self.Config.harass.QMana:Value()  /100 )  and IsReady(_Q))then
+          self:CastQ(Gtarget)
+        end
+  end
+  function Orianna:harass()
+     if(GetDistance(target) <= 825 and self.Config.harass.useQ:Value() and (myHero.mana / myHero.maxMana >=  self.Config.harass.QMana:Value()  /100 )  and IsReady(_Q))then
+          self:CastQ(Gtarget)
+        end
+         if not  self.Ball ~= myHero then
+         if(GetDistance(target) <= self.W.range  and self.Config.harass.useW:Value() and (myHero.mana / myHero.maxMana >=  self.Config.harass.WMana:Value()  /100 )   and IsReady(_W))then
+              if self:ValidTargetNear(target, self.W.radius, self.Ball) then
+              self:CastW(target)
+            end
+          end
+            elseif self.Ball ~= myHero then
+                         if(GetDistance(target) <= self.W.range  and self.Config.harass.useW:Value() and (myHero.mana / myHero.maxMana >=  self.Config.harass.WMana:Value()  /100 )   and IsReady(_W))then
+                                if self:ValidTargetNear(target, self.W.radius, self.Ball) then
+             DelayAction(function()  self:CastW(target)  end, 0.25)
+            end
+                       end
+          end
+  end
+  function Orianna:Combo()
+  if(ValidTarget(target, 825)  and self.Config.combo.useQ:Value()   and IsReady(_Q))then
+          self:CastQ(Gtarget)
+        end
+        if not  self.Ball ~= myHero then
+         if(GetDistance(target) <= self.W.range  and self.Config.combo.useW:Value()   and IsReady(_W))then
+              if self:ValidTargetNear(target, self.W.radius, self.Ball) then
+              self:CastW(target)
+            end
+          end
+            elseif self.Ball ~= myHero then
+                         if(GetDistance(target) <= self.W.range  and self.Config.combo.useW:Value()   and IsReady(_W))then
+                                if self:ValidTargetNear(target, self.W.radius, self.Ball) then
+             DelayAction(function()  self:CastW(target)  end, 0.25)
+            end
+                       end
+          end
+           if self.Config.combo.useE:Value() == 1 then
+          if (myHero.mana / myHero.maxMana >=   self.Config.combo.emana:Value()  /100 ) then
+          if not IsReady(_W) then
+if(GetDistance(target) <= self.E.range  and IsReady(_E))then
+  local x, y, z = VectorPointProjectionOnLineSegment(mousePos, GetOrigin(target), Vector(self.Ball))
+    if z and GetDistance(x, self.Ball) < 80 then
+      if( self:GetEDmg(target) >target.health ) then
+                self:CastE(myHero)
+              end
+            end
+          end
+          end
+        end
+          elseif self.Config.combo.useE:Value() == 2 then
+                      if (myHero.mana / myHero.maxMana >=   self.Config.combo.emana:Value()  /100 ) then
+          if not IsReady(_W) then
+if(GetDistance(target) <= self.E.range  and IsReady(_E))then
+  local x, y, z = VectorPointProjectionOnLineSegment(mousePos, GetOrigin(target), Vector(self.Ball))
+    if z and GetDistance(x, self.Ball) < 80 then
+                self:CastE(myHero)
+              end
+            end
+          end
+          end
+        end
+ 
+                if(GetDistance(target,self.Ball) <= self.R.range and self.Config.combo.useR:Value() and IsReady(_R))then
+                  if self:ValidTargetNear(target, self.R.radius, self.Ball) then
+                  if self.Config.combo.rlogic:Value() == 1 then
+       if not (( IsReady(_Q) and self:GetQDmg(target) >target.health ) or  ( IsReady(_W) and self:GetWDmg(target) >target.health ) or  ( IsReady(_Q) and IsReady(_W) and  self:GetQDmg(target)+self:GetWDmg(target) >target.health )) then 
+       if self:GetRDmg(target) >target.health then
+              self:CastR(target)
+            end
+          end
+          elseif self.Config.combo.rlogic:Value() == 2 then
+              if self:GetRDmg(target) >target.health then
+                    self:CastR(target)
+                  end
+                  elseif self.Config.combo.rlogic:Value() == 3 then
+                             self:CastR(target)
+                  end
+                end
+                  if self.Config.combo.useRM:Value() then
+          local num =  self.Config.combo.rcount:Value()
+          if EnemiesAround(self.Ball, self.R.range) >= num then
+       self:CastR(target)
+        end
+        end
+      end
+end
+  function Orianna:LaneClear()
+    if not ValidTarget(ClosestMinion(GetOrigin(myHero), MINION_ENEMY),  1000) then return end
+ for i, minion in pairs(minionManager.objects) do
+                      if ValidTarget(minion, 1000)  and GetTeam(minion) == MINION_ENEMY then
+                    if (myHero.mana / myHero.maxMana >=  self.Config.farm.laneclear.WMana:Value() /100 ) then
+                      if IsReady(_W) then
+                        if  self.Config.farm.laneclear.useW:Value()   then
+                          if MinionsAround(self.Ball, 250, MINION_ENEMY) >=self.Config.farm.laneclear.wcount:Value() and self.Ball~= myHero then
+                          self:CastW(minion) 
+                          end
+                        end
+                      end
+                  end
+                end
+              end
+
+                  if IsReady(_Q) then
+                    if (myHero.mana / myHero.maxMana >= self.Config.farm.laneclear.QMana:Value() /100 ) then
+                      local NumberOfHits = self.Config.farm.laneclear.qcount:Value()
+                        if self.Config.Keys.laneclearkey:Value()  and self.Config.farm.laneclear.useQ:Value()  then
+                          local BestPos, BestHit = GetFarmPosition(self.Q.range, 160, MINION_ENEMY)
+                          if BestPos and BestHit and BestHit >= NumberOfHits then
+                            CastSkillShot(_Q, BestPos)
+                          end
+                        end
+                      end
+                    end
+                  end
+                  function Orianna:JungleClear()
+      if not ValidTarget(ClosestMinion(GetOrigin(myHero), MINION_JUNGLE),  1000) then return end
+ for i, minion in pairs(minionManager.objects) do
+                      if ValidTarget(minion, 1000) and minion ~= nil and GetTeam(minion) == MINION_JUNGLE then
+                   if (myHero.mana / myHero.maxMana >=  self.Config.farm.jungleclear.WMana:Value() /100 ) then
+                      if IsReady(_W) then
+                        if  self.Config.farm.jungleclear.useW:Value()   then
+                          if MinionsAround(self.Ball, 250, MINION_JUNGLE) >=1 then
+                          self:CastW(minion) 
+                          end
+                        end
+                      end
+                  end
+                end
+              end
+
+                  if IsReady(_Q) then
+                    if (myHero.mana / myHero.maxMana >= self.Config.farm.jungleclear.QMana:Value() /100 ) then
+                        if  self.Config.farm.jungleclear.useQ:Value()  then
+                          local BestPos, BestHit = GetFarmPosition(self.Q.range, 160, MINION_JUNGLE)
+                          if BestPos and BestHit and BestHit >= 1 then
+                            CastSkillShot(_Q, BestPos)
+                          end
+                        end
+                      end
+                    end
+                  end
+                  function Orianna:LastHit()
+for _, target in pairs(minionManager.objects) do
+  if GetTeam(target) == MINION_ENEMY then
+    if IsObjectAlive(target) then
+      if self.Config.farm.lasthit.lasthitlogic:Value() == 1 then
+        local Qdamage = self:GetQDmg(target)
+        if(IsReady(_Q) and self.Config.farm.lasthit.useQ:Value() and ValidTarget(target,self.Q.range)   and Qdamage >= GetCurrentHP(target)) then
+          self:CastQ(target)
+        end
+      end
+    end
+  end
+end
+end
+function Orianna:Draw()
+    if self.Config.other.draw.qdraw:Value() and IsReady(_Q) then
+          DrawCircle(myHero.x, myHero.y, myHero.z, 825,  self.Config.other.width.Qwidth:Value(),0,self.Config.other.color.Qcolor:Value())
+        end
+
+        if self.Config.other.draw.wdraw:Value() and IsReady(_W) then
+          DrawCircle(myHero.x, myHero.y, myHero.z, 825,  self.Config.other.width.Wwidth:Value(),0, self.Config.other.color.Wcolor:Value())
+        end
+
+        if self.Config.other.draw.edraw:Value() and IsReady(_E) then
+          DrawCircle(myHero.x, myHero.y, myHero.z, 1100,  self.Config.other.width.Ewidth:Value(),0, self.Config.other.color.Ecolor:Value())
+        end
+
+        if self.Config.other.draw.rdraw:Value() and IsReady(_R) then
+          DrawCircle(myHero.x, myHero.y, myHero.z, 1100, self.Config.other.width.Rwidth:Value(),0, self.Config.other.color.Rcolor:Value())
+        end
+        if self.Config.other.draw.aadraw:Value() then
+          DrawCircle(myHero.x, myHero.y, myHero.z, 525, self.Config.other.width.AAwidth:Value(),0, self.Config.other.color.AAcolor:Value())
+        end
+
+        if self.Config.other.circleball.enable:Value() then
+        if self.Ball ~= myHero then
+ DrawCircle(self.Ball.x, self.Ball.y, self.Ball.z, 125, self.Config.other.circleball.ballwidth:Value(),0, self.Config.other.circleball.ballcolor:Value())
+end
+end
+     if self.Config.other.circleball.enable:Value() then
+          if self.Ball ~= myHero then
+if  self.Config.other.circleball.circleballs.draww:Value() then
+ DrawCircle(self.Ball.x, self.Ball.y, self.Ball.z, 250, self.Config.other.circleball.ballwidth:Value(),0, self.Config.other.circleball.circleballs.ballcolorw:Value())
+end
+if self.Config.other.circleball.circleballs.drawr:Value() then
+   DrawCircle(self.Ball.x, self.Ball.y, self.Ball.z, 325, self.Config.other.circleball.ballwidth:Value(),0, self.Config.other.circleball.circleballs.ballcolorr:Value())
+ end
+end
+end
+
+    local rs = GetResolution()
+    if PopUp1 then
+      local w, h1, h2,size  = (rs.x*0.70), (rs.y*.15), (rs.y*.9), rs.y*.02
+      DrawLine(w, h1/1.05, w, h2/1.97, w/1.75, ARGB(255, 0, 0, 0))
+      DrawLine(w, h1, w, h2/1.97, w/1.75, ARGB(150, 235, 183, 63))
+      DrawText(tostring("Welcome to Krystra Mid Series Beta"), rs.y*.028, (rs.x/2.65), (rs.y*.155), ARGB(255, 96, 48, 0))
+      DrawText(tostring("Little informatation about Krystra Mid Series"), rs.y*.015, (rs.x/2.65), (rs.y*.194), ARGB(255, 96, 48, 0))
+      DrawText(tostring("Its a bundle that produced by Krystra"), rs.y*.015, (rs.x/2.65), (rs.y*.210), ARGB(255, 255, 255, 255))
+      DrawText(tostring("Currently it supported only mid champs "), rs.y*.015, (rs.x/2.65), (rs.y*.225), ARGB(255, 255, 255, 255))
+      DrawText(tostring("I focus Quality rather than Quantity"), rs.y*.015, (rs.x/2.65), (rs.y*.240), ARGB(255, 255, 255, 255))
+      DrawText(tostring("I need your feedbacks to improve it"), rs.y*.015, (rs.x/2.65), (rs.y*.255), ARGB(255, 255, 255, 255))
+      DrawText(tostring("I care every single feedback and try to add everything"), rs.y*.015, (rs.x/2.65), (rs.y*.270), ARGB(255, 255, 255, 255))
+      DrawText(tostring("Hope you are enjoy my script.."), rs.y*.015, (rs.x/2.65), (rs.y*.285), ARGB(255, 255, 255, 255))
+      DrawText(tostring("You can change every settings to your like :)"), rs.y*.015, (rs.x/2.65), (rs.y*.300), ARGB(255, 255, 255, 255))
+      DrawText(tostring("Did you like my script > Upvote me on script database and on forum"), rs.y*.015, (rs.x/2.65), (rs.y*.315), ARGB(255, 255, 255, 255))
+      -- DrawText(tostring("Don't forget these are VIP;"), rs.y*.015, (rs.x/2.65), (rs.y*.330), ARGB(255, 96, 48, 0))
+      -- DrawText(tostring("  Anti-Afk"), rs.y*.015, (rs.x/2.65), (rs.y*.345), ARGB(255, 255, 255, 255))
+      -- DrawText(tostring("  Auto Leveler "), rs.y*.015, (rs.x/2.65), (rs.y*.360), ARGB(255, 255, 255, 255))
+      -- DrawText(tostring("  Skin Changer "), rs.y*.015, (rs.x/2.65), (rs.y*.375), ARGB(255, 255, 255, 255))
+      local w1, w2, h1, h2 = (rs.x/2)-50, (rs.x/2)+50, (rs.y*.70), (rs.y*.75)
+      --DrawLine(w1, h1/1.775, w2, h1/1.775, 50, ARGB(255, 0, 0, 0))
+      --DrawRectangleButton(rs.x*0.467, rs.y/2.375, rs.x*.047, rs.y*.041, ARGB(255, 255, 255, 255))
+      FillRect((rs.x/2)-size+10, (rs.y/2)-150, 80, 30, ARGB(150, 235, 183, 63))
+      DrawText(tostring("OK"),size, (rs.x/2)-size+10, (rs.y/2)-150, ARGB(255,0, 0, 0))
+    end
+    for _, target in pairs(GetEnemyHeroes()) do
+      if ValidTarget(target, 15000) then
+        if target.visible and not target.dead and self.Config.other.damage:Value() then
+          currLine = 1
+          -- DrawLineHPBar2(self:GetMyDmg(target),"",  target, currLine)
+          DrawLineHPBar(self:GetMyDmg(target), "Damage " .. math.round(self:GetMyDmg(target)),target,currLine)
+          currLine = currLine + 1
+          DrawDmgOverHpBar(target,GetCurrentHP(target),0,self:GetMyDmg(target),0xff00ff00)
+        end
+      end
+    end
+
+    if self.Config.other.targetcal:Value() and not myHero.dead then
+      if target and target ~= nil then
+        --  local target= GetOrigin(target)
+        local drawpos=WorldToScreen(1,target.x, target.y, target.z)
+        local comboText,color = self:GetDraws(target)
+        if comboText then
+          DrawText(comboText,15,drawpos.x-20,drawpos.y-20,color)
+        end
+      end
+    end
+  end
+function Orianna:AddRange(unit)
+  return unit.boundingRadius
+end
+
+function Orianna:TrueRange(enemy)
+  return myHero.range+self:AddRange(myHero)+self:AddRange(enemy)
+end
+  function Orianna:CastI(unit)
+    if Ignite then
+      if IsReady(Ignite) then
+        CastTargetSpell(unit, Ignite)
+      end
+    end
+  end
+  function Orianna:CastQ(unit)
+      if self.Ball and self.Ball ~=nil  then
+    if self.Config.pred.selectpred:Value() == 1 then
+      local QPred = GetPrediction(unit, self.Q, self.Ball)
+      if IsReady(_Q) then
+        if QPred  and QPred.hitChance >= (self.Config.pred.hcgeneral.hcop.hcopq:Value()/100) then
+          CastSkillShot(_Q, QPred.castPos)
+        end
+      end
+    elseif self.Config.pred.selectpred:Value() == 2 then
+      if ipred then
+        local HitChance, y = qSpell:Predict(unit)
+        if IsReady(_Q) and HitChance >= 3 then
+          CastSkillShot(_Q, y.x, y.y, y.z)
+        end
+      end
+    elseif self.Config.pred.selectpred:Value() == 3 then
+      local qPred = GetPredictionForPlayer(self.Ball, unit, GetMoveSpeed(unit), 1200, 250, 825, 160, false, true)
+      if IsReady(_Q) and qPred.HitChance == 1 then
+        CastSkillShot(_Q, qPred.PredPos.x, qPred.PredPos.y, qPred.PredPos.z)
+      end
+    end
+end
+end
+    function Orianna:CastW( unit)
+   if GetDistance(unit,self.Ball) <= self.W.range then
+    if IsReady(_W) then
+      CastSpell(_W)
+    end
+end
+  end
+   function Orianna:CastE(unit)
+            if IsReady(_E) then
+              CastTargetSpell(unit, _E)
+            end
+          end
+          function Orianna:GiveE(unit)
+            if unit.dead then
+    return
+  end
+    CastTargetSpell(unit, _E)
+end
+    function Orianna:CastR(unit)
+  if GetDistance(unit,self.Ball) <= self.R.range then
+    if IsReady(_R) then
+      CastSpell(_R)
+    end
+end
+  end
+  function Orianna:GetQDmg(target)
+              if GetCastLevel(myHero, _Q) < 1 then
+                return 0
+              end
+              if IsReady(_Q) then
+                local FinalDamage = (30 + (GetCastLevel(myHero, _Q) * 30) + (GetBonusAP(myHero))*.5)
+                return CalcDamage(myHero,target,0, FinalDamage)
+              else
+                return 0
+              end
+            end
+            function Orianna:GetWDmg(target)
+              if GetCastLevel(myHero, _W) < 1 then
+                return 0
+              end
+              if IsReady(_W) then
+                local FinalDamage =  (25 + (GetCastLevel(myHero, _Q) * 45) + (GetBonusAP(myHero))*.7)
+                return CalcDamage(myHero,target,0, FinalDamage)
+              else
+                return 0
+              end
+            end
+            function Orianna:GetEDmg(target)
+              if GetCastLevel(myHero, _E) < 1 then
+                return 0
+              end
+              if IsReady(_E) then
+                local FinalDamage = (30 + (GetCastLevel(myHero, _W) * 30) + (GetBonusAP(myHero))* .3)
+                return CalcDamage(myHero,target,0, FinalDamage)
+              else
+                return 0
+              end
+            end
+            function Orianna:GetRDmg(target)
+              if GetCastLevel(myHero, _R) < 1 then
+                return 0
+              end
+              if IsReady(_R) then
+                local FinalDamage = (75 + (GetCastLevel(myHero, _R) * 75) + (GetBonusAP(myHero))* .7)
+                return CalcDamage(myHero,target,0, FinalDamage)
+              else
+                return 0
+              end
+            end
+            function Orianna:GetMyDmg(target)
+              if IsReady(_Q) and IsReady(_W) and IsReady(_R) and IsReady(_E) then
+                return self:GetQDmg(target) + self:GetWDmg(target) + self:GetRDmg(target) + self:GetEDmg(target)
+              elseif IsReady(_Q) and IsReady(_W) and IsReady(_R) then
+                return self:GetQDmg(target) + self:GetWDmg(target) + self:GetRDmg(target)
+              elseif IsReady(_Q) and IsReady(_W) and IsReady(_E) then
+                return self:GetQDmg(target) + self:GetWDmg(target) + self:GetEDmg(target)
+              elseif IsReady(_Q) and IsReady(_R) and IsReady(_E) then
+                return self:GetQDmg(target) + self:GetRDmg(target) + self:GetEDmg(target)
+              elseif IsReady(_R) and IsReady(_W) and IsReady(_E) then
+                return self:GetRDmg(target) + self:GetWDmg(target) + self:GetEDmg(target)
+              elseif IsReady(_Q) and IsReady(_W) then
+                return self:GetQDmg(target) + self:GetWDmg(target)
+              elseif IsReady(_E) and IsReady(_W) then
+                return self:GetEDmg(target) + self:GetWDmg(target)
+              elseif IsReady(_R) and IsReady(_W) then
+                return self:GetRDmg(target) + self:GetWDmg(target)
+              elseif IsReady(_Q) and IsReady(_R) then
+                return self:GetQDmg(target) + self:GetRDmg(target)
+              elseif IsReady(_E) and IsReady(_R) then
+                return self:GetEDmg(target) + self:GetRDmg(target)
+              elseif IsReady(_Q) and IsReady(_E) then
+                return self:GetQDmg(target) + self:GetEDmg(target)
+              elseif IsReady(_R) then
+                return self:GetRDmg(target)
+              elseif IsReady(_E) then
+                return self:GetEDmg(target)
+              elseif IsReady(_Q) then
+                return self:GetQDmg(target)
+              elseif IsReady(_W) then
+                return self:GetWDmg(target)
+              else
+                return 0
+              end
+            end
+            function Orianna:GetDraws(target)
+              local qdamage = self:GetQDmg(target)
+              local wdamage = self:GetWDmg(target)
+              local edamage = self:GetEDmg(target)
+              local rdamage = self:GetRDmg(target)
+              local Idmg=(50+ ((myHero.level)*20))
+
+              if qdamage >target.health then
+                return 'Q', GoS.White
+              elseif qdamage+ Idmg>target.health then
+                return 'Q + Ignite', GoS.White
+              elseif wdamage >target.health then
+                return 'W', GoS.White
+              elseif wdamage+ Idmg>target.health then
+                return 'W + Ignite', GoS.White
+              elseif edamage >target.health then
+                return 'E', GoS.White
+              elseif edamage + Idmg>target.health then
+                return 'E + Ignite', GoS.White
+              elseif rdamage  >target.health then
+                return 'R', GoS.White
+              elseif rdamage + Idmg>target.health then
+                return 'R + Ignite', GoS.White
+              elseif rdamage +edamage  >target.health then
+                return 'R + E',GoS.White
+              elseif rdamage +edamage+ Idmg>target.health then
+                return 'R + E + Ignite',GoS.White
+              elseif edamage+wdamage >target.health then
+                return 'E + W',GoS.White
+              elseif edamage+wdamage+ Idmg>target.health then
+                return 'E + W + Ignite',GoS.White
+              elseif rdamage+wdamage >target.health then
+                return 'R + W',GoS.White
+              elseif rdamage+wdamage+ Idmg>target.health then
+                return 'R + W + Ignite',GoS.White
+              elseif qdamage+wdamage >target.health then
+                return 'Q + W',GoS.White
+              elseif qdamage+edamage>target.health then
+                return 'Q + E',GoS.White
+              elseif qdamage+rdamage >target.health then
+                return 'Q + R',GoS.White
+              elseif qdamage+wdamage+ Idmg>target.health then
+                return 'Q + W + Ignite',GoS.White
+              elseif qdamage+edamage+ Idmg>target.health then
+                return 'Q + E + Ignite',GoS.White
+              elseif qdamage+rdamage+ Idmg>target.health then
+                return 'Q + R + Ignite',GoS.White
+              elseif qdamage+edamage+wdamage >target.health then
+                return 'Q + W + E',GoS.White
+              elseif qdamage+rdamage+wdamage >target.health then
+                return 'Q + W + R',GoS.White
+              elseif qdamage+edamage+rdamage >target.health then
+                return 'Q + R + E',GoS.White
+              elseif qdamage+edamage+wdamage+ Idmg>target.health then
+                return 'Q + W + E + Ignite',GoS.White
+              elseif qdamage+wdamage+edamage+rdamage >target.health then
+                return 'Kill with full combo',GoS.White
+              elseif qdamage+wdamage+edamage+rdamage+Idmg>target.health then
+                return 'Full Combo + Ignite',GoS.White
+              else
+                return "Cant Kill yet", GoS.White
+              end
+            end
+             function Orianna:Antiafk()
+                    if os.clock() < Clock or not self.Config.misc.antiafk.useafk:Value()  then return end
+                    Clock = os.clock() + math.random(60,120)
+                    MoveToXYZ(myHeroPos())
+                  end
+                  function Orianna:skinhack()
+                    if ((CurrentTimeInMillis() - lastTimeTickCalled) > 200) then
+                      lastTimeTickCalled = CurrentTimeInMillis()
+                      if  self.Config.misc.skinhack.useskin:Value() then
+                        if self.Config.misc.skinhack['selected' .. myHero.charName .. 'Skin'] ~= lastSkin then
+                          lastSkin = self.Config.misc.skinhack['selected' .. myHero.charName .. 'Skin']:Value()
+                          HeroSkinChanger(GetMyHero(),self.Config.misc.skinhack['selected' .. myHero.charName .. 'Skin']:Value()-1)
+                        end
+                      end
+                    end
+                  end
+                  local spellLevel = 0
+                  function Orianna:autolevel()
+                    if GetLevelPoints(myHero) >= 1 then
+                      if(  self.Config.misc.autolevel.uselevel:Value() and self.Config.misc.autolevel.logic:Value() == 1 and os.clock()-Last_LevelSpell > 0.5 ) then
+                        local levelSequence =    { _Q,_W,_E,_Q,_Q,_R,_Q,_W,_Q,_W,_R,_W,_W,_E,_E,_R,_E,_E}
+                        LevelSpell(levelSequence[GetLevel(myHero)-GetLevelPoints(myHero)+1])
+                        Last_LevelSpell = os.clock()
+                      end
+                      if(  self.Config.misc.autolevel.uselevel:Value() and self.Config.misc.autolevel.logic:Value() == 2 and os.clock()-Last_LevelSpell > 0.5 ) then
+                        local levelSequence =  { _Q,_W,_E,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
+                        LevelSpell(levelSequence[GetLevel(myHero)-GetLevelPoints(myHero)+1])
+                        Last_LevelSpell = os.clock()
+                      end
+                      if(   self.Config.misc.autolevel.uselevel:Value() and self.Config.misc.autolevel.logic:Value() == 3 and os.clock()-Last_LevelSpell > 0.5 ) then
+                        local levelSequence =  { _W,_E,_Q,_W,_W,_R,_W,_Q,_W,_Q,_R,_Q,_Q,_E,_E,_R,_E,_E}
+                        LevelSpell(levelSequence[GetLevel(myHero)-GetLevelPoints(myHero)+1])
+                        Last_LevelSpell = os.clock()
+                      end
+                      if( self.Config.misc.autolevel.uselevel:Value()and self.Config.misc.autolevel.logic:Value() == 4 and os.clock()-Last_LevelSpell > 0.5 ) then
+                        local levelSequence =  { _W,_E,_Q,_W,_W,_R,_W,_E,_W,_E,_R,_E,_E,_Q,_Q,_R,_Q,_Q}
+                        LevelSpell(levelSequence[GetLevel(myHero)-GetLevelPoints(myHero)+1])
+                        Last_LevelSpell = os.clock()
+                      end
+                      if( self.Config.misc.autolevel.uselevel:Value() and self.Config.misc.autolevel.logic:Value() == 5 and os.clock()-Last_LevelSpell > 0.5 ) then
+                        local levelSequence =  { _E,_Q,_W,_E,_E,_R,_E,_W,_E,_W,_R,_W,_W,_Q,_Q,_R,_Q,_Q}
+                        LevelSpell(levelSequence[GetLevel(myHero)-GetLevelPoints(myHero)+1])
+                        Last_LevelSpell = os.clock()
+                      end
+                      if(  self.Config.misc.autolevel.uselevel:Value() and self.Config.misc.autolevel.logic:Value() == 6 and os.clock()-Last_LevelSpell > 0.5 ) then
+                        local levelSequence =   { _E,_Q,_W,_E,_E,_R,_E,_Q,_E,_Q,_R,_Q,_Q,_W,_W,_R,_W,_W}
+                        LevelSpell(levelSequence[GetLevel(myHero)-GetLevelPoints(myHero)+1])
+                        Last_LevelSpell = os.clock()
+                      end
+                      if( self.Config.misc.autolevel.uselevel:Value() and self.Config.misc.autolevel.logic:Value() == 7 and os.clock()-Last_LevelSpell > 0.5 ) then
+                        local levelSequence =  {_Q, _E, _W, _Q, _Q, _R, _Q, _W, _Q, _W, _R, _W, _W, _E, _E, _R, _E, _E}
+                        LevelSpell(levelSequence[GetLevel(myHero)-GetLevelPoints(myHero)+1])
+                        Last_LevelSpell = os.clock()
+                      end
+                    end
+                  end
+                  lastPotion = 0
+                  function Orianna:autopot()
+                    if os.clock() - lastPotion < 15 then return end
+                    for SLOT = ITEM_1, ITEM_6 do
+                      if myHero:GetSpellData(SLOT).name == "RegenerationPotion" and self.Config.item.autopot.enableautopothp:Value() then
+                        if myHero:CanUseSpell(SLOT) == READY and (myHero.health / myHero.maxHealth < self.Config.item.autopot.autopothp:Value() /100 )  then
+                          CastSpell(SLOT)
+                          lastPotion = os.clock()
+                        end
+                      end
+                    end
+                  end
+                  function Orianna:items()
+                    if self.Config.item.usebg:Value() and self.Config.Keys.combokey:Value() then
+                      for _ = ITEM_1, ITEM_7 do
+                        if ( myHero:CanUseSpell(_) == 0 and myHero:GetSpellData(_).name == "BilgewaterCutlass" )then CastTargetSpell(target, _)
+                      end
+                    end
+                  end
+                  if self.Config.item.usehg:Value() and self.Config.Keys.combokey:Value() then
+                    for _ = ITEM_1, ITEM_7 do
+                      if ( myHero:CanUseSpell(_) == 0 and myHero:GetSpellData(_).name == "HextechGunblade" )then CastTargetSpell(target, _)
+                    end
+                  end
+                end
+                if self.Config.item.enableautozhonya:Value() then
+                  for _ = ITEM_1, ITEM_7 do
+                    if myHero.health <= (myHero.maxHealth * self.Config.item.autozhonya:Value() / 100) and ( myHero:CanUseSpell(_) == 0 and myHero:GetSpellData(_).name == "ZhonyasHourglass" )then CastSpell(_)
+                  end
+                end
+              end
+            end
+ function Orianna:LoadMenu()
+     self.Config=MenuConfig("menu",""..Scriptname.." [" .. myHero.charName.."]" )
+
+              self.Config:Menu( "combo",loc_eng[1])
+              self.Config.combo:Boolean("useQ", loc_eng[2], true)
+              self.Config.combo:Boolean("useW", loc_eng[3], true)
+              self.Config.combo:DropDown("useE","E logic for combo ;",1, {"If Target Killable","Always"," Never"})
+              self.Config.combo:Slider("emana","Use E if Mana Percent => % ", 10, 10, 100, 1)
+              self.Config.combo:Info("blank", " R Settings")
+              self.Config.combo:Boolean("useR", "Use R  For Single Target", true)
+              self.Config.combo:DropDown("rlogic","R logic (Single Target) ;",1, {"Smart","If Target Killable","Always"})
+              self.Config.combo:Boolean("useRM", "Use R  For Multiple Target", true)
+              self.Config.combo:Slider("rcount","Use R Min Count", 3, 2, 5, 1)
+              self.Config.combo:Boolean("useI", loc_eng[6], true)
+              self.Config.combo:Slider("Mana",loc_eng[8], 10, 10, 100, 1)
+
+
+              self.Config:Menu( "harass",loc_eng[9])
+              self.Config.harass:Boolean("useautoq", "Use Auto Q Harass", false)
+              self.Config.harass:Boolean("useQ", loc_eng[10], true)
+              self.Config.harass:Slider("QMana","Use Q if Mana Percent => % ", 30, 10, 100, 1)
+              self.Config.harass:Boolean("useW", loc_eng[11], true)
+              self.Config.harass:Slider("WMana","Use W if Mana Percent => % ", 30, 10, 100, 1)
+        
+
+
+              self.Config:Menu( "farm",loc_eng[14])
+
+              self.Config.farm:Menu("laneclear",loc_eng[15])
+              self.Config.farm.laneclear:Boolean("useQ",loc_eng[16],true)
+              self.Config.farm.laneclear:Slider("qcount",loc_eng[180], 2, 1, 10, 1)
+              self.Config.farm.laneclear:Boolean("useW",loc_eng[17],true)
+              self.Config.farm.laneclear:Slider("wcount",loc_eng[181], 2, 1, 10, 1)
+              self.Config.farm.laneclear:Info("blank","" )
+              self.Config.farm.laneclear:Info("blank", "")
+              self.Config.farm.laneclear:Info("info2", loc_eng[184])
+              self.Config.farm.laneclear:Slider("QMana",loc_eng[185], 30, 10, 100, 1)
+              self.Config.farm.laneclear:Slider("WMana",loc_eng[186], 30, 10, 100, 1)
+
+              self.Config.farm:Menu("jungleclear",loc_eng[20])
+              self.Config.farm.jungleclear:Boolean("useQ",loc_eng[21],true)
+              self.Config.farm.jungleclear:Boolean("useW",loc_eng[22],true)
+              self.Config.farm.jungleclear:Info("blank","" )
+              self.Config.farm.jungleclear:Info("blank","" )
+              self.Config.farm.jungleclear:Info("info2", loc_eng[184])
+              self.Config.farm.jungleclear:Slider("QMana",loc_eng[185], 30, 10, 100, 1)
+              self.Config.farm.jungleclear:Slider("WMana",loc_eng[186], 30, 10, 100, 1)
+
+              self.Config.farm:Menu("lasthit",loc_eng[25])
+              self.Config.farm.lasthit:Boolean("autolasthit",loc_eng[189],false)
+              self.Config.farm.lasthit:Boolean("useQ",loc_eng[26],true)
+              self.Config.farm.lasthit:DropDown("lasthitlogic",loc_eng[191],1, {loc_eng[172],loc_eng[174]})
+              self.Config.farm.lasthit:Info("blank", "")
+              self.Config.farm.lasthit:Info("blank", "")
+              self.Config.farm.lasthit:Info("info2", loc_eng[184])
+              self.Config.farm.lasthit:Slider("QMana",loc_eng[185], 30, 10, 100, 1)
+
+              self.Config:Menu( "killsteal",loc_eng[35])
+              self.Config.killsteal:Boolean("ks",loc_eng[36],true)
+              self.Config.killsteal:Boolean("useQ", loc_eng[37], true)
+              self.Config.killsteal:Boolean("useW", loc_eng[38], true)
+              self.Config.killsteal:Boolean("useE", loc_eng[39], true)
+              self.Config.killsteal:Boolean("useR", loc_eng[40], true)
+              self.Config.killsteal:Boolean("useI", loc_eng[41], true)
+
+                  self.Config:Menu("escape",loc_eng[30])
+      self.Config.escape:Boolean("useE",loc_eng[33],true)
+
+              self.Config:Menu( "item",loc_eng[42])
+              self.Config.item:Menu( "autopot",loc_eng[192])
+              self.Config.item.autopot:Boolean("enableautopothp", loc_eng[193], false)
+              self.Config.item.autopot:Slider("autopothp", loc_eng[194],  10, 0, 100, 1)
+              self.Config.item:Boolean("enableautozhonya", loc_eng[43], false)
+              self.Config.item:Slider("autozhonya", loc_eng[44],  10, 0, 100, 1)
+              self.Config.item:Boolean("usehg", loc_eng[45], false)
+              self.Config.item:Boolean("usebg", loc_eng[46], false)
+
+
+
+              self.Config:Menu("misc",loc_eng[92])
+                       self.Config.misc:Menu( "auto","[" .. myHero.charName.. "] - Auto Settings")
+            self.Config.misc.auto:Boolean("use", "Use Auto Settings", false)
+              self.Config.misc.auto:Boolean("useW", "Use W (Multiple Target)", false)
+             self.Config.misc.auto:Slider("wcount", "Use W Minimum Count",  3, 2, 5, 1) 
+           self.Config.misc.auto:Boolean("useR", "Use R (Multiple Target)", false)
+             self.Config.misc.auto:Slider("rcount", "Use R Minimum Count",  3, 2, 5, 1) 
+              self.Config.misc:Menu( "interrupt",loc_eng[93])
+              self.Config.misc.interrupt:Boolean("r", loc_eng[97], true)
+              self.Config.misc.interrupt:Info("info3", loc_eng[98])
+              DelayAction(function()  for i, a in pairs(GetEnemyHeroes()) do
+                if Interrupt[a.charName] ~= nil then
+                  for i, spell in pairs(Interrupt[a.charName].stop) do
+                    self.Config.misc.interrupt:Boolean(spell.spellName, a.charName.." - "..spell.name, true)
+                  end
+                end
+
+              end
+              end, 0.3)
+
+              self.Config.misc:Menu( "skinhack","[" .. myHero.charName.. "] - Skinhack Settings")
+              self.Config.misc.skinhack:Boolean("useskin",loc_eng[54], false)
+              self.Config.misc.skinhack:DropDown('selected' .. myHero.charName .. 'Skin', loc_eng[57]  ,  1, skinMeta[myHero.charName])
+              self.Config.misc:Menu( "autolevel","[" .. myHero.charName.. "] - AutoLevel Settings")
+              self.Config.misc.autolevel:Boolean("uselevel",loc_eng[51], false)
+              self.Config.misc.autolevel:DropDown("logic", loc_eng[52] , 7, {loc_eng[58], loc_eng[59],loc_eng[60],loc_eng[61],loc_eng[62], loc_eng[63], loc_eng[64]  })
+              self.Config.misc:Menu( "antiafk","[" .. myHero.charName.. "] - AntiAFK Settings")
+              self.Config.misc.antiafk:Boolean("useafk",loc_eng[196], false)
+
+              Clock = os.clock()
+              self.Config:Menu("other",loc_eng[65])
+              --self.Config.other:Menu("Show Damage On Hp Bar", "HPBAR")
+              --self.Config.other.HPBAR:Boolean("key","ON/OFF",true)
+              self.Config.other:Menu( "draw",loc_eng[66])
+               self.Config.other:Menu( "circleball","Circle for Ball")
+                              self.Config.other.circleball:Menu( "circleballs","Ball Skill Ranges")
+                  self.Config.other.circleball.circleballs:Boolean("draww","Draw W Range", false)
+                     self.Config.other.circleball.circleballs:Boolean("drawr","Draw W Range", false)
+                        self.Config.other.circleball.circleballs:ColorPick("ballcolorw", "W Color",   {255, 255, 255, 255})
+                                      self.Config.other.circleball.circleballs:ColorPick("ballcolorr", "R color",   {255, 255, 255, 255})
+              self.Config.other.circleball:Boolean("enable","Enable", true)
+             self.Config.other.circleball:ColorPick("ballcolor", "Color",   {255, 255, 255, 255})
+              self.Config.other.circleball:Slider("ballwidth", "Width", 1, 1, 10, 1)
+              self.Config.other.draw:Boolean("qdraw",loc_eng[67],true)
+              self.Config.other.draw:Boolean("wdraw",loc_eng[68],true)
+              self.Config.other.draw:Boolean("edraw",loc_eng[69],true)
+              self.Config.other.draw:Boolean("rdraw",loc_eng[70],true)
+              self.Config.other.draw:Boolean("aadraw",loc_eng[71],false)
+              self.Config.other:Menu( "color",loc_eng[198])
+              self.Config.other.color:ColorPick("Qcolor", loc_eng[199],{255, 255, 255, 255})
+              self.Config.other.color:ColorPick("Wcolor", loc_eng[200],{255, 255, 255, 255})
+              self.Config.other.color:ColorPick("Ecolor", loc_eng[201],{255, 255, 255, 255})
+              self.Config.other.color:ColorPick("Rcolor", loc_eng[202],{255, 255, 255, 255})
+              self.Config.other.color:ColorPick("AAcolor", loc_eng[204],{255, 255,0,0})
+              -- self.Config.other.color:ColorPick("targetselect", loc_eng[205],{255, 255,0,0})
+              self.Config.other:Menu( "width",loc_eng[206])
+              self.Config.other.width:Slider("Qwidth", loc_eng[210],  1, 1, 10, 1)
+              self.Config.other.width:Slider("Wwidth", loc_eng[211],  1, 1, 10, 1)
+              self.Config.other.width:Slider("Ewidth", loc_eng[212],  1, 1, 10, 1)
+              self.Config.other.width:Slider("Rwidth", loc_eng[213],  1, 1, 10, 1)
+              self.Config.other.width:Slider("AAwidth", loc_eng[209], 1, 1, 10, 1)
+              -- self.Config.other.width:Slider("STwidth", loc_eng[208], 1, 1, 10, 1)
+              self.Config.other:Boolean("target",loc_eng[75],true)
+              self.Config.other:Boolean("damage",loc_eng[214],true)
+              self.Config.other:Boolean("targetcal",loc_eng[76],true)
+              --          self.Config.other:Menu( "perma",loc_eng[73])
+              -- self.Config.other.perma:Boolean("perma",loc_eng[74],true)
+
+              self.Config:Menu("targetsel",loc_eng[77])
+              self.Config.targetsel:Boolean("ts",loc_eng[78],false)
+
+              self.Config:Menu("orb","Orbwalker Settings")
+              self.Config.orb:Menu( "selectorb","Current Orbwalker :")
+
+
+              self.Config:Menu("pred","Prediction Settings")
+              self.Config.pred:DropDown("selectpred","Current Predictions :",   1, {"Open Prediction","IPrediction","Gos Prediction"})
+              self.Config.pred:Menu( "hcgeneral","Hitchance Settings")
+              self.Config.pred.hcgeneral:Menu( "hcop","Open Prediction Hitchance")
+              self.Config.pred.hcgeneral.hcop:Slider("hcopq", "Q Hitchance " , 30, 0, 100, 1)
+              self.Config.pred:Info("blank", "    Currently Open Prediction "   )
+              self.Config.pred:Info("blank", "      is best with this bundle"   )
+
+
+              self.Config:Menu( "Keys",loc_eng[79])
+              self.Config.Keys:Info("infoK3", loc_eng[80])
+              self.Config.Keys:Key("combokey", loc_eng[81],string.byte(" "))
+              self.Config.Keys:Info("infoK4", loc_eng[82])
+              self.Config.Keys:Key("harasskey", loc_eng[83],string.byte("C"))
+              self.Config.Keys:Key("autoq", loc_eng[91], string.byte("T"))
+              self.Config.Keys:Info("infoK5", loc_eng[84])
+              self.Config.Keys:Key("laneclearkey", loc_eng[85],string.byte("V"))
+              self.Config.Keys:Key("jungleclearkey", loc_eng[86],string.byte("V"))
+              self.Config.Keys:Key("lasthitkey",loc_eng[215],string.byte("X"))
+              self.Config.Keys:Info("infoK6", loc_eng[87])
+              self.Config.Keys:Key("escapekey", loc_eng[88],string.byte("Y"))
+              --self.Config.Keys:Boolean("lasthitkey", "Lasthit Key",string.byte("X"))
+              self.Config.Keys:Info("infoK","" )
+              self.Config.Keys:Info("infoK2", loc_eng[89])
+
+              self.Config:Info("infoK","           "..Scriptname.."" )
+              self.Config:Info("infoK","         Script Version:  "..Version.. "  " )
+              self.Config:Info("infoK","   Script was made by  "..Author.. "" )
+              self.Config:Info("infoK","Leauge Of Legends Version: "..LVersion.. "" )
+              self.Config:Boolean("instruct", loc_eng[216], false)
+
+
+
+    end
+      function Orianna:escape()
+    if self.Config.Keys.escapekey:Value()  then
+  if self.Config.escape.useE:Value()  then
+    if  IsReady(_E) and GetDistance(target) <= 525  then
+      self:CastE(myHero)
+    else
+      MoveToXYZ(mousePos)
+    end
+  end
+end
+end
+ function Orianna:killsteal()
+              for _, unit in pairs(GetEnemyHeroes()) do
+                local health = GetCurrentHP(unit)
+                local dmgQ = self:GetQDmg(unit)
+                if(GetDistance(target) <= self.Q.range and  IsReady(_Q) and not self.Config.Keys.combokey:Value()   and health<dmgQ and self.Config.killsteal.useQ:Value() and self.Config.killsteal.ks:Value() )then
+                  self:CastQ(unit)
+                end
+                local dmgW = self:GetWDmg(unit)
+           if( self:ValidTargetNear(target, self.W.radius, self.Ball)  and  IsReady(_W) and not self.Config.Keys.combokey:Value()  and health<dmgQ and self.Config.killsteal.useW:Value() and self.Config.killsteal.ks:Value() )then
+                  self:CastW(unit)
+                end
+                local dmgI =(50+ ((myHero.level)*20))
+                if(health<dmgI and self.Config.killsteal.useI:Value() and self.Config.killsteal.ks:Value() and GetDistance(unit)<600)then
+                  self:CastI(unit)
+                end
+                local dmgR =self:GetRDmg(unit)
+                if(self:ValidTargetNear(target, self.R.range, self.Ball) and  IsReady(_R) and not self.Config.Keys.combokey:Value()   and health<dmgR and self.Config.killsteal.useR:Value() and self.Config.killsteal.ks:Value() )then
+                  self:CastR(unit)
+                end
+              end
+            end
+    function  Orianna:ProcessSpell(unit, spell)
+    if unit == myHero then
+      if unit and spell then
+        if spell.name == "OrianaIzunaCommand" then
+    self.Ball = Vector(spell.endPos)
+  elseif spell.name == "OrianaRedactCommand" then
+    self.Ball = spell.target
+  end
+  end
+end
+ if GetCastLevel(myHero, _R) > 1 then
+                if Interrupt[unit.charName] ~= nil then
+                  spell = Interrupt[unit.charName].stop[spell.name]
+                  if spell ~= nil then
+                    if self.Config.misc.interrupt[spell.name]:Value() then
+                      if ValidTarget(unit) and GetDistance(unit, self.Ball) < self.R.range  and IsReady(_R)  and self.Config.misc.interrupt.r:Value() then
+                        self:CastR(unit)
+                      end
+                    end
+                  end
+                end
+              end
+            end
+    function Orianna:UpdateBuff(unit,buff)
+                    if unit and unit.team == myHero.team and unit.type == myHero.type then
+                      if  buff.Name == "orianaghostself" then
+                         self.Ball = myHero
+                      end
+                    end
+                  end
+    function Orianna:ValidTargetNear(object, distance, from)
+  return object ~= nil and object.valid and object.team ~= myHero.team and object.visible and not object.dead  and GetDistanceSqr(object, from) <= distance*distance
+end
+    function Orianna:WndMsg(Msg, Key)
+      if self.Config.targetsel.ts:Value() then
+        if Msg == WM_LBUTTONDOWN then
+          local minD = 10
+          local starget = nil
+          for i, enemy in ipairs(GetEnemyHeroes()) do
+            if ValidTarget(enemy) then
+              if GetDistance(enemy, mousePos) <= minD or starget == nil then
+                minD = GetDistance(enemy, mousePos)
+                starget = enemy
+              end
+            end
+          end
+          if starget and minD < 150 then
+            if self.selectedTar and starget.charName == self.selectedTar.charName then
+              self.selectedTar = nil
+              print("<font color=\"#FFFFFF\">Target <b>is no loger selected.</b>:<font color=\"#D3649F\"><b> "..starget.charName.." </b></font>")
+            else
+              self.selectedTar = starget
+              print("<font color=\"#FFFFFF\">New target <b>selected.</b>:<font color=\"#D3649F\"><b> "..starget.charName.." </b></font>")
+            end
+          end
+        end
+      end
+      if Msg == WM_LBUTTONDOWN then
+        if PopUp1 then
+          PopUp1 = false
+        end
+      end
+    end
 class "Zed"
 local GR = 0
 local Wdmgp = false
@@ -8926,11 +10728,11 @@ end
   end
   function Akali:findorb()
     if  _G.DAC_Loaded or _G.DAC_Init then
-      DAC = true
+      loaddac = true
       self.Config.orb.selectorb:Info("infoK5", "Deftsu's Auto Carry")
       PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.." - </b></font><font color=\"#FFFFFF\">Deftsu's Auto Carry integration has been finished succesfully")
     else
-      IOW = true
+      loadiow = true
       LoadIOW()
       self.Config.orb.selectorb:Info("infoK5", "Insprieds Orb Walker")
       PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.." - </b></font><font color=\"#FFFFFF\">Insprieds Orb Walker integration has been finished succesfully")
@@ -8938,11 +10740,36 @@ end
   end
   function Diana:findorb()
     if  _G.DAC_Loaded or _G.DAC_Init then
-      DAC = true
+      loaddac = true
       self.Config.orb.selectorb:Info("infoK5", "Deftsu's Auto Carry")
       PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.." - </b></font><font color=\"#FFFFFF\">Deftsu's Auto Carry integration has been finished succesfully")
     else
-      IOW = true
+      loadiow = true
+      LoadIOW()
+      self.Config.orb.selectorb:Info("infoK5", "Insprieds Orb Walker")
+      PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.." - </b></font><font color=\"#FFFFFF\">Insprieds Orb Walker integration has been finished succesfully")
+    end
+  end
+    function Orianna:findorb()
+    if  _G.DAC_Loaded or _G.DAC_Init then
+      loaddac = true
+      self.Config.orb.selectorb:Info("infoK5", "Deftsu's Auto Carry")
+      PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.." - </b></font><font color=\"#FFFFFF\">Deftsu's Auto Carry integration has been finished succesfully")
+    else
+      loadiow = true
+      LoadIOW()
+
+      self.Config.orb.selectorb:Info("infoK5", "Insprieds Orb Walker")
+      PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.." - </b></font><font color=\"#FFFFFF\">Insprieds Orb Walker integration has been finished succesfully")
+    end
+  end
+      function TwistedFate:findorb()
+       if  _G.DAC_Loaded or _G.DAC_Init then
+      loaddac = true
+      self.Config.orb.selectorb:Info("infoK5", "Deftsu's Auto Carry")
+      PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.." - </b></font><font color=\"#FFFFFF\">Deftsu's Auto Carry integration has been finished succesfully")
+    else
+      loadiow = true
       LoadIOW()
       self.Config.orb.selectorb:Info("infoK5", "Insprieds Orb Walker")
       PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.." - </b></font><font color=\"#FFFFFF\">Insprieds Orb Walker integration has been finished succesfully")
@@ -8950,11 +10777,11 @@ end
   end
   function Lissandra:findorb()
     if  _G.DAC_Loaded or _G.DAC_Init then
-      DAC = true
+      loaddac = true
       self.Config.orb.selectorb:Info("infoK5", "Deftsu's Auto Carry")
       PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.." - </b></font><font color=\"#FFFFFF\">Deftsu's Auto Carry integration has been finished succesfully")
     else
-      IOW = true
+      loadiow = true
       LoadIOW()
       self.Config.orb.selectorb:Info("infoK5", "Insprieds Orb Walker")
       PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.." - </b></font><font color=\"#FFFFFF\">Insprieds Orb Walker integration has been finished succesfully")
@@ -8962,11 +10789,11 @@ end
   end
   function Yasuo:findorb()
     if  _G.DAC_Loaded or _G.DAC_Init then
-      DAC = true
+      loaddac = true
       self.Config.orb.selectorb:Info("infoK5", "Deftsu's Auto Carry")
       PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.." - </b></font><font color=\"#FFFFFF\">Deftsu's Auto Carry integration has been finished succesfully")
     else
-      IOW = true
+      loadiow = true
       LoadIOW()
 
       self.Config.orb.selectorb:Info("infoK5", "Insprieds Orb Walker")
@@ -8975,11 +10802,11 @@ end
   end
   function Viktor:findorb()
     if  _G.DAC_Loaded or _G.DAC_Init then
-      DAC = true
+      loaddac = true
       self.Config.orb.selectorb:Info("infoK5", "Deftsu's Auto Carry")
       PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.." - </b></font><font color=\"#FFFFFF\">Deftsu's Auto Carry integration has been finished succesfully")
     else
-      IOW = true
+      loadiow = true
       LoadIOW()
 
       self.Config.orb.selectorb:Info("infoK5", "Insprieds Orb Walker")
@@ -8988,11 +10815,11 @@ end
   end
   function Zed:findorb()
     if  _G.DAC_Loaded or _G.DAC_Init then
-      DAC = true
+      loaddac = true
       self.Config.orb.selectorb:Info("infoK5", "Deftsu's Auto Carry")
       PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.." - </b></font><font color=\"#FFFFFF\">Deftsu's Auto Carry integration has been finished succesfully")
     else
-      IOW = true
+      loadiow = true
       LoadIOW()
 
       self.Config.orb.selectorb:Info("infoK5", "Insprieds Orb Walker")
@@ -9001,11 +10828,11 @@ end
   end
   function Leblanc:findorb()
     if  _G.DAC_Loaded or _G.DAC_Init then
-      DAC = true
+      loaddac = true
       self.Config.orb.selectorb:Info("infoK5", "Deftsu's Auto Carry")
       PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.." - </b></font><font color=\"#FFFFFF\">Deftsu's Auto Carry integration has been finished succesfully")
     else
-      IOW = true
+      loadiow = true
       LoadIOW()
       self.Config.orb.selectorb:Info("infoK5", "Insprieds Orb Walker")
       PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.." - </b></font><font color=\"#FFFFFF\">Insprieds Orb Walker integration has been finished succesfully")
@@ -9031,6 +10858,24 @@ end
     end
   end
   function Leblanc:checkothers()
+    if os.clock() - lastcheck < 15 then return end
+    if self.Config.pred.selectpred:Value() == 2 then
+      if not ipred then
+        print("<font color=\"#FF0000\"><b> "..Scriptname.." [Prediction Manager]  </b></font><font color=\"#FFFFFF\"> : If you want to use Iprediction, IPrediction should be in common folder. " )
+        lastcheck = os.clock()
+      end
+    end
+  end
+    function Orianna:checkothers()
+    if os.clock() - lastcheck < 15 then return end
+    if self.Config.pred.selectpred:Value() == 2 then
+      if not ipred then
+        print("<font color=\"#FF0000\"><b> "..Scriptname.." [Prediction Manager]  </b></font><font color=\"#FFFFFF\"> : If you want to use Iprediction, IPrediction should be in common folder. " )
+        lastcheck = os.clock()
+      end
+    end
+  end
+      function TwistedFate:checkothers()
     if os.clock() - lastcheck < 15 then return end
     if self.Config.pred.selectpred:Value() == 2 then
       if not ipred then
