@@ -8,7 +8,7 @@ end
 local lastTimeTickCalled = 0
 local DAC = false
 local IOW = false
-Version = "1.19"
+Version = "1.20"
 LVersion = " 6.4"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
@@ -16,7 +16,7 @@ list = "Leblanc , Lissandra , Viktor, Akali, Diana, Yasuo,Zed"
 link = "http://gamingonsteroids.com/topic/10502-beta-stage-krystra-mid-series-leblanc-viktor-lissandra-diana-akali-multi-prediction-orbwalk-support-expert-drawings-and-much-more/"
 date = "20.02.2016"
 
-AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.19)
+AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.20)
 
 ---//==================================================\\---
 --|| > English Translation details               ||--
@@ -2116,7 +2116,6 @@ function Leblanc:combomode()
                 function Diana:Tick()
                   self:Checks()
                   self:autoq()
-                  print (abuff)
                   self:Antiafk()
                   self:autolevel()
                   self:skinhack()
