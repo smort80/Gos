@@ -8,7 +8,7 @@ end
 local lastTimeTickCalled = 0
 local loaddac = false
 local loadiow = false
-Version = "1.23"
+Version = "1.24"
 LVersion = " 6.4"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
@@ -16,7 +16,7 @@ list = "Leblanc , Lissandra , Viktor, Akali, Diana, Yasuo,Zed, Orianna , Twisted
 link = "http://gamingonsteroids.com/topic/10502-beta-stage-krystra-mid-series-leblanc-viktor-lissandra-diana-akali-multi-prediction-orbwalk-support-expert-drawings-and-much-more/"
 date = "27.02.2016"
 
-AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.23)
+AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.24)
 
 ---//==================================================\\---
 --|| > English Translation details               ||--
@@ -526,7 +526,7 @@ function Leblanc:Checks()
   elseif  ValidTarget(Gtarget, 925) and not self.selectedTar then
     target = GetCurrentTarget()
   elseif (ValidTarget(Gtarget, 925) and self.selectedTar) then
-    target = GetGameTarget()
+    target = self.selectedTar
   end
   Etarget = self.tse:GetTarget()
   mousePos = GetMousePos()
@@ -2109,7 +2109,7 @@ function Leblanc:combomode()
                   elseif  ValidTarget(Gtarget, 925) and not self.selectedTar then
                     target = GetCurrentTarget()
                   elseif (ValidTarget(Gtarget, 925) and self.selectedTar) then
-                    target = GetGameTarget()
+                    target = self.selectedTar
                   end
                   mousePos = GetMousePos()
                 end
@@ -2665,7 +2665,7 @@ function Leblanc:combomode()
             elseif  ValidTarget(Gtarget, 1200) and not self.selectedTar then
               target = GetCurrentTarget()
             elseif (ValidTarget(Gtarget, 1200) and self.selectedTar) then
-              target = GetGameTarget()
+              target = self.selectedTar
             end
             mousePos = GetMousePos()
           end
@@ -3672,7 +3672,7 @@ function Leblanc:combomode()
         elseif  ValidTarget(Gtarget, 925) and not self.selectedTar then
           target = GetCurrentTarget()
         elseif (ValidTarget(Gtarget, 925) and self.selectedTar) then
-          target = GetGameTarget()
+          target = self.selectedTar
         end
         mousePos = GetMousePos()
 
@@ -4459,7 +4459,7 @@ function Leblanc:combomode()
       elseif  ValidTarget(Gtarget, 1300) and not self.selectedTar then
         target = GetCurrentTarget()
       elseif (ValidTarget(Gtarget, 1300) and self.selectedTar) then
-        target = GetGameTarget()
+        target = self.selectedTar
       end
       mousePos = GetMousePos()
     end
@@ -5688,7 +5688,7 @@ if not ValidTarget(Gtarget, 925) or not self.Config.targetsel.ts:Value()  then
 elseif  ValidTarget(Gtarget, 925) and not self.selectedTar then
   target = GetCurrentTarget()
 elseif (ValidTarget(Gtarget, 925) and self.selectedTar) then
-  target = GetGameTarget()
+  target = self.selectedTar
 end
 q3ready = GetCastName(myHero,_Q)  == "YasuoQ3W"
 mousePos = GetMousePos()
@@ -6505,7 +6505,7 @@ end
   elseif  ValidTarget(Gtarget, 925) and not self.selectedTar then
     target = GetCurrentTarget()
   elseif (ValidTarget(Gtarget, 925) and self.selectedTar) then
-    target = GetGameTarget()
+    target = self.selectedTar
   end
                   mousePos = GetMousePos()
                 end
@@ -7393,7 +7393,7 @@ function Orianna:Checks()
   elseif  ValidTarget(Gtarget, 925) and not self.selectedTar then
     target = GetCurrentTarget()
   elseif (ValidTarget(Gtarget, 925) and self.selectedTar) then
-    target = GetGameTarget()
+    target = self.selectedTar
   end
   mousePos = GetMousePos()
   if myHero.dead then
@@ -8315,7 +8315,7 @@ target = GetCurrentTarget()
 elseif  ValidTarget(Gtarget, 925) and not self.selectedTar then
 target = GetCurrentTarget()
 elseif (ValidTarget(Gtarget, 925) and self.selectedTar) then
-target = GetGameTarget()
+target = self.selectedTar
 end
 mousePos = GetMousePos()
 Blg = GetItemSlot(myHero,3144) > 0 and GetItemSlot(myHero,3144) or nil
