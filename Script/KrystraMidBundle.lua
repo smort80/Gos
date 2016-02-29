@@ -8,7 +8,7 @@ end
 local lastTimeTickCalled = 0
 local loaddac = false
 local loadiow = false
-Version = "1.26"
+Version = "1.27"
 LVersion = " 6.4"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
@@ -16,7 +16,7 @@ list = "Leblanc , Lissandra , Viktor, Akali, Diana, Yasuo,Zed, Orianna , Twisted
 link = "http://gamingonsteroids.com/topic/10502-beta-stage-krystra-mid-series-leblanc-viktor-lissandra-diana-akali-multi-prediction-orbwalk-support-expert-drawings-and-much-more/"
 date = "27.02.2016"
 
-AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.26)
+AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.27)
 
 ---//==================================================\\---
 --|| > English Translation details               ||--
@@ -1936,15 +1936,16 @@ function Leblanc:combomode()
               self.Config.misc:Menu( "interrupt",loc_eng[93])
               self.Config.misc.interrupt:Boolean("r", loc_eng[96], true)
               self.Config.misc.interrupt:Info("info3", loc_eng[98])
-              DelayAction(function()  for i, a in pairs(GetEnemyHeroes()) do
-                if Interrupt[a.charName] ~= nil then
-                  for i, spell in pairs(Interrupt[a.charName].stop) do
-                    self.Config.misc.interrupt:Boolean(spell.spellName, a.charName.." - "..spell.name, true)
-                  end
-                end
-
-              end
-              end, 1)
+      DelayAction(function()
+  local str = {[_Q] = "Q", [_W] = "W", [_E] = "E", [_R] = "R"}
+  for i, spell in pairs(CHANELLING_SPELLS) do
+    for _,k in pairs(GetEnemyHeroes()) do
+        if spell["Name"] == GetObjectName(k) then
+        self.Config.misc.interrupt:Boolean(GetObjectName(k).."Inter", "On "..GetObjectName(k).." "..(type(spell.Spellslot) == 'number' and str[spell.Spellslot]), true)
+        end
+    end
+  end
+end, 0.35)
 
               self.Config.misc:Menu( "skinhack","[" .. myHero.charName.. "] - Skinhack Settings")
               self.Config.misc.skinhack:Boolean("useskin",loc_eng[54], false)
@@ -2218,18 +2219,13 @@ function Leblanc:combomode()
                   end
                 end
                 function Diana:ProcessSpell(unit, spell)
-                  if GetCastLevel(myHero, _E) > 1 then
-                    if Interrupt[unit.charName] ~= nil then
-                      spell = Interrupt[unit.charName].stop[spell.name]
-                      if spell ~= nil then
-                        if self.Config.misc.interrupt[spell.name]:Value() then
-                          if ValidTarget(unit) and GetDistance(unit) < self.E.range  and IsReady(_E)  and self.Config.misc.interrupt.r:Value() then
-                            self:CastE(unit)
-                          end
-                        end
-                      end
-                    end
-                  end
+                  if GetObjectType(unit) == Obj_AI_Hero and GetTeam(unit) ~= GetTeam(myHero) and IsReady(_E) then
+      if CHANELLING_SPELLS[spell.name] then
+        if ValidTarget(unit, 1000) and GetObjectName(unit) == CHANELLING_SPELLS[spell.name].Name and  self.Config.misc.interrupt[GetObjectName(unit).."Inter"]:Value() and self.Config.misc.interrupt.r:Value() then 
+         self:CastE(unit)
+        end
+      end
+    end
                 end
                 function Diana:UpdateBuff(unit,buff)
                   if unit and unit.team ~= myHero.team and unit.type == myHero.type then
@@ -2988,18 +2984,13 @@ function Leblanc:combomode()
             end
 
             function Lissandra:ProcessSpell(unit, spell)
-              if GetCastLevel(myHero, _R) > 1 then
-                if Interrupt[unit.charName] ~= nil then
-                  spell = Interrupt[unit.charName].stop[spell.name]
-                  if spell ~= nil then
-                    if self.Config.misc.interrupt[spell.name]:Value() then
-                      if ValidTarget(unit) and GetDistance(unit) < self.R.range  and IsReady(_R)  and self.Config.misc.interrupt.r:Value() then
-                        self:CastR(unit)
-                      end
-                    end
-                  end
-                end
-              end
+       if GetObjectType(unit) == Obj_AI_Hero and GetTeam(unit) ~= GetTeam(myHero) and IsReady(_R) then
+      if CHANELLING_SPELLS[spell.name] then
+        if ValidTarget(unit, 1000) and GetObjectName(unit) == CHANELLING_SPELLS[spell.name].Name and  self.Config.misc.interrupt[GetObjectName(unit).."Inter"]:Value() and self.Config.misc.interrupt.r:Value() then 
+         self:CastR(unit)
+        end
+      end
+    end
             end
             function Lissandra:GetQDmg(target)
               if GetCastLevel(myHero, _Q) < 1 then
@@ -3431,15 +3422,16 @@ function Leblanc:combomode()
               self.Config.misc:Menu("interrupt",loc_eng[93])
               self.Config.misc.interrupt:Boolean("r", loc_eng[97], true)
               self.Config.misc.interrupt:Info("info3", loc_eng[98])
-              DelayAction(function()  for i, a in pairs(GetEnemyHeroes()) do
-                if Interrupt[a.charName] ~= nil then
-                  for i, spell in pairs(Interrupt[a.charName].stop) do
-                    self.Config.misc.interrupt:Boolean(spell.spellName, a.charName.." - "..spell.name, true)
-                  end
-                end
-
-              end
-              end, 1)
+DelayAction(function()
+  local str = {[_Q] = "Q", [_W] = "W", [_E] = "E", [_R] = "R"}
+  for i, spell in pairs(CHANELLING_SPELLS) do
+    for _,k in pairs(GetEnemyHeroes()) do
+        if spell["Name"] == GetObjectName(k) then
+        self.Config.misc.interrupt:Boolean(GetObjectName(k).."Inter", "On "..GetObjectName(k).." "..(type(spell.Spellslot) == 'number' and str[spell.Spellslot]), true)
+        end
+    end
+  end
+end, 0.35)
               self.Config.misc:Menu( "autow","[" .. myHero.charName.. "] - Auto W Settings")
               self.Config.misc.autow:Boolean("use", loc_eng[223], true)
               self.Config.misc.autow:DropDown("enemycount", loc_eng[224], 1, {loc_eng[130], loc_eng[131] , loc_eng[132],loc_eng[133] })
@@ -4691,30 +4683,20 @@ function Leblanc:combomode()
       end
     end
     function Viktor:ProcessSpell(unit, spell)
-      if GetCastLevel(myHero, _R) > 1 then
-        if Interrupt[unit.charName] ~= nil then
-          spell = Interrupt[unit.charName].stop[spell.name]
-          if spell ~= nil then
-            if self.Config.misc.interrupt[spell.name]:Value() then
-              if ValidTarget(unit) and GetDistance(unit) < self.R.range  and IsReady(_R)  and self.Config.misc.interrupt.r:Value() then
-                self:CastR(unit)
-              end
-            end
-          end
+       if GetObjectType(unit) == Obj_AI_Hero and GetTeam(unit) ~= GetTeam(myHero) and IsReady(_R) then
+      if CHANELLING_SPELLS[spell.name] then
+        if ValidTarget(unit, self.R.range) and GetObjectName(unit) == CHANELLING_SPELLS[spell.name].Name and  self.Config.misc.interrupt[GetObjectName(unit).."Inter"]:Value() and self.Config.misc.interrupt.r:Value() then 
+         self:CastR(unit)
         end
       end
-      if GetCastLevel(myHero, _W) > 1 then
-        if Interrupt[unit.charName] ~= nil then
-          spell = Interrupt[unit.charName].stop[spell.name]
-          if spell ~= nil then
-            if self.Config.misc.interrupt[spell.name]:Value() then
-              if ValidTarget(unit) and GetDistance(unit) < self.W.range  and IsReady(_W) and self.Config.misc.interrupt.w:Value() then
-                self:CastW(unit)
-              end
-            end
-          end
+    end
+       if GetObjectType(unit) == Obj_AI_Hero and GetTeam(unit) ~= GetTeam(myHero) and IsReady(_W) then
+      if CHANELLING_SPELLS[spell.name] then
+        if ValidTarget(unit, 1000) and GetObjectName(unit) == CHANELLING_SPELLS[spell.name].Name and  self.Config.misc.interrupt[GetObjectName(unit).."Inter"]:Value() and self.Config.misc.interrupt.w:Value() then 
+         self:CastW(unit)
         end
       end
+    end
     end
     function Viktor:combo()
       if((IsReady(_Q) and (myHero.mana / myHero.maxMana > self.Config.combo.Mana:Value() /100 )and GetDistance(target) < 600  and self.Config.combo.useQ:Value() and self.Config.combo.combokey:Value()  )) then
@@ -5070,16 +5052,16 @@ function Leblanc:combomode()
       self.Config.misc.interrupt:Boolean("r", loc_eng[97], true)
       self.Config.misc.interrupt:Boolean("w", loc_eng[95],  true)
       self.Config.misc.interrupt:Info("info3", loc_eng[98] )
-      DelayAction(function()  for i, a in pairs(GetEnemyHeroes()) do
-        if Interrupt[a.charName] ~= nil then
-          for i, spell in pairs(Interrupt[a.charName].stop) do
-            self.Config.misc.interrupt:Boolean(spell.spellName, a.charName.." - "..spell.name, true)
-          end
+DelayAction(function()
+  local str = {[_Q] = "Q", [_W] = "W", [_E] = "E", [_R] = "R"}
+  for i, spell in pairs(CHANELLING_SPELLS) do
+    for _,k in pairs(GetEnemyHeroes()) do
+        if spell["Name"] == GetObjectName(k) then
+        self.Config.misc.interrupt:Boolean(GetObjectName(k).."Inter", "On "..GetObjectName(k).." "..(type(spell.Spellslot) == 'number' and str[spell.Spellslot]), true)
         end
-
-      end
-      end, 1)
-
+    end
+  end
+end, 0.35)
       Clock = os.clock()
 
 
@@ -5398,15 +5380,16 @@ self.Config.misc.walljump:ColorPick("fcolor", "Location Color",   {255, 255, 255
 self.Config.misc:Menu( "interrupt",loc_eng[93])
 self.Config.misc.interrupt:Boolean("r", "Interrupt with Q3 Skill", true)
 self.Config.misc.interrupt:Info("info3", loc_eng[98])
-DelayAction(function()  for i, a in pairs(GetEnemyHeroes()) do
-  if Interrupt[a.charName] ~= nil then
-    for i, spell in pairs(Interrupt[a.charName].stop) do
-      self.Config.misc.interrupt:Boolean(spell.spellName, a.charName.." - "..spell.name, true)
+DelayAction(function()
+  local str = {[_Q] = "Q", [_W] = "W", [_E] = "E", [_R] = "R"}
+  for i, spell in pairs(CHANELLING_SPELLS) do
+    for _,k in pairs(GetEnemyHeroes()) do
+        if spell["Name"] == GetObjectName(k) then
+        self.Config.misc.interrupt:Boolean(GetObjectName(k).."Inter", "On "..GetObjectName(k).." "..(type(spell.Spellslot) == 'number' and str[spell.Spellslot]), true)
+        end
     end
   end
-
-end
-end, 1)
+end, 0.35)
 self.Config.misc:Menu( "autoq","[" .. myHero.charName.. "] - Auto Q Settings")
 self.Config.misc.autoq:Boolean("useQ", "Use Auto Q to minion ( Stack )", false)
 self.Config.misc.autoq:DropDown("autoqlogic","Auto Q Logic",   1, {"Always use","Only if enemy away"})
@@ -6196,18 +6179,13 @@ else
 end
 end
 function Yasuo:ProcessSpell(unit, spell)
-if GetCastLevel(myHero, _Q) > 1 then
-  if Interrupt[unit.charName] ~= nil then
-    spell = Interrupt[unit.charName].stop[spell.name]
-    if spell ~= nil then
-      if self.Config.misc.interrupt[spell.name]:Value() then
-        if ValidTarget(unit) and GetDistance(unit) < self.Q.range  and IsReady(_Q)  and self.Config.misc.interrupt.r:Value() then
-          self:CastQ3(unit)
+       if GetObjectType(unit) == Obj_AI_Hero and GetTeam(unit) ~= GetTeam(myHero) and q3ready then
+      if CHANELLING_SPELLS[spell.name] then
+        if ValidTarget(unit, 1000) and GetObjectName(unit) == CHANELLING_SPELLS[spell.name].Name and  self.Config.misc.interrupt[GetObjectName(unit).."Inter"]:Value() and self.Config.misc.interrupt.r:Value() then 
+         self:CastQ3(unit)
         end
       end
     end
-  end
-end
 if  self.Config.misc.autowall.useW:Value() then
 
   if unit and unit ~= nil and spell then
@@ -6605,19 +6583,14 @@ if self.Config.combo.qmode:Value() == 1  then
                        DelayAction(function()   ultused = false end, 2)
                 end
 
-                 if GetCastLevel(myHero, _W) >= 1 then
-                if Interrupt[unit.charName] ~= nil then
-                  spell = Interrupt[unit.charName].stop[spell.name]
-                  if spell ~= nil then
-                    if self.Config.misc.interrupt[spell.name]:Value() then
-                      if ValidTarget(unit) and GetDistance(unit, myHero) < 525  and IsReady(_W)  and self.Config.misc.interrupt.r:Value() then
-                        self:CastW(self.yellow)
+                      if GetObjectType(unit) == Obj_AI_Hero and GetTeam(unit) ~= GetTeam(myHero) and IsReady(_W) then
+      if CHANELLING_SPELLS[spell.name] then
+        if ValidTarget(unit, 1000) and GetObjectName(unit) == CHANELLING_SPELLS[spell.name].Name and  self.Config.misc.interrupt[GetObjectName(unit).."Inter"]:Value() and self.Config.misc.interrupt.r:Value() then 
+                         self:CastW(self.yellow)
                               AttackUnit(unit) 
-                      end
-                    end
-                  end
-                end
-              end
+        end
+      end
+    end
                if unit.type == myHero.type and unit.team ~= myHero.team and isAGapcloserUnit[unit.charName] and GetDistance(unit) < 1000 and spell ~= nil then     
     if spell.name == (type(isAGapcloserUnit[unit.charName].spell) == 'number' and unit:GetSpellData(isAGapcloserUnit[unit.charName].spell).name or isAGapcloserUnit[unit.charName].spell) and self.Config.misc.gapClose1.gapClose1w[unit.charName] then
       if spell.target ~= nil and spell.target.name == myHero.name or isAGapcloserUnit[unit.charName].spell == 'blindmonkqtwo' then
@@ -7235,15 +7208,16 @@ function TwistedFate:LoadMenu()
               self.Config.misc:Menu( "interrupt",loc_eng[93])
               self.Config.misc.interrupt:Boolean("r", loc_eng[95], true)
               self.Config.misc.interrupt:Info("info3", loc_eng[98])
-              DelayAction(function()  for i, a in pairs(GetEnemyHeroes()) do
-                if Interrupt[a.charName] ~= nil then
-                  for i, spell in pairs(Interrupt[a.charName].stop) do
-                    self.Config.misc.interrupt:Boolean(spell.spellName, a.charName.." - "..spell.name, true)
-                  end
-                end
-
-              end
-              end, 0.3)
+          DelayAction(function()
+  local str = {[_Q] = "Q", [_W] = "W", [_E] = "E", [_R] = "R"}
+  for i, spell in pairs(CHANELLING_SPELLS) do
+    for _,k in pairs(GetEnemyHeroes()) do
+        if spell["Name"] == GetObjectName(k) then
+        self.Config.misc.interrupt:Boolean(GetObjectName(k).."Inter", "On "..GetObjectName(k).." "..(type(spell.Spellslot) == 'number' and str[spell.Spellslot]), true)
+        end
+    end
+  end
+end, 0.35)
 
               self.Config.misc:Menu( "gapClose1",loc_eng[219])
               self.Config.misc.gapClose1:Menu( "gapClose1w","Gap Close - W Settings")
@@ -8081,15 +8055,16 @@ end
               self.Config.misc:Menu( "interrupt",loc_eng[93])
               self.Config.misc.interrupt:Boolean("r", loc_eng[97], true)
               self.Config.misc.interrupt:Info("info3", loc_eng[98])
-              DelayAction(function()  for i, a in pairs(GetEnemyHeroes()) do
-                if Interrupt[a.charName] ~= nil then
-                  for i, spell in pairs(Interrupt[a.charName].stop) do
-                    self.Config.misc.interrupt:Boolean(spell.spellName, a.charName.." - "..spell.name, true)
-                  end
-                end
-
-              end
-              end, 0.3)
+    DelayAction(function()
+  local str = {[_Q] = "Q", [_W] = "W", [_E] = "E", [_R] = "R"}
+  for i, spell in pairs(CHANELLING_SPELLS) do
+    for _,k in pairs(GetEnemyHeroes()) do
+        if spell["Name"] == GetObjectName(k) then
+        self.Config.misc.interrupt:Boolean(GetObjectName(k).."Inter", "On "..GetObjectName(k).." "..(type(spell.Spellslot) == 'number' and str[spell.Spellslot]), true)
+        end
+    end
+  end
+end, 0.35)
 
               self.Config.misc:Menu( "skinhack","[" .. myHero.charName.. "] - Skinhack Settings")
               self.Config.misc.skinhack:Boolean("useskin",loc_eng[54], false)
@@ -8222,18 +8197,13 @@ end
   end
   end
 end
- if GetCastLevel(myHero, _R) > 1 then
-                if Interrupt[unit.charName] ~= nil then
-                  spell = Interrupt[unit.charName].stop[spell.name]
-                  if spell ~= nil then
-                    if self.Config.misc.interrupt[spell.name]:Value() then
-                      if ValidTarget(unit) and GetDistance(unit, self.Ball) < self.R.range  and IsReady(_R)  and self.Config.misc.interrupt.r:Value() then
-                        self:CastR(unit)
-                      end
-                    end
-                  end
-                end
-              end
+       if GetObjectType(unit) == Obj_AI_Hero and GetTeam(unit) ~= GetTeam(myHero) and IsReady(_R) then
+      if CHANELLING_SPELLS[spell.name] then
+        if ValidTarget(unit, 1000) and GetObjectName(unit) == CHANELLING_SPELLS[spell.name].Name and  self.Config.misc.interrupt[GetObjectName(unit).."Inter"]:Value() and self.Config.misc.interrupt.r:Value() then 
+         self:CastR(unit)
+        end
+      end
+    end
             end
     function Orianna:UpdateBuff(unit,buff)
                     if unit and unit.team == myHero.team and unit.type == myHero.type then
