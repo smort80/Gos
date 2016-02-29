@@ -8,7 +8,7 @@ end
 local lastTimeTickCalled = 0
 local loaddac = false
 local loadiow = false
-Version = "1.25"
+Version = "1.26"
 LVersion = " 6.4"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
@@ -16,7 +16,7 @@ list = "Leblanc , Lissandra , Viktor, Akali, Diana, Yasuo,Zed, Orianna , Twisted
 link = "http://gamingonsteroids.com/topic/10502-beta-stage-krystra-mid-series-leblanc-viktor-lissandra-diana-akali-multi-prediction-orbwalk-support-expert-drawings-and-much-more/"
 date = "27.02.2016"
 
-AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.25)
+AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.26)
 
 ---//==================================================\\---
 --|| > English Translation details               ||--
@@ -6512,7 +6512,6 @@ end
 function TwistedFate:Tick()
   self:Checks()
   self:Antiafk()
-  print (target)
   self:autolevel()
    self:ulti()
   self:skinhack()
