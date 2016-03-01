@@ -8,7 +8,7 @@ end
 local lastTimeTickCalled = 0
 local loaddac = false
 local loadiow = false
-Version = "1.27"
+Version = "1.29"
 LVersion = " 6.4"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
@@ -16,7 +16,7 @@ list = "Leblanc , Lissandra , Viktor, Akali, Diana, Yasuo,Zed, Orianna , Twisted
 link = "http://gamingonsteroids.com/topic/10502-beta-stage-krystra-mid-series-leblanc-viktor-lissandra-diana-akali-multi-prediction-orbwalk-support-expert-drawings-and-much-more/"
 date = "27.02.2016"
 
-AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.27)
+AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.29)
 
 ---//==================================================\\---
 --|| > English Translation details               ||--
@@ -6454,6 +6454,7 @@ self.R = { range = 5500  }
 Last_LevelSpell = 0
  Ignite = (GetCastName(GetMyHero(),SUMMONER_1):lower():find("summonerdot") and SUMMONER_1 or (GetCastName(GetMyHero(),SUMMONER_2):lower():find("summonerdot") and SUMMONER_2 or nil))
 self.tsg = TargetSelector(1600,TARGET_LESS_CAST_PRIORITY,DAMAGE_MAGIC,true,false)
+self.tshp = TargetSelector(1600,TARGET_LOW_HP_PRIORITY,DAMAGE_MAGIC,true,false)
 self.ts1 = TargetSelector(525,TARGET_LESS_CAST_PRIORITY,DAMAGE_MAGIC,true,false)
 if ipred then
 qSpell = IPrediction.Prediction({range = 1450, speed = 1000, delay = 0.25, width = 40, type = "linear", name =myHero:GetSpellData(_Q).name, collision = false})
@@ -6476,6 +6477,7 @@ self:LoadMenu()
 end
  function TwistedFate:Checks()
                   Gtarget = self.tsg:GetTarget()
+                   Hptarget = self.tshp:GetTarget()
                       Etarget = self.ts1:GetTarget()
   if not ValidTarget(Gtarget, 925) or not self.Config.targetsel.ts:Value()  then
     target = GetCurrentTarget()
@@ -7013,19 +7015,19 @@ end
 end
 end
      function TwistedFate:killsteal()
-      for _, unit in pairs(GetEnemyHeroes()) do
-        local health = unit.health
-        local dmgW = self:GetWDmg(unit)
-        if(GetDistance(unit)<525 and  IsReady(_W) and health<dmgW and self.Config.killsteal.useW:Value()  and self.Config.killsteal.ks:Value())then
+      if Hptarget ~= nil then
+        local health = Hptarget.health
+        local dmgW = self:GetWDmg(Hptarget)
+        if(GetDistance(Hptarget)<525 and  IsReady(_W) and health<dmgW and self.Config.killsteal.useW:Value()  and self.Config.killsteal.ks:Value())then
           self:CastW(self.yellow)
         end
-        local dmgQ = self:GetQDmg(unit)
-        if(GetDistance(unit)<1450 and  IsReady(_Q) and health<dmgQ and self.Config.killsteal.useQ:Value() and self.Config.killsteal.ks:Value() )then
-          self:CastQ(unit)
+        local dmgQ = self:GetQDmg(Hptarget)
+        if(GetDistance(Hptarget)<1450 and  IsReady(_Q) and health<dmgQ and self.Config.killsteal.useQ:Value() and self.Config.killsteal.ks:Value() )then
+          self:CastQ(Hptarget)
         end
         local dmgI =(50+ ((myHero.level)*20))
-        if(health<dmgI and self.Config.killsteal.useI:Value() and self.Config.killsteal.ks:Value() and GetDistance(unit)<600)then
-          self:CastI(unit)
+        if(health<dmgI and self.Config.killsteal.useI:Value() and self.Config.killsteal.ks:Value() and GetDistance(Hptarget)<600)then
+          self:CastI(Hptarget)
         end
       end
     end
@@ -7344,6 +7346,7 @@ self.R = { range = 315 ,radius = 325 }
 Last_LevelSpell = 0
  Ignite = (GetCastName(GetMyHero(),SUMMONER_1):lower():find("summonerdot") and SUMMONER_1 or (GetCastName(GetMyHero(),SUMMONER_2):lower():find("summonerdot") and SUMMONER_2 or nil))
 self.tsg = TargetSelector(1350,TARGET_LESS_CAST_PRIORITY,DAMAGE_MAGIC,true,false)
+self.tshp = TargetSelector(1350,TARGET_LOW_HP_PRIORITY,DAMAGE_MAGIC,true,false)
 if ipred then
 qSpell = IPrediction.Prediction({range = 825, speed = 1200, delay = 0.25, width = 160, type = "linear", name =myHero:GetSpellData(_Q).name, collision = false})
 end
@@ -7361,6 +7364,7 @@ end
   end
 function Orianna:Checks()
   Gtarget = self.tsg:GetTarget()
+    Hptarget = self.tshp:GetTarget()
   if not ValidTarget(Gtarget, 925) or not self.Config.targetsel.ts:Value()  then
     target = GetCurrentTarget()
   elseif  ValidTarget(Gtarget, 925) and not self.selectedTar then
@@ -8167,26 +8171,26 @@ end, 0.35)
 end
 end
  function Orianna:killsteal()
-              for _, unit in pairs(GetEnemyHeroes()) do
-                local health = GetCurrentHP(unit)
-                local dmgQ = self:GetQDmg(unit)
-                if(GetDistance(target) <= self.Q.range and  IsReady(_Q) and not self.Config.Keys.combokey:Value()   and health<dmgQ and self.Config.killsteal.useQ:Value() and self.Config.killsteal.ks:Value() )then
-                  self:CastQ(unit)
+   if Hptarget ~= nil then
+                local health = GetCurrentHP(Hptarget)
+                local dmgQ = self:GetQDmg(Hptarget)
+                if(GetDistance(Hptarget) <= self.Q.range and  IsReady(_Q) and not self.Config.Keys.combokey:Value()   and health<dmgQ and self.Config.killsteal.useQ:Value() and self.Config.killsteal.ks:Value() )then
+                  self:CastQ(Hptarget)
                 end
-                local dmgW = self:GetWDmg(unit)
-           if( self:ValidTargetNear(target, self.W.radius, self.Ball)  and  IsReady(_W) and not self.Config.Keys.combokey:Value()  and health<dmgQ and self.Config.killsteal.useW:Value() and self.Config.killsteal.ks:Value() )then
-                  self:CastW(unit)
+                local dmgW = self:GetWDmg(Hptarget)
+           if( self:ValidTargetNear(Hptarget, self.W.radius, self.Ball)  and  IsReady(_W) and not self.Config.Keys.combokey:Value()  and health<dmgQ and self.Config.killsteal.useW:Value() and self.Config.killsteal.ks:Value() )then
+                  self:CastW(Hptarget)
                 end
                 local dmgI =(50+ ((myHero.level)*20))
-                if(health<dmgI and self.Config.killsteal.useI:Value() and self.Config.killsteal.ks:Value() and GetDistance(unit)<600)then
-                  self:CastI(unit)
+                if(health<dmgI and self.Config.killsteal.useI:Value() and self.Config.killsteal.ks:Value() and GetDistance(Hptarget)<600)then
+                  self:CastI(Hptarget)
                 end
-                local dmgR =self:GetRDmg(unit)
-                if(self:ValidTargetNear(target, self.R.range, self.Ball) and  IsReady(_R) and not self.Config.Keys.combokey:Value()   and health<dmgR and self.Config.killsteal.useR:Value() and self.Config.killsteal.ks:Value() )then
-                  self:CastR(unit)
+                local dmgR =self:GetRDmg(Hptarget)
+                if(self:ValidTargetNear(Hptarget, self.R.range, self.Ball) and  IsReady(_R) and not self.Config.Keys.combokey:Value()   and health<dmgR and self.Config.killsteal.useR:Value() and self.Config.killsteal.ks:Value() )then
+                  self:CastR(Hptarget)
                 end
               end
-            end
+                  end
     function  Orianna:ProcessSpell(unit, spell)
     if unit == myHero then
       if unit and spell then
