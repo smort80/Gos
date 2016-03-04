@@ -16,12 +16,23 @@ list = "Leblanc , Lissandra , Viktor, Akali, Diana, Yasuo,Zed, Orianna , Twisted
 link = "http://gamingonsteroids.com/topic/10502-beta-stage-krystra-mid-series-leblanc-viktor-lissandra-diana-akali-multi-prediction-orbwalk-support-expert-drawings-and-much-more/"
 date = "27.02.2016"
 
-AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.29)
-
+--AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.29)
+local Update  = {}
+    Update.ScriptVersion = 1.28
+    Update.UseHttps = true
+    Update.Host = "raw.githubusercontent.com"
+    Update.VersionPath = "/Lonsemaria/Gos/master/Version/Klib.version"
+    Update.ScriptPath = "/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua"
+    Update.SavePath = SCRIPT_PATH.."/NEETSeries.lua"
+    Update.CallbackUpdate = function(new) print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Updated to "..new..". Please F6 x2 to reload." ) end
+    Update.CallbackNoUpdate = function(new)  print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> :You are using Lastest Version ("..new..")" ) sayhello() end
+    Update.Callbacknew = function(new)  print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : New Version found ("..new.."). Please wait..." ) end
+    Update.CallbackError = function() print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Error when checking update. Please try again." ) end
+    Callback.Add("Load", function() AutoUpdater(Update.ScriptVersion, Update.UseHttps, Update.Host, Update.VersionPath, Update.ScriptPath, Update.SavePath, Update.CallbackUpdate, Update.CallbackNoUpdate, Update.Callbacknew, Update.CallbackError) end)
 ---//==================================================\\---
 --|| > English Translation details               ||--
 ---\\==================================================//---
-loc_eng = {
+loc_eng = {  
   --General Menu(Combo) // 8 // 1
   "Combo Settings", "Use Q in Combo", "Use W in Combo", "Use E in Combo", "Use R in Combo" ,
   "Use Ignite if target killable","Combo logic","Mana Manager %",
@@ -6473,77 +6484,7 @@ Callback.Add("ProcessSpell", function(unit, spell) self:ProcessSpell(unit, spell
 Callback.Add("CreateObj", function(obj) self:CreateObj(obj) end)
 Callback.Add("DeleteObj", function(obj) self:DeleteObj(obj) end)
 self:LoadMenu()
-self._ = {
-        laneclear = {
-function()  if(self.Config.Keys.laneclearkey:Value() )then
-    self:LaneClear()
-  end 
-end
-    },
-     lasthit = {
-     function()     if( self.Config.Keys.lasthitkey:Value() or self.Config.farm.lasthit.autolasthit:Value() )then
-    self:LastHit()
-  end
-end
-       },
-  jungleclear = {
- function()      if(self.Config.Keys.jungleclearkey:Value() )then
-    self:JungleClear()
-  end
-end
-       },
-      combo = {
-     function()    if(self.Config.Keys.combokey:Value() )then
-    self:Combo()
-  end
-end
-       }   ,
-         harass = {
-        function()     if(self.Config.Keys.harasskey:Value()   ) then
-    self:harass()
-  end
-  end
-       },
-         ulti = {
-          function()     self:ulti() end
-       },
-         autoq = {
-          function()    self:autoq() end
-       },
-         escape = {
-           function()       self:escape() end
-       },
-         card = {
-      function()        if self.Config.Keys.bluecard:Value() then
-        self:CastW(self.blue)
-     elseif self.Config.Keys.redcard:Value() then
-        self:CastW(self.red)
-      elseif self.Config.Keys.yellowcard:Value() then
-        self:CastW(self.yellow)
-      end
-    end
-
-       },
-         killsteal = {
-          function()      if(self.Config.killsteal.ks:Value() ) then
-    self:killsteal()
-  end
-end
-       },
-        blockaa = {
-               function()      self:blockaa() end
-       },
-         others = {
-           function()   
-            self:Antiafk()
-  self:autolevel()
-  self:skinhack()
-  self:autopot()
-  self:items()
-end
-       }
-   }
-  self.__ = {} self.___ = {} for _,__ in pairs(self._) do self.__[_] = 0 self.___[_] = #__ end self.Special = function(Special) self.__[Special] = self.__[Special] + 1 if self.__[Special] > self.___[Special] then self.__[Special] = 1 end self._[Special][self.__[Special]]() end
+--AddGapcloseEvent(_Q, 900, false, self.Config.misc.gapClose1.gapClose1w)
 end
  function TwistedFate:Checks()
                   Gtarget = self.tsg:GetTarget()
@@ -6558,26 +6499,49 @@ end
   end
                   mousePos = GetMousePos()
                 end
-                      
 function TwistedFate:Tick()
   self:Checks()
-self.Special("combo")
-self.Special("harass")
-self.Special("laneclear")
-self.Special("lasthit")
-self.Special("jungleclear")
-self.Special("card")
-self.Special("ulti")
-self.Special("escape")
-self.Special("autoq")
-self.Special("others")
-self.Special("blockaa")
-self.Special("killsteal")
+  self:Antiafk()
+  self:autolevel()
+   self:ulti()
+  self:skinhack()
+  self:autopot()
+  self:autoq()
+  self:items()
+  self:escape()
+  if self.Config.Keys.bluecard:Value() then
+        self:CastW(self.blue)
+      end
+        if self.Config.Keys.redcard:Value() then
+        self:CastW(self.red)
+      end
+        if self.Config.Keys.yellowcard:Value() then
+        self:CastW(self.yellow)
+      end
+  if( self.Config.Keys.lasthitkey:Value() or self.Config.farm.lasthit.autolasthit:Value() )then
+    self:LastHit()
+  end
+  if(self.Config.Keys.combokey:Value() )then
+    self:Combo()
+  end
+  if(self.Config.Keys.harasskey:Value()   ) then
+    self:harass()
+  end
+    if(self.Config.killsteal.ks:Value() ) then
+    self:killsteal()
+  end
+    if(self.Config.Keys.laneclearkey:Value() )then
+    self:LaneClear()
+  end
+  if(self.Config.Keys.jungleclearkey:Value() )then
+    self:JungleClear()
+  end
  if self.Config.instruct:Value() then
           self.Config.instruct:Value(false)
           PopUp1 = true
         end
           self:checkothers()
+          self:blockaa()
   end
   function TwistedFate:CardUsed(spell)
  if myHero:GetSpellData(_W).name == spell then 
@@ -10942,7 +10906,7 @@ end
 
   if _G[GetObjectName(myHero)] then
     _G[GetObjectName(myHero)]()
-    sayhello()
+   -- sayhello()
     -- DelayAction(function() print("<font color=\"#FF0000\"><b> "..Scriptname.." - </b></font><font color=\"#FFFFFF\"> Skin Hack currently disabled until the next update") end, 14)
   else
     print("<font color=\"#FF0000\"><b> "..Scriptname.." - </b></font><font color=\"#CBF6FF\"> :This champion is not supported. Currently supported champions are: "..list.." " )
