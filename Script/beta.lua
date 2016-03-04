@@ -8,7 +8,7 @@ end
 local lastTimeTickCalled = 0
 local loaddac = false
 local loadiow = false
-Version = "1.28"
+Version = "1.27"
 LVersion = " 6.4"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
@@ -23,7 +23,8 @@ function AutoUpdate(data)
      print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Downloading update, please wait...")
         DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Script/beta.lua", SCRIPT_PATH .. "beta.lua", function() print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Updated succesfully to ".. data..". Please do 2x F6 to reload." ) return end)
     else
-       print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : No updates has been found, ".. data.." version has succesfully loaded, Good luck and don't forget to give a feedback :) ")
+       print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : No updates has been found")
+           print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : ".. data.." version has succesfully loaded, Good luck and don't forget to give a feedback :) ")
     end
 end
 
