@@ -1,5 +1,5 @@
 require ('Inspired')
---if not pcall( require, "KLib" )  then  print("<font color=\"#FF0000\"><b> Krystra Mid Series  </b></font><font color=\"#FFFFFF\"> : This Script requires KLib.lua , go download it and safe it into Common folder" )return end
+-- if not pcall( require, "KLib" )  then  print("<font color=\"#FF0000\"><b> Krystra Mid Series  </b></font><font color=\"#FFFFFF\"> : This Script requires KLib.lua , go download it and safe it into Common folder" )return end
 if not pcall( require, "OpenPredict" )  then  print("<font color=\"#FF0000\"><b> "..Scriptname.." [Prediction Manager]  </b></font><font color=\"#FFFFFF\"> : OpenPredict should be in Common folder in order to use this script. " ) return end
 if FileExist(COMMON_PATH .. "IPrediction.lua") then
   require 'IPrediction'
