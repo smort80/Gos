@@ -23,7 +23,7 @@ function AutoUpdate(data)
         DelayAction(function()  print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Downloading update, please wait...") end, 1)
        DelayAction(function() DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Script/beta.lua", SCRIPT_PATH .. "beta.lua", function() print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Updated succesfully to ".. data..". Please do 2x F6 to reload." ) return end)  end, 3)
     else
-        DelayAction(function()   print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : ".. data.." version has succesfully loaded, Good luck and don't forget to give a feedback :) ") end, 5)
+        DelayAction(function()   print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : ".. Version.." version has succesfully loaded, Good luck and don't forget to give a feedback :) ") end, 5)
     end
 end
 
