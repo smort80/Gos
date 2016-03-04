@@ -18,7 +18,7 @@ date = "27.02.2016"
 
 --AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.29)
 local Update  = {}
-    Update.ScriptVersion = 1.27
+    Update.ScriptVersion = 1.28
     Update.UseHttps = true
     Update.Host = "raw.githubusercontent.com"
     Update.VersionPath = "/Lonsemaria/Gos/master/Version/Klib.version"
