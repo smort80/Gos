@@ -8,7 +8,7 @@ end
 local lastTimeTickCalled = 0
 local loaddac = false
 local loadiow = false
-Version = "1.27"
+Version = "1.28"
 LVersion = " 6.4"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
