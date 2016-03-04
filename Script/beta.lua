@@ -18,11 +18,11 @@ date = "27.02.2016"
 
 --AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.29)
 local Update  = {}
-    Update.ScriptVersion = 1.28
+    Update.ScriptVersion = 1.27
     Update.UseHttps = true
     Update.Host = "raw.githubusercontent.com"
     Update.VersionPath = "/Lonsemaria/Gos/master/Version/Klib.version"
-    Update.ScriptPath = "Lonsemaria/Gos/master/Script/beta.lua"
+    Update.ScriptPath = "/Lonsemaria/Gos/master/Script/beta.lua"
     Update.SavePath = SCRIPT_PATH.."/beta.lua"
     Update.CallbackUpdate = function(new) print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Updated to "..new..". Please F6 x2 to reload." ) end
     Update.CallbackNoUpdate = function(new)  print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> :You are using Lastest Version ("..new..")" ) sayhello() end
