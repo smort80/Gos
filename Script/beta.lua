@@ -16,19 +16,32 @@ list = "Leblanc , Lissandra , Viktor, Akali, Diana, Yasuo,Zed, Orianna , Twisted
 link = "http://gamingonsteroids.com/topic/10502-beta-stage-krystra-mid-series-leblanc-viktor-lissandra-diana-akali-multi-prediction-orbwalk-support-expert-drawings-and-much-more/"
 date = "27.02.2016"
 
-local ver = "1.29"
+local ver = "1.28"
 
 function AutoUpdate(data)
     if tonumber(data) > tonumber(ver) then
-        PrintChat("New version found! " .. data)
-        PrintChat("Downloading update, please wait...")
-        DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Script/beta.lua", SCRIPT_PATH .. "beta.lua", function() PrintChat("Update Complete, please 2x F6!") return end)
+        print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : New version has been found " .. data) 
+     print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Downloading update, please wait...")
+        DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Script/beta.lua", SCRIPT_PATH .. "beta.lua", function() print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Updated succesfully to ".. data..". Please do 2x F6 to reload." ) return end)
     else
-        PrintChat("No updates found!")
+       print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : No updates has been found, ".. data.." version has succesfully loaded, Good luck and don't forget to give a feedback :) ")
     end
 end
 
 GetWebResultAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Version/Klib.version", AutoUpdate)
+--AutoUpdate("/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua","/Lonsemaria/Gos/master/Version/midbundle.version",SCRIPT_PATH.."KrystraMidBundle.lua",1.29)
+--[[local Update  = {}
+    Update.ScriptVersion = 1.27
+    Update.UseHttps = true
+    Update.Host = "raw.githubusercontent.com"
+    Update.VersionPath = "/Lonsemaria/Gos/master/Version/Klib.version"
+    Update.ScriptPath = "/Lonsemaria/Gos/master/Script/beta.lua"
+    Update.SavePath = SCRIPT_PATH.."/beta.lua"
+    Update.CallbackUpdate = function(new) print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Updated to "..new..". Please F6 x2 to reload." ) end
+    Update.CallbackNoUpdate = function(new)  print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> :You are using Lastest Version ("..new..")" ) sayhello() end
+    Update.Callbacknew = function(new)  print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : New Version found ("..new.."). Please wait..." ) end
+    Update.CallbackError = function() print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Error when checking update. Please try again." ) end
+    Callback.Add("Load", function() AutoUpdater(Update.ScriptVersion, Update.UseHttps, Update.Host, Update.VersionPath, Update.ScriptPath, Update.SavePath, Update.CallbackUpdate, Update.CallbackNoUpdate, Update.Callbacknew, Update.CallbackError) end)]]
 ---//==================================================\\---
 --|| > English Translation details               ||--
 ---\\==================================================//---
