@@ -12,7 +12,7 @@ end
 local loaddac = false
 local loadiow = false
 Version = "1.33"
-LVersion = " 6.4"
+LVersion = " 6.5"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
 list = "Leblanc , Lissandra , Viktor, Akali, Diana, Yasuo,Zed, Orianna , Twisted Fate "
