@@ -1,7 +1,6 @@
 require ('Inspired')
 require ('OpenPredict')
 require ('IPrediction')
---require ('KLib')
 if FileExist(COMMON_PATH .. "KLib.lua") then
 require ('KLib')
 libloaded = true
@@ -31,6 +30,671 @@ end
 
 GetWebResultAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Version/midbundle.version", AutoUpdate)
 
+
+
+ local ebuff = false
+    class "Viktor"
+    function Viktor:__init()
+      if not libloaded then return end
+      self.W = { delay = 0.50, speed = 750, width = 125, range = 700 , radius = 250 } --AOE true , Col false
+      self.E = { delay = 0.25, speed = 1350 , width = 180, range = 1200 } --AOE false , Col false
+      self.R = { delay = 0.25, speed = 1000, width = 650, range = 700 , radius = 325 } --AOE true , Col false
+      self:LoadMenu()
+      AddGapcloseEvent(_W, 100, false,  menu.misc.gapClose)
+      self.tsg = TargetSelector(1300,TARGET_LESS_CAST_PRIORITY,DAMAGE_MAGIC,true,false)
+        rSpell = IPrediction.Prediction({range = 600, speed = 1000, delay = 0.50, width = 650, type = "circular", name =myHero:GetSpellData(_R).name, collision = false})
+        wSpell  = IPrediction.Prediction({range = 700, speed = 750, delay = 0.50, width = 125, type = "circular",name =myHero:GetSpellData(_W).name,  collision = false})
+      self.E = {Range1 = 550, Range2 = 700, width = 180, ready}
+      self.ERange = self.E.Range1+self.E.Range2
+      Last_LevelSpell = 0
+      Callback.Add("Load", function() self:onload() end)
+      Callback.Add("Tick", function() self:Tick() end)
+      Callback.Add("WndMsg", function(Msg, Key) self:WndMsg(Msg, Key) end)
+      Callback.Add("Draw", function() self:Draw() end)
+      Callback.Add("UpdateBuff", function(unit,buff) self:UpdateBuff(unit,buff) end)
+      Callback.Add("RemoveBuff", function(unit,buff) self:RemoveBuff(unit,buff) end)
+      Callback.Add("ProcessSpell", function(unit, spell) self:ProcessSpell(unit, spell) end)
+    end
+    function Viktor:Checks()
+      Gtarget = self.tsg:GetTarget()
+      if not ValidTarget(Gtarget, 1300) or not menu.targetsel.ts:Value()  then
+        target = GetCurrentTarget()
+      elseif  ValidTarget(Gtarget, 1300) and not self.selectedTar then
+        target = GetCurrentTarget()
+      elseif (ValidTarget(Gtarget, 1300) and self.selectedTar) then
+        target = self.selectedTar
+      end
+      mousePos = GetMousePos()
+       Activator:Loaditems("ap")
+    end
+    function Viktor:Tick()
+      self:Checks()
+      self:Hasebuff()
+      Antiafk()
+      autolevel()
+      skinhack()
+      autopot()
+      Activator:Useitems("ap")
+      if(menu.combo.combokey:Value() )then
+        self:combo()
+      end
+      if(menu.farm.clearkey.lasthitkey:Value() or menu.farm.lasthit.autolasthit:Value() )then
+        self:LastHit()
+      end
+      if(menu.farm.clearkey.laneclearkey:Value())then
+        self:LaneClear()
+      end
+      if(menu.farm.clearkey.jungleclearkey:Value())then
+        self:JungleClear()
+      end
+      if(menu.killsteal.ks:Value() ) then
+        self:killsteal()
+      end
+      if(menu.harass.harasskey:Value() or menu.harass.harasstogle:Value() ) then
+        self:harass()
+      end
+      if menu.instruct:Value() then
+        menu.instruct:Value(false)
+        PopUp1 = true
+      end
+    end
+    function Viktor:CastQ(unit)
+      if IsReady(_Q) then
+        CastTargetSpell(unit, _Q)
+      end
+    end
+    function Viktor:CastW(unit)
+      if menu.pred.selectpred:Value() == 1 then
+        local WPred = GetCircularAOEPrediction(unit, self.W)
+        if IsReady(_W) then
+          if WPred  and WPred.hitChance >= (menu.pred.hcgeneral.hcop.hcopw:Value()/100) then
+            CastSkillShot(_W, WPred.castPos)
+          end
+        end
+      elseif  menu.pred.selectpred:Value() == 2 then
+          local HitChance, y = wSpell:Predict(unit)
+          if IsReady(_W) and HitChance >= 3 then
+            CastSkillShot(_W, y.x, y.y, y.z)
+          end
+      elseif menu.pred.selectpred:Value() == 3 then
+        local wPred = GetPredictionForPlayer(myHeroPos(), unit, GetMoveSpeed(unit), 1350, 500, 700, 125, false, true)
+        if IsReady(_W) and wPred.HitChance == 1 then
+          CastSkillShot(_W, wPred.PredPos.x, wPred.PredPos.y, wPred.PredPos.z)
+        end
+      end
+    end
+
+
+
+
+
+    function Viktor:CastE(unit)
+      if unit.dead or unit.health == 0 then
+        return
+      end
+      if GetDistance(unit, myHero) > self.E.Range1-5 then
+        EStartPos = CircleIntersection(myHero, unit, myHero, self.E.Range1-5)
+      else
+        EStartPos = Vector(unit.x, unit.y, unit.z)
+      end
+      local EPred = GetPrediction(unit, self.E)
+      if IsReady(_E) then
+        if EPred  and EPred.hitChance >= (menu.pred.hcgeneral.hcop.hcope:Value()/100)  then
+          CastSkillShot3(_E,EStartPos, EPred.castPos)
+        end
+      end
+    end
+    function Viktor:CastR(unit)
+      if menu.pred.selectpred:Value() == 1 then
+        local WPred = GetPrediction(unit, self.W)
+        if IsReady(_R) then
+          if WPred  and WPred.hitChance >= (menu.pred.hcgeneral.hcop.hcopr:Value()/100) then
+            CastSkillShot(_R, WPred.castPos)
+          end
+        end
+      elseif  menu.pred.selectpred:Value() == 2 then
+          local HitChance, y = rSpell:Predict(unit)
+          if IsReady(_R) and HitChance >= 3 then
+            CastSkillShot(_R, y.x, y.y, y.z)
+          end
+      elseif menu.pred.selectpred:Value() == 3 then
+        local wPred = GetPredictionForPlayer(myHeroPos(), unit, GetMoveSpeed(unit), 1000, 250, 700, 650, false, true)
+        if IsReady(_R) and eSpell.HitChance == 1 then
+          CastSkillShot(_R, wPred.PredPos.x, wPred.PredPos.y, wPred.PredPos.z)
+        end
+      end
+    end
+    function Viktor:CastI(unit)
+      local Ignite = (GetCastName(GetMyHero(),SUMMONER_1):lower():find("summonerdot") and SUMMONER_1 or (GetCastName(GetMyHero(),SUMMONER_2):lower():find("summonerdot") and SUMMONER_2 or nil))
+      if Ignite then
+        if IsReady(Ignite) then
+          CastTargetSpell(unit, Ignite)
+        end
+      end
+    end
+    function Viktor:UpdateBuff(unit,buff)
+      if unit and unit.isMe then
+        if  buff.Name == "viktoreaug" then
+          ebuff = true
+        end
+      end
+    end
+    function Viktor:Hasebuff()
+      for i = 1, myHero.buffCount do
+        local buff = myHero:getBuff(i)
+        if BuffIsValid(buff) then
+          if buff.name:lower():find("viktoreaug") then
+            ebuff = true
+          end
+        end
+      end
+    end
+    function Viktor:RemoveBuff(unit, buff)
+      if unit and unit.isMe then
+        if  buff.Name == "viktoreaug" then
+
+          ebuff = false
+        end
+      end
+    end
+    function Viktor:Draw()
+      if menu.other.draw.qdraw:Value() and IsReady(_Q) then
+        DrawCircle(myHero.x, myHero.y, myHero.z, 600,  menu.other.width.Qwidth:Value(),0,menu.other.color.Qcolor:Value())
+      end
+
+      if menu.other.draw.wdraw:Value() and IsReady(_W) then
+        DrawCircle(myHero.x, myHero.y, myHero.z, 700,  menu.other.width.Wwidth:Value(),0, menu.other.color.Wcolor:Value())
+      end
+
+      if menu.other.draw.edraw:Value() and IsReady(_E) then
+        DrawCircle(myHero.x, myHero.y, myHero.z, 1200,  menu.other.width.Ewidth:Value(),0, menu.other.color.Ecolor:Value())
+      end
+
+      if menu.other.draw.rdraw:Value() and IsReady(_R) then
+        DrawCircle(myHero.x, myHero.y, myHero.z, 700, menu.other.width.Rwidth:Value(),0, menu.other.color.Rcolor:Value())
+      end
+      if menu.other.draw.aadraw:Value() then
+        DrawCircle(myHero.x, myHero.y, myHero.z, 525, menu.other.width.AAwidth:Value(),0, menu.other.color.AAcolor:Value())
+      end
+    Global:Commondraw()
+      for _, target in pairs(GetEnemyHeroes()) do
+        if ValidTarget(target, 15000) then
+          if target.visible and not target.dead and menu.other.damage:Value() then
+            currLine = 1
+            -- DrawLineHPBar2(self:GetMyDmg(target),"",  target, currLine)
+            DrawLineHPBar(self:GetMyDmg(target), "Damage " .. math.round(self:GetMyDmg(target)),target,currLine)
+            currLine = currLine + 1
+            DrawDmgOverHpBar(target,GetCurrentHP(target),0,self:GetMyDmg(target),0xff00ff00)
+          end
+        end
+      end
+
+      if menu.other.targetcal:Value() and not myHero.dead then
+        if target and target ~= nil then
+          --  local target= GetOrigin(target)
+          local drawpos=WorldToScreen(1,target.x, target.y, target.z)
+          local comboText,color = self:GetDraws(target)
+          if comboText then
+            DrawText(comboText,15,drawpos.x-20,drawpos.y-20,color)
+          end
+        end
+      end
+    end
+    function Viktor:alwaysr()
+      if (IsReady(_R) and (myHero.mana / myHero.maxMana > menu.combo.Mana:Value() /100 ) and menu.combo.useR:Value() and menu.combo.combokey:Value() and GetDistance(target)<700 ) then
+        self:CastR(target)
+      end
+    end
+    function Viktor:needr()
+      if (IsReady(_R) and (myHero.mana / myHero.maxMana > menu.combo.Mana:Value() /100 ) and menu.combo.useR:Value() and menu.combo.combokey:Value() and GetDistance(target)<700 ) then
+        local damagewithr =self:GetRDmg(target)+self:GetQDmg(target) +self:GetEDmg(target)
+        local damagewithnor = self:GetQDmg(target) +self:GetEDmg(target)
+        local health=target.health
+        if(health<damagewithr )then
+          self:CastR(target)
+        end
+      end
+    end
+    function Viktor:killr()
+      if (IsReady(_R) and (myHero.mana / myHero.maxMana > menu.combo.Mana:Value() /100 ) and menu.combo.useR:Value() and menu.combo.combokey:Value() and GetDistance(target)<700 ) then
+        local dmgR =self:GetRDmg(target)
+        local health=target.health
+        if(health<dmgR )then
+          self:CastR(target)
+        end
+      end
+    end
+    function Viktor:ProcessSpell(unit, spell)
+       if GetObjectType(unit) == Obj_AI_Hero and GetTeam(unit) ~= GetTeam(myHero) and IsReady(_R) then
+      if CHANELLING_SPELLS[spell.name] then
+        if ValidTarget(unit, self.R.range) and GetObjectName(unit) == CHANELLING_SPELLS[spell.name].Name and  menu.misc.interrupt[GetObjectName(unit).."Inter"]:Value() and menu.misc.interrupt.r:Value() then 
+         self:CastR(unit)
+        end
+      end
+    end
+       if GetObjectType(unit) == Obj_AI_Hero and GetTeam(unit) ~= GetTeam(myHero) and IsReady(_W) then
+      if CHANELLING_SPELLS[spell.name] then
+        if ValidTarget(unit, 1000) and GetObjectName(unit) == CHANELLING_SPELLS[spell.name].Name and  menu.misc.interrupt[GetObjectName(unit).."Inter"]:Value() and menu.misc.interrupt.w:Value() then 
+         self:CastW(unit)
+        end
+      end
+    end
+    end
+    function Viktor:combo()
+      if((IsReady(_Q) and (myHero.mana / myHero.maxMana > menu.combo.Mana:Value() /100 )and GetDistance(target) < 600  and menu.combo.useQ:Value() and menu.combo.combokey:Value()  )) then
+        self:CastQ(target)
+      end
+      if((IsReady(_E) and (myHero.mana / myHero.maxMana > menu.combo.Mana:Value() /100 )and GetDistance(target) < 1200 and menu.combo.useE:Value() and menu.combo.combokey:Value()  ))then
+        self:CastE(target)
+      end
+      if((IsReady(_W) and (myHero.mana / myHero.maxMana > menu.combo.Mana:Value() /100 ) and GetDistance(target) < 700 and menu.combo.useW:Value() and  menu.combo.combokey:Value()  ))then
+        self:CastW(target)
+      end
+      if menu.combo.logic:Value() == 1 then
+        self:killr()
+      elseif menu.combo.logic:Value() == 2 then
+        self:needr()
+      elseif menu.combo.logic:Value() == 3 then
+        self:alwaysr()
+      end
+
+      if(menu.combo.useI:Value() and menu.combo.combokey:Value() )then
+        for _, unit in pairs(GetEnemyHeroes()) do
+          local dmgI =(50+ ((myHero.level)*20))
+          local health=unit.health
+          if(health<dmgI and menu.combo.useI:Value() and GetDistance(unit)<600)then
+            self:CastI(unit)
+          end
+        end
+      end
+    end
+    function Viktor:killsteal()
+      for _, unit in pairs(GetEnemyHeroes()) do
+        local health = unit.health
+        local dmgE = self:GetEDmg(unit)
+        if(GetDistance(unit)<1200 and  IsReady(_E) and health<dmgE and menu.killsteal.useE:Value() and GetDistance(unit)<700   and menu.killsteal.ks:Value())then
+          self:CastE(unit)
+        end
+        local dmgQ = self:GetQDmg(unit)
+        if(GetDistance(unit)<600 and  IsReady(_Q) and health<dmgQ and menu.killsteal.useQ:Value() and menu.killsteal.ks:Value() )then
+          self:CastQ(unit)
+        end
+        local dmgI =(50+ ((myHero.level)*20))
+        if(health<dmgI and menu.killsteal.useI:Value() and menu.killsteal.ks:Value() and GetDistance(unit)<600)then
+          self:CastI(unit)
+        end
+        local dmgR =self:GetRDmg(unit)
+        if(GetDistance(unit)<700 and  IsReady(_R) and health<dmgR and menu.killsteal.useR:Value() and menu.killsteal.ks:Value() and GetDistance(unit)<700)then
+          self:CastR(unit)
+        end
+      end
+    end
+    function Viktor:GetQDmg(target)
+      if GetCastLevel(myHero, _Q) < 1 then
+        return 0
+      end
+      if IsReady(_Q) then
+        local FinalDamage = (20 + (GetCastLevel(myHero, _Q) * 20)  +(GetBonusAP(myHero)*.2) + (GetBonusAP(myHero)*.5))
+        return CalcDamage(myHero,target, 0,FinalDamage)
+      else
+        return 0
+      end
+    end
+    function Viktor:GetQ2Dmg(target)
+      if GetCastLevel(myHero, _Q) < 1 then
+        return 0
+      end
+      if IsReady(_Q) then
+        local FinalDamage = (20 + (GetCastLevel(myHero, _Q) * 20) + (GetBonusAP(myHero)*.2))
+        return CalcDamage(myHero,target, 0,FinalDamage)
+      else
+        return 0
+      end
+    end
+    function Viktor:GetEDmg(target)
+      if GetCastLevel(myHero, _E) < 1 then
+        return 0
+      end
+      if not ebuff and IsReady(_E) then
+        local FinalDamage = (25 + (GetCastLevel(myHero, _E) * 45) + (GetBonusAP(myHero)*.7))
+        return CalcDamage(myHero,target, 0,FinalDamage)
+      elseif ebuff and IsReady(_E) then
+        local FinalDamage =(25 + (GetCastLevel(myHero, _E) * 45) + (GetBonusAP(myHero)*.7)) + (25 + (GetCastLevel(myHero, _E) * 45) + (GetBonusAP(myHero)*.7))*0.4
+        return CalcDamage(myHero,target, 0,FinalDamage)
+      else
+        return 0
+      end
+    end
+    function Viktor:GetRDmg(target)
+      if GetCastLevel(myHero, _R) < 1 then
+        return 0
+      end
+      if IsReady(_R) then
+        local Rdamage = (50 + (GetCastLevel(myHero, _R) * 100) + (GetBonusAP(myHero)*.55))
+        local persecond = ( 14*(GetCastLevel(myHero, _R) * 15) + (GetBonusAP(myHero)*.1))
+        local FinalDamage = Rdamage + persecond
+        return CalcDamage(myHero,target, 0,FinalDamage)
+      else
+        return 0
+      end
+    end
+    function Viktor:GetMyDmg(target)
+      if IsReady(_Q) and IsReady(_R) and IsReady(_E) then
+        return self:GetQDmg(target) + self:GetRDmg(target) + self:GetEDmg(target)
+      elseif IsReady(_Q)  and IsReady(_R) then
+        return self:GetQDmg(target) + self:GetRDmg(target)
+      elseif IsReady(_Q)  and IsReady(_E) then
+        return self:GetQDmg(target) + self:GetEDmg(target)
+      elseif IsReady(_R) and IsReady(_E) then
+        return self:GetRDmg(target) +self:GetEDmg(target)
+      elseif IsReady(_Q) then
+        return self:GetQDmg(target)
+      elseif IsReady(_E) then
+        return self:GetEDmg(target)
+      elseif IsReady(_R) then
+        return self:GetRDmg(target)
+      elseif IsReady(_Q) and IsReady(_R) then
+        return self:GetQDmg(target) + self:GetRDmg(target)
+      else
+        return 0
+      end
+    end
+    function Viktor:GetDraws(target)
+      local qdamage = self:GetQDmg(target)
+      local edamage = self:GetEDmg(target)
+      local rdamage = self:GetRDmg(target)
+      local Idmg=(50+ ((myHero.level)*20))
+
+      if qdamage >target.health then
+        return 'Q', GoS.White
+      elseif qdamage+ Idmg>target.health then
+        return 'Q + Ignite', GoS.White
+      elseif edamage >target.health then
+        return 'E', GoS.White
+      elseif edamage + Idmg>target.health then
+        return 'E + Ignite', GoS.White
+      elseif rdamage  >target.health then
+        return 'R', GoS.White
+      elseif rdamage + Idmg>target.health then
+        return 'R + Ignite', GoS.White
+      elseif rdamage +edamage  >target.health then
+        return 'R + E',GoS.White
+      elseif rdamage +edamage+ Idmg>target.health then
+        return 'R + E + Ignite',GoS.White
+      elseif qdamage+edamage>target.health then
+        return 'Q + E',GoS.White
+      elseif qdamage+rdamage >target.health then
+        return 'Q + R',GoS.White
+      elseif qdamage+edamage+ Idmg>target.health then
+        return 'Q + E + Ignite',GoS.White
+      elseif qdamage+rdamage+ Idmg>target.health then
+        return 'Q + R + Ignite',GoS.White
+      elseif qdamage+edamage+rdamage >target.health then
+        return 'Kill with full combo',GoS.White
+      elseif qdamage+edamage+rdamage+ Idmg>target.health then
+        return 'Full Combo + Ignite',GoS.White
+      else
+        return "Cant Kill yet", GoS.White
+      end
+    end
+    function Viktor:harass()
+      if menu.harass.harasskey:Value() or menu.harass.harasstogle:Value()  then
+        if(IsReady(_Q) and (myHero.mana / myHero.maxMana > menu.harass.Mana:Value() /100 ) and GetDistance(target) <= 700 and menu.harass.useQ:Value() ) then
+          self:CastQ(target)
+        end
+        if(IsReady(_E) and (myHero.mana / myHero.maxMana > menu.harass.Mana:Value() /100 ) and GetDistance(target) <= 1200 and menu.harass.useE:Value()  and ValidTarget(target, self.ERange)) then
+          self:CastE(target)
+        end
+
+      end
+    end
+    function Viktor:LastHit()
+      for _, target in pairs(minionManager.objects) do
+        -- print (self:GetEDmg(target))
+        if IsObjectAlive(target) and GetTeam(target) == MINION_ENEMY then
+          if menu.farm.lasthit.lasthitlogic:Value() == 1 then
+            local Qdamage = self:GetQDmg(target)
+            if(IsReady(_Q) and menu.farm.lasthit.useQ:Value() and (myHero.mana / myHero.maxMana >=  menu.farm.lasthit.QMana:Value() /100 ) and ValidTarget(target,700)   and Qdamage >= GetCurrentHP(target)) then
+              self:CastQ(target)
+            end
+            local Edamage = self:GetEDmg(target)
+            if(IsReady(_E)and menu.farm.lasthit.useE:Value() and (myHero.mana / myHero.maxMana >=  menu.farm.lasthit.EMana:Value() /100 )and  ValidTarget(target,925) and Edamage >= GetCurrentHP(target)) then
+              self:CastE(target)
+            end
+          end
+        end
+      end
+    end
+    function Viktor:LaneClear()
+      for i, minion in pairs(minionManager.objects) do
+        if ValidTarget(minion) and minion ~= nil and GetTeam(minion) == MINION_ENEMY then
+          if menu.farm.laneclear.useQ:Value() and ( myHero.mana / myHero.maxMana >= menu.farm.laneclear.QMana:Value() /100 ) and GetDistance(minion) <= 700 then
+            self:CastQ(minion)
+          end
+        end
+      end
+      if (myHero.mana / myHero.maxMana >=  menu.farm.laneclear.EMana:Value() /100 ) then
+        local NumberOfHits = menu.farm.laneclear.ecount:Value()
+        if IsReady(_E) then
+          if  menu.farm.laneclear.useE:Value()   then
+            local BestPos, BestHit =  GetLineFarmPosition(1000 ,180, MINION_ENEMY)
+            if BestPos   and  BestHit >= NumberOfHits then
+              EStartPos = Vector(myHero) - 475 * (Vector(myHero) - Vector(BestPos)):normalized()
+              CastSkillShot3(_E,EStartPos, BestPos)
+            end
+          end
+        end
+      end
+    end
+    function Viktor:JungleClear()
+      for i, minion in pairs(minionManager.objects) do
+        if ValidTarget(minion) and minion ~= nil and GetTeam(minion) == MINION_JUNGLE then
+          if menu.farm.jungleclear.useQ:Value() and ( myHero.mana / myHero.maxMana >= menu.farm.jungleclear.QMana:Value() /100 ) and GetDistance(minion) <= 700 then
+            self:CastQ(minion)
+          end
+        end
+      end
+      if (myHero.mana / myHero.maxMana >=  menu.farm.jungleclear.EMana:Value() /100 ) then
+        local NumberOfHits = 1
+        if IsReady(_E) then
+          if  menu.farm.jungleclear.useE:Value()   then
+            local BestPos, BestHit =  GetLineFarmPosition(1000 ,180, MINION_JUNGLE)
+            if BestPos   and  BestHit >= NumberOfHits then
+              EStartPos = Vector(myHero) - 475 * (Vector(myHero) - Vector(BestPos)):normalized()
+              CastSkillShot3(_E,EStartPos, BestPos)
+            end
+          end
+        end
+      end
+    end
+    function Viktor:WndMsg(Msg, Key)
+      if menu.targetsel.ts:Value() then
+        if Msg == WM_LBUTTONDOWN then
+          local minD = 10
+          local starget = nil
+          for i, enemy in ipairs(GetEnemyHeroes()) do
+            if ValidTarget(enemy) then
+              if GetDistance(enemy, mousePos) <= minD or starget == nil then
+                minD = GetDistance(enemy, mousePos)
+                starget = enemy
+              end
+            end
+          end
+          if starget and minD < 150 then
+            if self.selectedTar and starget.charName == self.selectedTar.charName then
+              self.selectedTar = nil
+              print("<font color=\"#FFFFFF\">Target <b>is no loger selected.</b>:<font color=\"#D3649F\"><b> "..starget.charName.." </b></font>")
+            else
+              self.selectedTar = starget
+              print("<font color=\"#FFFFFF\">New target <b>selected.</b>:<font color=\"#D3649F\"><b> "..starget.charName.." </b></font>")
+            end
+          end
+        end
+      end
+      if Msg == WM_LBUTTONDOWN then
+        if PopUp1 then
+          PopUp1 = false
+        end
+      end
+    end
+    function Viktor:onload()
+     findorb()
+    end
+    function Viktor:LoadMenu()
+      menu=MenuConfig( "menu",""..Scriptname.." [" .. myHero.charName.."]")
+
+
+      menu:Menu("combo",loc_eng[1])
+      menu.combo:Key("combokey", loc_eng[81], 32)
+      menu.combo:Boolean("useQ", loc_eng[2], true)
+      menu.combo:Boolean("useW", loc_eng[3], true)
+      menu.combo:Boolean("useE", loc_eng[4], true)
+      menu.combo:Boolean("useR", loc_eng[5], true)
+      menu.combo:Boolean("useI", loc_eng[6], true)
+      menu.combo:DropDown("logic", loc_eng[159],1, {loc_eng[160],loc_eng[217],loc_eng[172] })
+      menu.combo:Slider("Mana",loc_eng[8], 10, 10, 100, 1)
+
+
+      menu:Menu( "harass",loc_eng[9])
+      menu.harass:Key("harasskey", loc_eng[83], string.byte("C"))
+      menu.harass:Key("harasstogle", loc_eng[164],string.byte("T"))
+      menu.harass:Boolean("useQ", loc_eng[10], true)
+      menu.harass:Boolean("useE", loc_eng[12], true)
+      menu.harass:Slider("Mana",loc_eng[8], 30, 10, 100, 1)
+
+      menu:Menu( "farm",loc_eng[14])
+
+      menu.farm:Menu("laneclear",loc_eng[15])
+      menu.farm.laneclear:Boolean("useQ",loc_eng[16],true)
+      menu.farm.laneclear:Boolean("useE",loc_eng[18],true)
+      menu.farm.laneclear:Slider("ecount",loc_eng[182], 2, 1, 10, 1)
+      menu.farm.laneclear:Info("blank", "")
+      menu.farm.laneclear:Info("blank", "")
+      menu.farm.laneclear:Info("info2", loc_eng[184])
+      menu.farm.laneclear:Slider("QMana",loc_eng[185], 30, 10, 100, 1)
+      menu.farm.laneclear:Slider("WMana",loc_eng[186], 30, 10, 100, 1)
+      menu.farm.laneclear:Slider("EMana",loc_eng[187], 30, 10, 100, 1)
+
+
+      menu.farm:Menu("jungleclear",loc_eng[20])
+      menu.farm.jungleclear:Boolean("useQ",loc_eng[21],true)
+      menu.farm.jungleclear:Boolean("useE",loc_eng[23],true)
+      menu.farm.jungleclear:Info("blank", "")
+      menu.farm.jungleclear:Info("blank", "")
+      menu.farm.jungleclear:Info("info2", loc_eng[184])
+      menu.farm.jungleclear:Slider("QMana",loc_eng[185], 30, 10, 100, 1)
+      menu.farm.jungleclear:Slider("EMana",loc_eng[187], 30, 10, 100, 1)
+
+      menu.farm:Menu("lasthit",loc_eng[25])
+      menu.farm.lasthit:Boolean("autolasthit",loc_eng[189],false)
+      menu.farm.lasthit:Boolean("useQ",loc_eng[26],true)
+      menu.farm.lasthit:Boolean("useE",loc_eng[28],false)
+      menu.farm.lasthit:DropDown("lasthitlogic",loc_eng[191], 1, {loc_eng[172],loc_eng[174]})
+      menu.farm.lasthit:Info("blank", "")
+      menu.farm.lasthit:Info("info2", loc_eng[184])
+      menu.farm.lasthit:Slider("QMana",loc_eng[185], 30, 10, 100, 1)
+      menu.farm.lasthit:Slider("EMana",loc_eng[186], 30, 10, 100, 1)
+
+      menu.farm:Menu("clearkey",loc_eng[218])
+      menu.farm.clearkey:Key("lasthitkey",loc_eng[215], string.byte("X"))
+      menu.farm.clearkey:Key("laneclearkey", loc_eng[85], string.byte("V"))
+      menu.farm.clearkey:Key("jungleclearkey", loc_eng[86],  string.byte("V"))
+
+      menu:Menu( "killsteal",loc_eng[35])
+      menu.killsteal:Boolean("ks",loc_eng[36],true)
+      menu.killsteal:Boolean("useQ", loc_eng[37], true)
+      menu.killsteal:Boolean("useW", loc_eng[38], true)
+      menu.killsteal:Boolean("useE", loc_eng[39], true)
+      menu.killsteal:Boolean("useR", loc_eng[40], true)
+      menu.killsteal:Boolean("useI", loc_eng[41], true)
+
+
+Activator:Loadmenu("ap")
+
+      menu:Menu( "misc",loc_eng[92])
+      menu.misc:Menu( "gapClose",loc_eng[219])
+      menu.misc.gapClose:Boolean("w", loc_eng[220], true)
+      menu.misc.gapClose:Info("info3", loc_eng[98] )
+      menu.misc:Menu( "skinhack","[" .. myHero.charName.. "] - Skinhack Settings")
+      menu.misc.skinhack:Boolean("useskin",loc_eng[54], false)
+      menu.misc.skinhack:DropDown('selected' .. myHero.charName .. 'Skin', loc_eng[57]  ,  1, skinMeta[myHero.charName])
+      menu.misc:Menu( "autolevel","[" .. myHero.charName.. "] - AutoLevel Settings")
+      menu.misc.autolevel:Boolean("uselevel",loc_eng[51], false)
+      menu.misc.autolevel:DropDown("logic", loc_eng[52] , 7, {loc_eng[58], loc_eng[59],loc_eng[60],loc_eng[61],loc_eng[62], loc_eng[63], loc_eng[64]  })
+      menu.misc:Menu( "antiafk","[" .. myHero.charName.. "] - AntiAFK Settings")
+      menu.misc.antiafk:Boolean("useafk",loc_eng[196], false)
+      menu.misc:Menu( "interrupt",loc_eng[93])
+      menu.misc.interrupt:Boolean("r", loc_eng[97], true)
+      menu.misc.interrupt:Boolean("w", loc_eng[95],  true)
+      menu.misc.interrupt:Info("info3", loc_eng[98] )
+DelayAction(function()
+  local str = {[_Q] = "Q", [_W] = "W", [_E] = "E", [_R] = "R"}
+  for i, spell in pairs(CHANELLING_SPELLS) do
+    for _,k in pairs(GetEnemyHeroes()) do
+        if spell["Name"] == GetObjectName(k) then
+        menu.misc.interrupt:Boolean(GetObjectName(k).."Inter", "On "..GetObjectName(k).." "..(type(spell.Spellslot) == 'number' and str[spell.Spellslot]), true)
+        end
+    end
+  end
+end, 0.35)
+      Clock = os.clock()
+
+
+      menu:Menu("other",loc_eng[65])
+      --menu.other:Menu("Show Damage On Hp Bar", "HPBAR")
+      --menu.other.HPBAR:Boolean("key","ON/OFF",true)
+      menu.other:Menu("draw",loc_eng[66])
+      menu.other.draw:Boolean("qdraw",loc_eng[67],true)
+      menu.other.draw:Boolean("wdraw",loc_eng[68],true)
+      menu.other.draw:Boolean("edraw",loc_eng[69],true)
+      menu.other.draw:Boolean("rdraw",loc_eng[70],true)
+      menu.other.draw:Boolean("aadraw",loc_eng[71],false)
+      menu.other:Menu( "color",loc_eng[198])
+      menu.other.color:ColorPick("Qcolor", loc_eng[199],{255, 255, 255, 255})
+      menu.other.color:ColorPick("Wcolor", loc_eng[200],{255, 255, 255, 255})
+      menu.other.color:ColorPick("Ecolor", loc_eng[201],{255, 255, 255, 255})
+      menu.other.color:ColorPick("Rcolor", loc_eng[202],{255, 255, 255, 255})
+      menu.other.color:ColorPick("E2color", loc_eng[203],{255, 255, 255, 255})
+      menu.other.color:ColorPick("AAcolor", loc_eng[204],{255, 255,0,0})
+      -- menu.other.color:ColorPick("targetselect", loc_eng[205],{255, 255,0,0})
+      menu.other:Menu( "width",loc_eng[206])
+      menu.other.width:Slider("Qwidth", loc_eng[210], 1, 1, 10, 1)
+      menu.other.width:Slider("Wwidth", loc_eng[211], 1, 1, 10, 1)
+      menu.other.width:Slider("Ewidth", loc_eng[212], 1, 1, 10, 1)
+      menu.other.width:Slider("Rwidth", loc_eng[213], 1, 1, 10, 1)
+      menu.other.width:Slider("AAwidth", loc_eng[209], 1, 1, 10, 1)
+      -- menu.other.width:Slider("STwidth", loc_eng[208], 1, 1, 10, 1)
+      --menu.other:Menu( "perma",loc_eng[73])
+      -- menu.other.perma:Boolean("perma",loc_eng[74],true)
+      menu.other:Boolean("target",loc_eng[75],true)
+      menu.other:Boolean("damage",loc_eng[214],true)
+      menu.other:Boolean("targetcal",loc_eng[76],true)
+
+      menu:Menu("targetsel",loc_eng[77])
+      menu.targetsel:Boolean("ts",loc_eng[78], false)
+
+      menu:Menu("orb","Orbwalker Settings")
+      menu.orb:Menu( "selectorb","Current Orbwalker :")
+
+      menu:Menu("pred","Prediction Settings")
+      menu.pred:DropDown("selectpred","Current Predictions :",   1, {"Open Prediction","IPrediction","Gos Prediction"})
+      menu.pred:Menu( "hcgeneral","Hitchance Settings")
+      menu.pred.hcgeneral:Menu( "hcop","Open Prediction Hitchance")
+      menu.pred.hcgeneral.hcop:Slider("hcopw", "W Hitchance " , 30, 0, 100, 1)
+      menu.pred.hcgeneral.hcop:Slider("hcope", "E Hitchance " , 30, 0, 100, 1)
+      menu.pred.hcgeneral.hcop:Slider("hcopr", "r Hitchance " , 30, 0, 100, 1)
+      menu.pred:Info("blank", "    Currently Open Prediction "   )
+      menu.pred:Info("blank", "      is best with this bundle"   )
+
+
+      menu:Info("infoK","           "..Scriptname.."" )
+      menu:Info("infoK","         Script Version:  "..Version.. "  " )
+      menu:Info("infoK","   Script was made by  "..Author.. "" )
+      menu:Info("infoK","Leauge Of Legends Version: "..LVersion.. "" )
+      menu:Boolean("instruct", loc_eng[216], false)
+
+    end
+    
 class "Leblanc"
 ---//==================================================\\---
 --|| > Leblanc İnit                          ||--
@@ -3624,668 +4288,7 @@ Activator:Loadmenu("hybrid")
         end
       end
     end
-    local ebuff = false
-    class "Viktor"
-    function Viktor:__init()
-      if not libloaded then return end
-      self.W = { delay = 0.50, speed = 750, width = 125, range = 700 , radius = 250 } --AOE true , Col false
-      self.E = { delay = 0.25, speed = 1350 , width = 180, range = 1200 } --AOE false , Col false
-      self.R = { delay = 0.25, speed = 1000, width = 650, range = 700 , radius = 325 } --AOE true , Col false
-      self:LoadMenu()
-      AddGapcloseEvent(_W, 100, false,  menu.misc.gapClose)
-      self.tsg = TargetSelector(1300,TARGET_LESS_CAST_PRIORITY,DAMAGE_MAGIC,true,false)
-        rSpell = IPrediction.Prediction({range = 600, speed = 1000, delay = 0.50, width = 650, type = "circular", name =myHero:GetSpellData(_R).name, collision = false})
-        wSpell  = IPrediction.Prediction({range = 700, speed = 750, delay = 0.50, width = 125, type = "circular",name =myHero:GetSpellData(_W).name,  collision = false})
-      self.E = {Range1 = 550, Range2 = 700, width = 180, ready}
-      self.ERange = self.E.Range1+self.E.Range2
-      Last_LevelSpell = 0
-      Callback.Add("Load", function() self:onload() end)
-      Callback.Add("Tick", function() self:Tick() end)
-      Callback.Add("WndMsg", function(Msg, Key) self:WndMsg(Msg, Key) end)
-      Callback.Add("Draw", function() self:Draw() end)
-      Callback.Add("UpdateBuff", function(unit,buff) self:UpdateBuff(unit,buff) end)
-      Callback.Add("RemoveBuff", function(unit,buff) self:RemoveBuff(unit,buff) end)
-      Callback.Add("ProcessSpell", function(unit, spell) self:ProcessSpell(unit, spell) end)
-    end
-    function Viktor:Checks()
-      Gtarget = self.tsg:GetTarget()
-      if not ValidTarget(Gtarget, 1300) or not menu.targetsel.ts:Value()  then
-        target = GetCurrentTarget()
-      elseif  ValidTarget(Gtarget, 1300) and not self.selectedTar then
-        target = GetCurrentTarget()
-      elseif (ValidTarget(Gtarget, 1300) and self.selectedTar) then
-        target = self.selectedTar
-      end
-      mousePos = GetMousePos()
-       Activator:Loaditems("ap")
-    end
-    function Viktor:Tick()
-      self:Checks()
-      self:Hasebuff()
-      Antiafk()
-      autolevel()
-      skinhack()
-      autopot()
-      Activator:Useitems("ap")
-      if(menu.combo.combokey:Value() )then
-        self:combo()
-      end
-      if(menu.farm.clearkey.lasthitkey:Value() or menu.farm.lasthit.autolasthit:Value() )then
-        self:LastHit()
-      end
-      if(menu.farm.clearkey.laneclearkey:Value())then
-        self:LaneClear()
-      end
-      if(menu.farm.clearkey.jungleclearkey:Value())then
-        self:JungleClear()
-      end
-      if(menu.killsteal.ks:Value() ) then
-        self:killsteal()
-      end
-      if(menu.harass.harasskey:Value() or menu.harass.harasstogle:Value() ) then
-        self:harass()
-      end
-      if menu.instruct:Value() then
-        menu.instruct:Value(false)
-        PopUp1 = true
-      end
-    end
-    function Viktor:CastQ(unit)
-      if IsReady(_Q) then
-        CastTargetSpell(unit, _Q)
-      end
-    end
-    function Viktor:CastW(unit)
-      if menu.pred.selectpred:Value() == 1 then
-        local WPred = GetCircularAOEPrediction(unit, self.W)
-        if IsReady(_W) then
-          if WPred  and WPred.hitChance >= (menu.pred.hcgeneral.hcop.hcopw:Value()/100) then
-            CastSkillShot(_W, WPred.castPos)
-          end
-        end
-      elseif  menu.pred.selectpred:Value() == 2 then
-          local HitChance, y = wSpell:Predict(unit)
-          if IsReady(_W) and HitChance >= 3 then
-            CastSkillShot(_W, y.x, y.y, y.z)
-          end
-      elseif menu.pred.selectpred:Value() == 3 then
-        local wPred = GetPredictionForPlayer(myHeroPos(), unit, GetMoveSpeed(unit), 1350, 500, 700, 125, false, true)
-        if IsReady(_W) and wPred.HitChance == 1 then
-          CastSkillShot(_W, wPred.PredPos.x, wPred.PredPos.y, wPred.PredPos.z)
-        end
-      end
-    end
-
-
-
-
-
-    function Viktor:CastE(unit)
-      if unit.dead or unit.health == 0 then
-        return
-      end
-      if GetDistance(unit, myHero) > self.E.Range1-5 then
-        EStartPos = CircleIntersection(myHero, unit, myHero, self.E.Range1-5)
-      else
-        EStartPos = Vector(unit.x, unit.y, unit.z)
-      end
-      local EPred = GetPrediction(unit, self.E)
-      if IsReady(_E) then
-        if EPred  and EPred.hitChance >= (menu.pred.hcgeneral.hcop.hcope:Value()/100)  then
-          CastSkillShot3(_E,EStartPos, EPred.castPos)
-        end
-      end
-    end
-    function Viktor:CastR(unit)
-      if menu.pred.selectpred:Value() == 1 then
-        local WPred = GetPrediction(unit, self.W)
-        if IsReady(_R) then
-          if WPred  and WPred.hitChance >= (menu.pred.hcgeneral.hcop.hcopr:Value()/100) then
-            CastSkillShot(_R, WPred.castPos)
-          end
-        end
-      elseif  menu.pred.selectpred:Value() == 2 then
-          local HitChance, y = rSpell:Predict(unit)
-          if IsReady(_R) and HitChance >= 3 then
-            CastSkillShot(_R, y.x, y.y, y.z)
-          end
-      elseif menu.pred.selectpred:Value() == 3 then
-        local wPred = GetPredictionForPlayer(myHeroPos(), unit, GetMoveSpeed(unit), 1000, 250, 700, 650, false, true)
-        if IsReady(_R) and eSpell.HitChance == 1 then
-          CastSkillShot(_R, wPred.PredPos.x, wPred.PredPos.y, wPred.PredPos.z)
-        end
-      end
-    end
-    function Viktor:CastI(unit)
-      local Ignite = (GetCastName(GetMyHero(),SUMMONER_1):lower():find("summonerdot") and SUMMONER_1 or (GetCastName(GetMyHero(),SUMMONER_2):lower():find("summonerdot") and SUMMONER_2 or nil))
-      if Ignite then
-        if IsReady(Ignite) then
-          CastTargetSpell(unit, Ignite)
-        end
-      end
-    end
-    function Viktor:UpdateBuff(unit,buff)
-      if unit and unit.isMe then
-        if  buff.Name == "viktoreaug" then
-          ebuff = true
-        end
-      end
-    end
-    function Viktor:Hasebuff()
-      for i = 1, myHero.buffCount do
-        local buff = myHero:getBuff(i)
-        if BuffIsValid(buff) then
-          if buff.name:lower():find("viktoreaug") then
-            ebuff = true
-          end
-        end
-      end
-    end
-    function Viktor:RemoveBuff(unit, buff)
-      if unit and unit.isMe then
-        if  buff.Name == "viktoreaug" then
-
-          ebuff = false
-        end
-      end
-    end
-    function Viktor:Draw()
-      if menu.other.draw.qdraw:Value() and IsReady(_Q) then
-        DrawCircle(myHero.x, myHero.y, myHero.z, 600,  menu.other.width.Qwidth:Value(),0,menu.other.color.Qcolor:Value())
-      end
-
-      if menu.other.draw.wdraw:Value() and IsReady(_W) then
-        DrawCircle(myHero.x, myHero.y, myHero.z, 700,  menu.other.width.Wwidth:Value(),0, menu.other.color.Wcolor:Value())
-      end
-
-      if menu.other.draw.edraw:Value() and IsReady(_E) then
-        DrawCircle(myHero.x, myHero.y, myHero.z, 1200,  menu.other.width.Ewidth:Value(),0, menu.other.color.Ecolor:Value())
-      end
-
-      if menu.other.draw.rdraw:Value() and IsReady(_R) then
-        DrawCircle(myHero.x, myHero.y, myHero.z, 700, menu.other.width.Rwidth:Value(),0, menu.other.color.Rcolor:Value())
-      end
-      if menu.other.draw.aadraw:Value() then
-        DrawCircle(myHero.x, myHero.y, myHero.z, 525, menu.other.width.AAwidth:Value(),0, menu.other.color.AAcolor:Value())
-      end
-    Global:Commondraw()
-      for _, target in pairs(GetEnemyHeroes()) do
-        if ValidTarget(target, 15000) then
-          if target.visible and not target.dead and menu.other.damage:Value() then
-            currLine = 1
-            -- DrawLineHPBar2(self:GetMyDmg(target),"",  target, currLine)
-            DrawLineHPBar(self:GetMyDmg(target), "Damage " .. math.round(self:GetMyDmg(target)),target,currLine)
-            currLine = currLine + 1
-            DrawDmgOverHpBar(target,GetCurrentHP(target),0,self:GetMyDmg(target),0xff00ff00)
-          end
-        end
-      end
-
-      if menu.other.targetcal:Value() and not myHero.dead then
-        if target and target ~= nil then
-          --  local target= GetOrigin(target)
-          local drawpos=WorldToScreen(1,target.x, target.y, target.z)
-          local comboText,color = self:GetDraws(target)
-          if comboText then
-            DrawText(comboText,15,drawpos.x-20,drawpos.y-20,color)
-          end
-        end
-      end
-    end
-    function Viktor:alwaysr()
-      if (IsReady(_R) and (myHero.mana / myHero.maxMana > menu.combo.Mana:Value() /100 ) and menu.combo.useR:Value() and menu.combo.combokey:Value() and GetDistance(target)<700 ) then
-        self:CastR(target)
-      end
-    end
-    function Viktor:needr()
-      if (IsReady(_R) and (myHero.mana / myHero.maxMana > menu.combo.Mana:Value() /100 ) and menu.combo.useR:Value() and menu.combo.combokey:Value() and GetDistance(target)<700 ) then
-        local damagewithr =self:GetRDmg(target)+self:GetQDmg(target) +self:GetEDmg(target)
-        local damagewithnor = self:GetQDmg(target) +self:GetEDmg(target)
-        local health=target.health
-        if(health<damagewithr )then
-          self:CastR(target)
-        end
-      end
-    end
-    function Viktor:killr()
-      if (IsReady(_R) and (myHero.mana / myHero.maxMana > menu.combo.Mana:Value() /100 ) and menu.combo.useR:Value() and menu.combo.combokey:Value() and GetDistance(target)<700 ) then
-        local dmgR =self:GetRDmg(target)
-        local health=target.health
-        if(health<dmgR )then
-          self:CastR(target)
-        end
-      end
-    end
-    function Viktor:ProcessSpell(unit, spell)
-       if GetObjectType(unit) == Obj_AI_Hero and GetTeam(unit) ~= GetTeam(myHero) and IsReady(_R) then
-      if CHANELLING_SPELLS[spell.name] then
-        if ValidTarget(unit, self.R.range) and GetObjectName(unit) == CHANELLING_SPELLS[spell.name].Name and  menu.misc.interrupt[GetObjectName(unit).."Inter"]:Value() and menu.misc.interrupt.r:Value() then 
-         self:CastR(unit)
-        end
-      end
-    end
-       if GetObjectType(unit) == Obj_AI_Hero and GetTeam(unit) ~= GetTeam(myHero) and IsReady(_W) then
-      if CHANELLING_SPELLS[spell.name] then
-        if ValidTarget(unit, 1000) and GetObjectName(unit) == CHANELLING_SPELLS[spell.name].Name and  menu.misc.interrupt[GetObjectName(unit).."Inter"]:Value() and menu.misc.interrupt.w:Value() then 
-         self:CastW(unit)
-        end
-      end
-    end
-    end
-    function Viktor:combo()
-      if((IsReady(_Q) and (myHero.mana / myHero.maxMana > menu.combo.Mana:Value() /100 )and GetDistance(target) < 600  and menu.combo.useQ:Value() and menu.combo.combokey:Value()  )) then
-        self:CastQ(target)
-      end
-      if((IsReady(_E) and (myHero.mana / myHero.maxMana > menu.combo.Mana:Value() /100 )and GetDistance(target) < 1200 and menu.combo.useE:Value() and menu.combo.combokey:Value()  ))then
-        self:CastE(target)
-      end
-      if((IsReady(_W) and (myHero.mana / myHero.maxMana > menu.combo.Mana:Value() /100 ) and GetDistance(target) < 700 and menu.combo.useW:Value() and  menu.combo.combokey:Value()  ))then
-        self:CastW(target)
-      end
-      if menu.combo.logic:Value() == 1 then
-        self:killr()
-      elseif menu.combo.logic:Value() == 2 then
-        self:needr()
-      elseif menu.combo.logic:Value() == 3 then
-        self:alwaysr()
-      end
-
-      if(menu.combo.useI:Value() and menu.combo.combokey:Value() )then
-        for _, unit in pairs(GetEnemyHeroes()) do
-          local dmgI =(50+ ((myHero.level)*20))
-          local health=unit.health
-          if(health<dmgI and menu.combo.useI:Value() and GetDistance(unit)<600)then
-            self:CastI(unit)
-          end
-        end
-      end
-    end
-    function Viktor:killsteal()
-      for _, unit in pairs(GetEnemyHeroes()) do
-        local health = unit.health
-        local dmgE = self:GetEDmg(unit)
-        if(GetDistance(unit)<1200 and  IsReady(_E) and health<dmgE and menu.killsteal.useE:Value() and GetDistance(unit)<700   and menu.killsteal.ks:Value())then
-          self:CastE(unit)
-        end
-        local dmgQ = self:GetQDmg(unit)
-        if(GetDistance(unit)<600 and  IsReady(_Q) and health<dmgQ and menu.killsteal.useQ:Value() and menu.killsteal.ks:Value() )then
-          self:CastQ(unit)
-        end
-        local dmgI =(50+ ((myHero.level)*20))
-        if(health<dmgI and menu.killsteal.useI:Value() and menu.killsteal.ks:Value() and GetDistance(unit)<600)then
-          self:CastI(unit)
-        end
-        local dmgR =self:GetRDmg(unit)
-        if(GetDistance(unit)<700 and  IsReady(_R) and health<dmgR and menu.killsteal.useR:Value() and menu.killsteal.ks:Value() and GetDistance(unit)<700)then
-          self:CastR(unit)
-        end
-      end
-    end
-    function Viktor:GetQDmg(target)
-      if GetCastLevel(myHero, _Q) < 1 then
-        return 0
-      end
-      if IsReady(_Q) then
-        local FinalDamage = (20 + (GetCastLevel(myHero, _Q) * 20)  +(GetBonusAP(myHero)*.2) + (GetBonusAP(myHero)*.5))
-        return CalcDamage(myHero,target, 0,FinalDamage)
-      else
-        return 0
-      end
-    end
-    function Viktor:GetQ2Dmg(target)
-      if GetCastLevel(myHero, _Q) < 1 then
-        return 0
-      end
-      if IsReady(_Q) then
-        local FinalDamage = (20 + (GetCastLevel(myHero, _Q) * 20) + (GetBonusAP(myHero)*.2))
-        return CalcDamage(myHero,target, 0,FinalDamage)
-      else
-        return 0
-      end
-    end
-    function Viktor:GetEDmg(target)
-      if GetCastLevel(myHero, _E) < 1 then
-        return 0
-      end
-      if not ebuff and IsReady(_E) then
-        local FinalDamage = (25 + (GetCastLevel(myHero, _E) * 45) + (GetBonusAP(myHero)*.7))
-        return CalcDamage(myHero,target, 0,FinalDamage)
-      elseif ebuff and IsReady(_E) then
-        local FinalDamage =(25 + (GetCastLevel(myHero, _E) * 45) + (GetBonusAP(myHero)*.7)) + (25 + (GetCastLevel(myHero, _E) * 45) + (GetBonusAP(myHero)*.7))*0.4
-        return CalcDamage(myHero,target, 0,FinalDamage)
-      else
-        return 0
-      end
-    end
-    function Viktor:GetRDmg(target)
-      if GetCastLevel(myHero, _R) < 1 then
-        return 0
-      end
-      if IsReady(_R) then
-        local Rdamage = (50 + (GetCastLevel(myHero, _R) * 100) + (GetBonusAP(myHero)*.55))
-        local persecond = ( 14*(GetCastLevel(myHero, _R) * 15) + (GetBonusAP(myHero)*.1))
-        local FinalDamage = Rdamage + persecond
-        return CalcDamage(myHero,target, 0,FinalDamage)
-      else
-        return 0
-      end
-    end
-    function Viktor:GetMyDmg(target)
-      if IsReady(_Q) and IsReady(_R) and IsReady(_E) then
-        return self:GetQDmg(target) + self:GetRDmg(target) + self:GetEDmg(target)
-      elseif IsReady(_Q)  and IsReady(_R) then
-        return self:GetQDmg(target) + self:GetRDmg(target)
-      elseif IsReady(_Q)  and IsReady(_E) then
-        return self:GetQDmg(target) + self:GetEDmg(target)
-      elseif IsReady(_R) and IsReady(_E) then
-        return self:GetRDmg(target) +self:GetEDmg(target)
-      elseif IsReady(_Q) then
-        return self:GetQDmg(target)
-      elseif IsReady(_E) then
-        return self:GetEDmg(target)
-      elseif IsReady(_R) then
-        return self:GetRDmg(target)
-      elseif IsReady(_Q) and IsReady(_R) then
-        return self:GetQDmg(target) + self:GetRDmg(target)
-      else
-        return 0
-      end
-    end
-    function Viktor:GetDraws(target)
-      local qdamage = self:GetQDmg(target)
-      local edamage = self:GetEDmg(target)
-      local rdamage = self:GetRDmg(target)
-      local Idmg=(50+ ((myHero.level)*20))
-
-      if qdamage >target.health then
-        return 'Q', GoS.White
-      elseif qdamage+ Idmg>target.health then
-        return 'Q + Ignite', GoS.White
-      elseif edamage >target.health then
-        return 'E', GoS.White
-      elseif edamage + Idmg>target.health then
-        return 'E + Ignite', GoS.White
-      elseif rdamage  >target.health then
-        return 'R', GoS.White
-      elseif rdamage + Idmg>target.health then
-        return 'R + Ignite', GoS.White
-      elseif rdamage +edamage  >target.health then
-        return 'R + E',GoS.White
-      elseif rdamage +edamage+ Idmg>target.health then
-        return 'R + E + Ignite',GoS.White
-      elseif qdamage+edamage>target.health then
-        return 'Q + E',GoS.White
-      elseif qdamage+rdamage >target.health then
-        return 'Q + R',GoS.White
-      elseif qdamage+edamage+ Idmg>target.health then
-        return 'Q + E + Ignite',GoS.White
-      elseif qdamage+rdamage+ Idmg>target.health then
-        return 'Q + R + Ignite',GoS.White
-      elseif qdamage+edamage+rdamage >target.health then
-        return 'Kill with full combo',GoS.White
-      elseif qdamage+edamage+rdamage+ Idmg>target.health then
-        return 'Full Combo + Ignite',GoS.White
-      else
-        return "Cant Kill yet", GoS.White
-      end
-    end
-    function Viktor:harass()
-      if menu.harass.harasskey:Value() or menu.harass.harasstogle:Value()  then
-        if(IsReady(_Q) and (myHero.mana / myHero.maxMana > menu.harass.Mana:Value() /100 ) and GetDistance(target) <= 700 and menu.harass.useQ:Value() ) then
-          self:CastQ(target)
-        end
-        if(IsReady(_E) and (myHero.mana / myHero.maxMana > menu.harass.Mana:Value() /100 ) and GetDistance(target) <= 1200 and menu.harass.useE:Value()  and ValidTarget(target, self.ERange)) then
-          self:CastE(target)
-        end
-
-      end
-    end
-    function Viktor:LastHit()
-      for _, target in pairs(minionManager.objects) do
-        -- print (self:GetEDmg(target))
-        if IsObjectAlive(target) and GetTeam(target) == MINION_ENEMY then
-          if menu.farm.lasthit.lasthitlogic:Value() == 1 then
-            local Qdamage = self:GetQDmg(target)
-            if(IsReady(_Q) and menu.farm.lasthit.useQ:Value() and (myHero.mana / myHero.maxMana >=  menu.farm.lasthit.QMana:Value() /100 ) and ValidTarget(target,700)   and Qdamage >= GetCurrentHP(target)) then
-              self:CastQ(target)
-            end
-            local Edamage = self:GetEDmg(target)
-            if(IsReady(_E)and menu.farm.lasthit.useE:Value() and (myHero.mana / myHero.maxMana >=  menu.farm.lasthit.EMana:Value() /100 )and  ValidTarget(target,925) and Edamage >= GetCurrentHP(target)) then
-              self:CastE(target)
-            end
-          end
-        end
-      end
-    end
-    function Viktor:LaneClear()
-      for i, minion in pairs(minionManager.objects) do
-        if ValidTarget(minion) and minion ~= nil and GetTeam(minion) == MINION_ENEMY then
-          if menu.farm.laneclear.useQ:Value() and ( myHero.mana / myHero.maxMana >= menu.farm.laneclear.QMana:Value() /100 ) and GetDistance(minion) <= 700 then
-            self:CastQ(minion)
-          end
-        end
-      end
-      if (myHero.mana / myHero.maxMana >=  menu.farm.laneclear.EMana:Value() /100 ) then
-        local NumberOfHits = menu.farm.laneclear.ecount:Value()
-        if IsReady(_E) then
-          if  menu.farm.laneclear.useE:Value()   then
-            local BestPos, BestHit =  GetLineFarmPosition(1000 ,180, MINION_ENEMY)
-            if BestPos   and  BestHit >= NumberOfHits then
-              EStartPos = Vector(myHero) - 475 * (Vector(myHero) - Vector(BestPos)):normalized()
-              CastSkillShot3(_E,EStartPos, BestPos)
-            end
-          end
-        end
-      end
-    end
-    function Viktor:JungleClear()
-      for i, minion in pairs(minionManager.objects) do
-        if ValidTarget(minion) and minion ~= nil and GetTeam(minion) == MINION_JUNGLE then
-          if menu.farm.jungleclear.useQ:Value() and ( myHero.mana / myHero.maxMana >= menu.farm.jungleclear.QMana:Value() /100 ) and GetDistance(minion) <= 700 then
-            self:CastQ(minion)
-          end
-        end
-      end
-      if (myHero.mana / myHero.maxMana >=  menu.farm.jungleclear.EMana:Value() /100 ) then
-        local NumberOfHits = 1
-        if IsReady(_E) then
-          if  menu.farm.jungleclear.useE:Value()   then
-            local BestPos, BestHit =  GetLineFarmPosition(1000 ,180, MINION_JUNGLE)
-            if BestPos   and  BestHit >= NumberOfHits then
-              EStartPos = Vector(myHero) - 475 * (Vector(myHero) - Vector(BestPos)):normalized()
-              CastSkillShot3(_E,EStartPos, BestPos)
-            end
-          end
-        end
-      end
-    end
-    function Viktor:WndMsg(Msg, Key)
-      if menu.targetsel.ts:Value() then
-        if Msg == WM_LBUTTONDOWN then
-          local minD = 10
-          local starget = nil
-          for i, enemy in ipairs(GetEnemyHeroes()) do
-            if ValidTarget(enemy) then
-              if GetDistance(enemy, mousePos) <= minD or starget == nil then
-                minD = GetDistance(enemy, mousePos)
-                starget = enemy
-              end
-            end
-          end
-          if starget and minD < 150 then
-            if self.selectedTar and starget.charName == self.selectedTar.charName then
-              self.selectedTar = nil
-              print("<font color=\"#FFFFFF\">Target <b>is no loger selected.</b>:<font color=\"#D3649F\"><b> "..starget.charName.." </b></font>")
-            else
-              self.selectedTar = starget
-              print("<font color=\"#FFFFFF\">New target <b>selected.</b>:<font color=\"#D3649F\"><b> "..starget.charName.." </b></font>")
-            end
-          end
-        end
-      end
-      if Msg == WM_LBUTTONDOWN then
-        if PopUp1 then
-          PopUp1 = false
-        end
-      end
-    end
-    function Viktor:onload()
-     findorb()
-    end
-    function Viktor:LoadMenu()
-      menu=MenuConfig( "menu",""..Scriptname.." [" .. myHero.charName.."]")
-
-
-      menu:Menu("combo",loc_eng[1])
-      menu.combo:Key("combokey", loc_eng[81], 32)
-      menu.combo:Boolean("useQ", loc_eng[2], true)
-      menu.combo:Boolean("useW", loc_eng[3], true)
-      menu.combo:Boolean("useE", loc_eng[4], true)
-      menu.combo:Boolean("useR", loc_eng[5], true)
-      menu.combo:Boolean("useI", loc_eng[6], true)
-      menu.combo:DropDown("logic", loc_eng[159],1, {loc_eng[160],loc_eng[217],loc_eng[172] })
-      menu.combo:Slider("Mana",loc_eng[8], 10, 10, 100, 1)
-
-
-      menu:Menu( "harass",loc_eng[9])
-      menu.harass:Key("harasskey", loc_eng[83], string.byte("C"))
-      menu.harass:Key("harasstogle", loc_eng[164],string.byte("T"))
-      menu.harass:Boolean("useQ", loc_eng[10], true)
-      menu.harass:Boolean("useE", loc_eng[12], true)
-      menu.harass:Slider("Mana",loc_eng[8], 30, 10, 100, 1)
-
-      menu:Menu( "farm",loc_eng[14])
-
-      menu.farm:Menu("laneclear",loc_eng[15])
-      menu.farm.laneclear:Boolean("useQ",loc_eng[16],true)
-      menu.farm.laneclear:Boolean("useE",loc_eng[18],true)
-      menu.farm.laneclear:Slider("ecount",loc_eng[182], 2, 1, 10, 1)
-      menu.farm.laneclear:Info("blank", "")
-      menu.farm.laneclear:Info("blank", "")
-      menu.farm.laneclear:Info("info2", loc_eng[184])
-      menu.farm.laneclear:Slider("QMana",loc_eng[185], 30, 10, 100, 1)
-      menu.farm.laneclear:Slider("WMana",loc_eng[186], 30, 10, 100, 1)
-      menu.farm.laneclear:Slider("EMana",loc_eng[187], 30, 10, 100, 1)
-
-
-      menu.farm:Menu("jungleclear",loc_eng[20])
-      menu.farm.jungleclear:Boolean("useQ",loc_eng[21],true)
-      menu.farm.jungleclear:Boolean("useE",loc_eng[23],true)
-      menu.farm.jungleclear:Info("blank", "")
-      menu.farm.jungleclear:Info("blank", "")
-      menu.farm.jungleclear:Info("info2", loc_eng[184])
-      menu.farm.jungleclear:Slider("QMana",loc_eng[185], 30, 10, 100, 1)
-      menu.farm.jungleclear:Slider("EMana",loc_eng[187], 30, 10, 100, 1)
-
-      menu.farm:Menu("lasthit",loc_eng[25])
-      menu.farm.lasthit:Boolean("autolasthit",loc_eng[189],false)
-      menu.farm.lasthit:Boolean("useQ",loc_eng[26],true)
-      menu.farm.lasthit:Boolean("useE",loc_eng[28],false)
-      menu.farm.lasthit:DropDown("lasthitlogic",loc_eng[191], 1, {loc_eng[172],loc_eng[174]})
-      menu.farm.lasthit:Info("blank", "")
-      menu.farm.lasthit:Info("info2", loc_eng[184])
-      menu.farm.lasthit:Slider("QMana",loc_eng[185], 30, 10, 100, 1)
-      menu.farm.lasthit:Slider("EMana",loc_eng[186], 30, 10, 100, 1)
-
-      menu.farm:Menu("clearkey",loc_eng[218])
-      menu.farm.clearkey:Key("lasthitkey",loc_eng[215], string.byte("X"))
-      menu.farm.clearkey:Key("laneclearkey", loc_eng[85], string.byte("V"))
-      menu.farm.clearkey:Key("jungleclearkey", loc_eng[86],  string.byte("V"))
-
-      menu:Menu( "killsteal",loc_eng[35])
-      menu.killsteal:Boolean("ks",loc_eng[36],true)
-      menu.killsteal:Boolean("useQ", loc_eng[37], true)
-      menu.killsteal:Boolean("useW", loc_eng[38], true)
-      menu.killsteal:Boolean("useE", loc_eng[39], true)
-      menu.killsteal:Boolean("useR", loc_eng[40], true)
-      menu.killsteal:Boolean("useI", loc_eng[41], true)
-
-
-Activator:Loadmenu("ap")
-
-      menu:Menu( "misc",loc_eng[92])
-      menu.misc:Menu( "gapClose",loc_eng[219])
-      menu.misc.gapClose:Boolean("w", loc_eng[220], true)
-      menu.misc.gapClose:Info("info3", loc_eng[98] )
-      menu.misc:Menu( "skinhack","[" .. myHero.charName.. "] - Skinhack Settings")
-      menu.misc.skinhack:Boolean("useskin",loc_eng[54], false)
-      menu.misc.skinhack:DropDown('selected' .. myHero.charName .. 'Skin', loc_eng[57]  ,  1, skinMeta[myHero.charName])
-      menu.misc:Menu( "autolevel","[" .. myHero.charName.. "] - AutoLevel Settings")
-      menu.misc.autolevel:Boolean("uselevel",loc_eng[51], false)
-      menu.misc.autolevel:DropDown("logic", loc_eng[52] , 7, {loc_eng[58], loc_eng[59],loc_eng[60],loc_eng[61],loc_eng[62], loc_eng[63], loc_eng[64]  })
-      menu.misc:Menu( "antiafk","[" .. myHero.charName.. "] - AntiAFK Settings")
-      menu.misc.antiafk:Boolean("useafk",loc_eng[196], false)
-      menu.misc:Menu( "interrupt",loc_eng[93])
-      menu.misc.interrupt:Boolean("r", loc_eng[97], true)
-      menu.misc.interrupt:Boolean("w", loc_eng[95],  true)
-      menu.misc.interrupt:Info("info3", loc_eng[98] )
-DelayAction(function()
-  local str = {[_Q] = "Q", [_W] = "W", [_E] = "E", [_R] = "R"}
-  for i, spell in pairs(CHANELLING_SPELLS) do
-    for _,k in pairs(GetEnemyHeroes()) do
-        if spell["Name"] == GetObjectName(k) then
-        menu.misc.interrupt:Boolean(GetObjectName(k).."Inter", "On "..GetObjectName(k).." "..(type(spell.Spellslot) == 'number' and str[spell.Spellslot]), true)
-        end
-    end
-  end
-end, 0.35)
-      Clock = os.clock()
-
-
-      menu:Menu("other",loc_eng[65])
-      --menu.other:Menu("Show Damage On Hp Bar", "HPBAR")
-      --menu.other.HPBAR:Boolean("key","ON/OFF",true)
-      menu.other:Menu("draw",loc_eng[66])
-      menu.other.draw:Boolean("qdraw",loc_eng[67],true)
-      menu.other.draw:Boolean("wdraw",loc_eng[68],true)
-      menu.other.draw:Boolean("edraw",loc_eng[69],true)
-      menu.other.draw:Boolean("rdraw",loc_eng[70],true)
-      menu.other.draw:Boolean("aadraw",loc_eng[71],false)
-      menu.other:Menu( "color",loc_eng[198])
-      menu.other.color:ColorPick("Qcolor", loc_eng[199],{255, 255, 255, 255})
-      menu.other.color:ColorPick("Wcolor", loc_eng[200],{255, 255, 255, 255})
-      menu.other.color:ColorPick("Ecolor", loc_eng[201],{255, 255, 255, 255})
-      menu.other.color:ColorPick("Rcolor", loc_eng[202],{255, 255, 255, 255})
-      menu.other.color:ColorPick("E2color", loc_eng[203],{255, 255, 255, 255})
-      menu.other.color:ColorPick("AAcolor", loc_eng[204],{255, 255,0,0})
-      -- menu.other.color:ColorPick("targetselect", loc_eng[205],{255, 255,0,0})
-      menu.other:Menu( "width",loc_eng[206])
-      menu.other.width:Slider("Qwidth", loc_eng[210], 1, 1, 10, 1)
-      menu.other.width:Slider("Wwidth", loc_eng[211], 1, 1, 10, 1)
-      menu.other.width:Slider("Ewidth", loc_eng[212], 1, 1, 10, 1)
-      menu.other.width:Slider("Rwidth", loc_eng[213], 1, 1, 10, 1)
-      menu.other.width:Slider("AAwidth", loc_eng[209], 1, 1, 10, 1)
-      -- menu.other.width:Slider("STwidth", loc_eng[208], 1, 1, 10, 1)
-      --menu.other:Menu( "perma",loc_eng[73])
-      -- menu.other.perma:Boolean("perma",loc_eng[74],true)
-      menu.other:Boolean("target",loc_eng[75],true)
-      menu.other:Boolean("damage",loc_eng[214],true)
-      menu.other:Boolean("targetcal",loc_eng[76],true)
-
-      menu:Menu("targetsel",loc_eng[77])
-      menu.targetsel:Boolean("ts",loc_eng[78], false)
-
-      menu:Menu("orb","Orbwalker Settings")
-      menu.orb:Menu( "selectorb","Current Orbwalker :")
-
-      menu:Menu("pred","Prediction Settings")
-      menu.pred:DropDown("selectpred","Current Predictions :",   1, {"Open Prediction","IPrediction","Gos Prediction"})
-      menu.pred:Menu( "hcgeneral","Hitchance Settings")
-      menu.pred.hcgeneral:Menu( "hcop","Open Prediction Hitchance")
-      menu.pred.hcgeneral.hcop:Slider("hcopw", "W Hitchance " , 30, 0, 100, 1)
-      menu.pred.hcgeneral.hcop:Slider("hcope", "E Hitchance " , 30, 0, 100, 1)
-      menu.pred.hcgeneral.hcop:Slider("hcopr", "r Hitchance " , 30, 0, 100, 1)
-      menu.pred:Info("blank", "    Currently Open Prediction "   )
-      menu.pred:Info("blank", "      is best with this bundle"   )
-
-
-      menu:Info("infoK","           "..Scriptname.."" )
-      menu:Info("infoK","         Script Version:  "..Version.. "  " )
-      menu:Info("infoK","   Script was made by  "..Author.. "" )
-      menu:Info("infoK","Leauge Of Legends Version: "..LVersion.. "" )
-      menu:Boolean("instruct", loc_eng[216], false)
-
-    end
+   
 
 class "Yasuo"
 local hase = false
