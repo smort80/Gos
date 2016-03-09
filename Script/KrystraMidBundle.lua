@@ -1,15 +1,17 @@
 require ('Inspired')
 require ('OpenPredict')
 require ('IPrediction')
-if FileExist(COMMON_PATH .. "KLib.lua") then
-require ('KLib')
+if FileExist(COMMON_PATH .. "Krystralib.lua") then
+require ('Krystralib')
 libloaded = true
  else
-   DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Common/KLib.lua", COMMON_PATH .. "KLib.lua", function() print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> :Hello <font color=\"#FF0000\"><b>"..GetUser().."</b></font> , KLib has been downloaded succesfully. In order to use script , please 2x F6 ")  return end)
+   DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Common/KLib.lua", COMMON_PATH .. "Krystralib.lua", 
+      function() DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Common/welcome.wav", COMMON_PATH .. "Welcome.wav",
+        function() print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> :Hello <font color=\"#FF0000\"><b>"..GetUser().."</b></font> , Krystralib has been downloaded succesfully. In order to use script , please 2x F6 ")  return end) end )
 end
 local loaddac = false
 local loadiow = false
-Version = "1.32"
+Version = "1.33"
 LVersion = " 6.4"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
@@ -27,7 +29,9 @@ date = "09.03.2016"
         function() print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Updated succesfully to ".. data..". Please do 2x F6 to reload." ) return  end) end) end, 3)
     else
         DelayAction(function()   print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Hello <font color=\"#FF0000\"><b>"..GetUser().."</b></font> ,  [".. Version.."] version has succesfully loaded, Good luck and don't forget to give a feedback :) ") end, 1.5)
+        if GetGameTimer() <= 137 then
         PlaySound(COMMON_PATH .. "welcome")
+      end
     end
 end
 
@@ -7265,8 +7269,7 @@ function Zed:JungleClear()
     elseif self:buffcheck()== false then
       if(GetDistance(target) <= self.W.range and menu.combo.useW:Value() and  IsReady(_W))then
                  if not menu.combo.secondw:Value() then
-                          local Wposition =   GetOrigin(myHero) + (Vector(target) - GetOrigin(myHero)):normalized() * 700
-          DelayAction(function ()  self:CastW(Wposition) end, 0.21)
+          DelayAction(function ()  self:CastW(target) end, 0.21)
         elseif menu.combo.secondw:Value() then
            DelayAction(function ()    CastSkillShot(_W, target) end, 0.21)
          end
