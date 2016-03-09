@@ -1,13 +1,15 @@
    local lastTimeTickCalled = 0
    local spellLevel = 0
    local lastPotion = 0
-local libversion = "2.00"
+local libversion = "2.01"
 local LibName = "Krystra Library"
 function AutoUpdate2(data)
     if tonumber(data) > tonumber(libversion) then
         print("<font color=\"#00FFFF\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : New version has been found " .. data) 
         DelayAction(function()  print("<font color=\"#00FFFF\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : Downloading update, please wait...") end, 1)
        DelayAction(function() DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Common/KLib.lua", COMMON_PATH .. "KLib.lua", function() print("<font color=\"#00FFFF\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : Updated succesfully to ".. data..". Please do 2x F6 to reload." ) return end)  end, 3)
+     else
+      libupdated = true
     end
 end
 
@@ -375,6 +377,7 @@ else
 end
 end
  function findorb()
+  if libupdated then
       if  _G.DAC_Loaded or _G.DAC_Init then
       loaddac = true
       menu.orb.selectorb:Info("infoK5", "Deftsu's Auto Carry")
@@ -386,6 +389,7 @@ end
      DelayAction(function()   PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.." - </b></font><font color=\"#FFFFFF\">Insprieds Orb Walker integration has been finished succesfully")end , 5)
     end
   end
+end
 function autolevel()
 if GetLevelPoints(myHero) >= 1 then
   if(  menu.misc.autolevel.uselevel:Value()  and not  menu.misc.autolevel.logic:Value() == 7 and os.clock()-Last_LevelSpell > 0.5 ) then
