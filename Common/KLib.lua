@@ -1,13 +1,13 @@
    local lastTimeTickCalled = 0
    local spellLevel = 0
    local lastPotion = 0
-local libversion = "2.01"
+local libversion = "2.00"
 local LibName = "Krystra Library"
 function AutoUpdate2(data)
     if tonumber(data) > tonumber(libversion) then
         print("<font color=\"#00FFFF\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : New version has been found " .. data) 
         DelayAction(function()  print("<font color=\"#00FFFF\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : Downloading update, please wait...") end, 1)
-       DelayAction(function() DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Common/KLib.lua", COMMON_PATH .. "KLib.lua", 
+       DelayAction(function() DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Common/KLib.lua", COMMON_PATH .. "Krystralib.lua", 
         function() DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Common/welcome.wav", COMMON_PATH .. "Welcome.wav",
           function() print("<font color=\"#00FFFF\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : Updated succesfully to ".. data..". Please do 2x F6 to reload." ) return end) end) end, 3)
      else
