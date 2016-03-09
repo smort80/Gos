@@ -1,4 +1,19 @@
-   
+   local lastTimeTickCalled = 0
+   local spellLevel = 0
+   local lastPotion = 0
+local libversion = "2.00"
+local LibName = "Krystra Library"
+function AutoUpdate2(data)
+    if tonumber(data) > tonumber(libversion) then
+        print("<font color=\"#FF0000\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : New version has been found " .. data) 
+        DelayAction(function()  print("<font color=\"#FF0000\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : Downloading update, please wait...") end, 1)
+       DelayAction(function() DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Common/KLib.lua", COMMON_PATH .. "KLib.lua", function() print("<font color=\"#FF0000\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : Updated succesfully to ".. data..". Please do 2x F6 to reload." ) return end)  end, 3)
+    else
+        DelayAction(function()   print("<font color=\"#FF0000\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : Hello <font color=\"#FF0000\"><b>"..GetUser().."</b></font> ,  [".. libversion.."] version has succesfully loaded, Good luck and don't forget to give a feedback :) ") end, 1.5)
+    end
+end
+
+GetWebResultAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Version/Klib.version", AutoUpdate2)
      ---//==================================================\\---
 --|| > English Translation details               ||--
 ---\\==================================================//---
@@ -230,9 +245,420 @@ yasuospotend = {
 
 
 }
+class "Global"
+function Global:Commondraw()
+            local rs = GetResolution()
+    if PopUp1 then
+                      local w, h1, h2,size  = (rs.x*0.70), (rs.y*.15), (rs.y*.9), rs.y*.02
+                      DrawLine(w, h1/1.05, w, h2/1.97, w/1.75, ARGB(255, 0, 0, 0))
+                      DrawLine(w, h1, w, h2/1.97, w/1.75, ARGB(150, 235, 183, 63))
+                      DrawText(tostring("Welcome to Krystra Mid Series Beta"), rs.y*.028, (rs.x/2.65), (rs.y*.155), ARGB(255, 96, 48, 0))
+                      DrawText(tostring("Little informatation about Krystra Mid Series"), rs.y*.015, (rs.x/2.65), (rs.y*.194), ARGB(255, 96, 48, 0))
+                      DrawText(tostring("Its a bundle that produced by Krystra"), rs.y*.015, (rs.x/2.65), (rs.y*.210), ARGB(255, 255, 255, 255))
+                      DrawText(tostring("Currently it supported only mid champs "), rs.y*.015, (rs.x/2.65), (rs.y*.225), ARGB(255, 255, 255, 255))
+                      DrawText(tostring("I focus Quality rather than Quantity"), rs.y*.015, (rs.x/2.65), (rs.y*.240), ARGB(255, 255, 255, 255))
+                      DrawText(tostring("I need your feedbacks to improve it"), rs.y*.015, (rs.x/2.65), (rs.y*.255), ARGB(255, 255, 255, 255))
+                      DrawText(tostring("I care every single feedback and try to add everything"), rs.y*.015, (rs.x/2.65), (rs.y*.270), ARGB(255, 255, 255, 255))
+                      DrawText(tostring("Hope you are enjoy my script.."), rs.y*.015, (rs.x/2.65), (rs.y*.285), ARGB(255, 255, 255, 255))
+                      DrawText(tostring("You can change every settings to your like :)"), rs.y*.015, (rs.x/2.65), (rs.y*.300), ARGB(255, 255, 255, 255))
+                      DrawText(tostring("Did you like my script > Upvote me on script database and on forum"), rs.y*.015, (rs.x/2.65), (rs.y*.315), ARGB(255, 255, 255, 255))
+                      -- DrawText(tostring("Don't forget these are VIP;"), rs.y*.015, (rs.x/2.65), (rs.y*.330), ARGB(255, 96, 48, 0))
+                      -- DrawText(tostring("  Anti-Afk"), rs.y*.015, (rs.x/2.65), (rs.y*.345), ARGB(255, 255, 255, 255))
+                      -- DrawText(tostring("  Auto Leveler "), rs.y*.015, (rs.x/2.65), (rs.y*.360), ARGB(255, 255, 255, 255))
+                      -- DrawText(tostring("  Skin Changer "), rs.y*.015, (rs.x/2.65), (rs.y*.375), ARGB(255, 255, 255, 255))
+                      local w1, w2, h1, h2 = (rs.x/2)-50, (rs.x/2)+50, (rs.y*.70), (rs.y*.75)
+                      --DrawLine(w1, h1/1.775, w2, h1/1.775, 50, ARGB(255, 0, 0, 0))
+                      --DrawRectangleButton(rs.x*0.467, rs.y/2.375, rs.x*.047, rs.y*.041, ARGB(255, 255, 255, 255))
+                      FillRect((rs.x/2)-size+10, (rs.y/2)-150, 80, 30, ARGB(150, 235, 183, 63))
+                      DrawText(tostring("OK"),size, (rs.x/2)-size+10, (rs.y/2)-150, ARGB(255,0, 0, 0))
+                    end
+end
+class "Activator"
+function Activator:Loadmenu(mode)
+  if mode == "ap" then
+    menu:Menu( "item",loc_eng[42])
+  menu.item:Menu( "autopot",loc_eng[192])
+  menu.item.autopot:Boolean("enableautopothp", loc_eng[193], false)
+  menu.item.autopot:Slider("autopothp", loc_eng[194] , 10, 0, 100, 1)
+  menu.item:Boolean("enableautozhonya", loc_eng[43], false)
+  menu.item:Slider("autozhonya", loc_eng[44] , 10, 0, 100, 1)
+  menu.item:Boolean("usehg", loc_eng[45],  false)
+      menu.item:Menu( "bg","Bilgewater Settings")
+      menu.item.bg:Boolean("usebg", loc_eng[46],  false)
+  elseif mode == "ad" then
+    menu:Menu( "item",loc_eng[42])
+      menu.item:Menu( "autopot",loc_eng[192])
+      menu.item.autopot:Boolean("enableautopothp", loc_eng[193], false)
+      menu.item.autopot:Slider("autopothp", loc_eng[194] , 10, 0, 100, 1)
+      menu.item:Menu( "tiamat","Tiamat Settings")
+      menu.item.tiamat:Boolean("usetiac", "Use Tiamat in combo",  false)
+      menu.item.tiamat:Boolean("usetiacl", "Use Tiamat in clear",  false)
+      menu.item.tiamat:DropDown("tiamatlogic","Tiamat logic for clear",   1, {"Always","Depends on Minion Count"})
+      menu.item.tiamat:Slider("mintia","Minimum Minion to Tiamat"   , 1, 1, 6, 1)
+      menu.item:Menu( "Rhydra","Ravenous Hydra Settings")
+      menu.item.Rhydra:Boolean("userhc", "Use Ravenous Hydra in combo ",  false)
+      menu.item.Rhydra:Boolean("userhcl", "Use Ravenous Hydra in clear ",  false)
+      menu.item.Rhydra:DropDown("Rhydralogic","Ravenous Hydra logic for clear",   1, {"Always","Depends on Minion Count"})
+      menu.item.Rhydra:Slider("minrhydra","Minimum Minion to Ravenous Hydra"   , 1, 1, 6, 1)
+      menu.item:Menu( "thydra","Titanic Hydra Settings")
+      menu.item.thydra:Boolean("useth", "Use Titanic Hydra in combo",  false)
+      menu.item.thydra:Boolean("usethl", "Use Titanic Hydra in clear",  false)
+      menu.item.thydra:DropDown("Thydralogic","Titanic Hydra logic for clear",   1, {"Always","Depends on Minion Count"})
+      menu.item.thydra:Slider("minthydra","Minimum Minion to Titanic Hydra"   , 1, 1, 6, 1)
+      menu.item:Menu( "bg","Bilgewater Settings")
+      menu.item.bg:Boolean("usebg", loc_eng[46],  false)
+             menu.item:Menu( "yahu","Youmuu's Ghostblade Settings")
+      menu.item.yahu:Boolean("yahuc", "Use in combo" ,  false)
+       menu.item.yahu:Boolean("yahug", "Use after gapclose" ,  false)
+              menu.item.yahu:Slider("yahud","Minimum distance ( Gap close )"   , 550, 100, 1000, 1)
+      menu.item:Menu( "btk","Blade of the Ruined King Settings")
+      menu.item.btk:Boolean("usebtk", "Use Blade of the Ruined King",  false)
+      menu.item:Menu( "randuin","Randuin's Omen Settings")
+      menu.item.randuin:Boolean("userand", "Use Randuin's Omen",  false)
+      menu.item.randuin:Slider("minrand","Minimum Enemy to Randuin's Omen"   , 1, 1, 5, 1)
+      menu.item:Menu( "qss","QSS settings")
+      menu.item.qss:Boolean("useqss", "Use QSS",  false)
+      elseif mode == "hybrid" then
+         menu:Menu( "item",loc_eng[42])
+  menu.item:Menu( "autopot",loc_eng[192])
+  menu.item.autopot:Boolean("enableautopothp", loc_eng[193], false)
+  menu.item.autopot:Slider("autopothp", loc_eng[194] , 10, 0, 100, 1)
+  menu.item:Boolean("enableautozhonya", loc_eng[43], false)
+  menu.item:Slider("autozhonya", loc_eng[44] , 10, 0, 100, 1)
+  menu.item:Boolean("usehg", loc_eng[45],  false)
+      menu.item:Menu( "bg","Bilgewater Settings")
+      menu.item.bg:Boolean("usebg", loc_eng[46],  false)
+      menu.item:Menu( "tiamat","Tiamat Settings")
+      menu.item.tiamat:Boolean("usetiac", "Use Tiamat in combo",  false)
+      menu.item.tiamat:Boolean("usetiacl", "Use Tiamat in clear",  false)
+      menu.item.tiamat:DropDown("tiamatlogic","Tiamat logic for clear",   1, {"Always","Depends on Minion Count"})
+      menu.item.tiamat:Slider("mintia","Minimum Minion to Tiamat"   , 1, 1, 6, 1)
+      menu.item:Menu( "Rhydra","Ravenous Hydra Settings")
+      menu.item.Rhydra:Boolean("userhc", "Use Ravenous Hydra in combo ",  false)
+      menu.item.Rhydra:Boolean("userhcl", "Use Ravenous Hydra in clear ",  false)
+      menu.item.Rhydra:DropDown("Rhydralogic","Ravenous Hydra logic for clear",   1, {"Always","Depends on Minion Count"})
+      menu.item.Rhydra:Slider("minrhydra","Minimum Minion to Ravenous Hydra"   , 1, 1, 6, 1)
+      menu.item:Menu( "thydra","Titanic Hydra Settings")
+      menu.item.thydra:Boolean("useth", "Use Titanic Hydra in combo",  false)
+      menu.item.thydra:Boolean("usethl", "Use Titanic Hydra in clear",  false)
+      menu.item.thydra:DropDown("Thydralogic","Titanic Hydra logic for clear",   1, {"Always","Depends on Minion Count"})
+      menu.item.thydra:Slider("minthydra","Minimum Minion to Titanic Hydra"   , 1, 1, 6, 1)
+             menu.item:Menu( "yahu","Youmuu's Ghostblade Settings")
+      menu.item.yahu:Boolean("yahuc", "Use in combo" ,  false)
+       menu.item.yahu:Boolean("yahug", "Use after gapclose" ,  false)
+              menu.item.yahu:Slider("yahud","Minimum distance ( Gap close )"   , 550, 100, 1000, 1)
+      menu.item:Menu( "btk","Blade of the Ruined King Settings")
+      menu.item.btk:Boolean("usebtk", "Use Blade of the Ruined King",  false)
+      menu.item:Menu( "randuin","Randuin's Omen Settings")
+      menu.item.randuin:Boolean("userand", "Use Randuin's Omen",  false)
+      menu.item.randuin:Slider("minrand","Minimum Enemy to Randuin's Omen"   , 1, 1, 5, 1)
+      menu.item:Menu( "qss","QSS settings")
+      menu.item.qss:Boolean("useqss", "Use QSS",  false)
+    end
+  end
+    function Activator:Loaditems(mode)
+      if mode == "ap" then
+Zhonya=GetItemSlot(myHero,3157) > 0 and GetItemSlot(myHero,3157) or nil
+Hextech=GetItemSlot(myHero,3146) > 0 and GetItemSlot(myHero,3146) or nil
+Bilgewater=GetItemSlot(myHero,3144) > 0 and GetItemSlot(myHero,3144) or nil
+        elseif mode == "ad" then
+          Tia = GetItemSlot(myHero,3077) > 0 and GetItemSlot(myHero,3077) or nil
+Rhyd = GetItemSlot(myHero,3074) > 0 and GetItemSlot(myHero,3074) or nil
+Bilgewater=GetItemSlot(myHero,3144) > 0 and GetItemSlot(myHero,3144) or nil
+Thyd = GetItemSlot(myHero,3053) > 0 and GetItemSlot(myHero,3053) or nil
+Btk = GetItemSlot(myHero,3153) > 0 and GetItemSlot(myHero,3153) or nil
+Rand = GetItemSlot(myHero,3143) > 0 and GetItemSlot(myHero,3143) or nil
+Qss = GetItemSlot(myHero,3140) > 0 and GetItemSlot(myHero,3140) or GetItemSlot(myHero,3139) > 0 and GetItemSlot(myHero,3139) or nil
+elseif mode == "hybrid" then
+  Zhonya=GetItemSlot(myHero,3157) > 0 and GetItemSlot(myHero,3157) or nil
+Hextech=GetItemSlot(myHero,3146) > 0 and GetItemSlot(myHero,3146) or nil
+Bilgewater=GetItemSlot(myHero,3144) > 0 and GetItemSlot(myHero,3144) or nil
+  Tia = GetItemSlot(myHero,3077) > 0 and GetItemSlot(myHero,3077) or nil
+Rhyd = GetItemSlot(myHero,3074) > 0 and GetItemSlot(myHero,3074) or nil
+Thyd = GetItemSlot(myHero,3053) > 0 and GetItemSlot(myHero,3053) or nil
+Btk = GetItemSlot(myHero,3153) > 0 and GetItemSlot(myHero,3153) or nil
+Rand = GetItemSlot(myHero,3143) > 0 and GetItemSlot(myHero,3143) or nil
+Qss = GetItemSlot(myHero,3140) > 0 and GetItemSlot(myHero,3140) or GetItemSlot(myHero,3139) > 0 and GetItemSlot(myHero,3139) or nil
+end
+end
+function Activator:Useitems(mode)
+  if mode == "ap" then
+ if menu.item.bg.usebg:Value() and menu.Keys.combokey:Value() then
+if Bilgewater and IsReady(Bilgewater) and ValidTarget(target, 550  ) then
+  CastTargetSpell(target, Bilgewater)
+end
+end
+
+ if menu.item.usehg:Value() and menu.Keys.combokey:Value() then
+if Hextech and IsReady(Hextech) and ValidTarget(target, 700 ) then
+  CastTargetSpell(target, Hextech)
+end
+end
+
+if menu.item.enableautozhonya:Value()  then
+if Zhonya and IsReady(Zhonya) and myHero.health <= (myHero.maxHealth * menu.item.autozhonya:Value() / 100) then
+  CastSpell(Zhonya)
+end
+end
+
+    elseif mode == "ad" then
+      if menu.item.bg.usebg:Value() and menu.Keys.combokey:Value() then
+if Bilgewater and IsReady(Bilgewater) and ValidTarget(target, 550 ) then
+  CastTargetSpell(target, Bilgewater)
+end
+end
+
+if menu.item.tiamat.usetiac:Value() and menu.Keys.combokey:Value() then
+if Tia and IsReady(Tia) and ValidTarget(target, 300) and GetDistance(target) <= 300 then
+  CastSpell(Tia)
+end
+end
+if menu.item.tiamat.usetiacl:Value() and ( menu.Keys.laneclearkey:Value() or menu.Keys.jungleclearkey:Value() ) then
+if Tia and IsReady(Tia) then
+  if menu.item.tiamat.tiamatlogic:Value() == 1 and MinionsAround(myHero, 400, MINION_ENEMY) >=1 then
+    CastSpell(Tia)
+  elseif menu.item.tiamat.tiamatlogic:Value() == 2 then
+    if MinionsAround(myHero, 400, MINION_ENEMY) >=menu.item.tiamat.mintia:Value() then
+      CastSpell(Tia)
+    end
+  end
+end
+end
+
+if menu.item.Rhydra.userhc:Value() and menu.Keys.combokey:Value() then
+if Rhyd and IsReady(Rhyd) and ValidTarget(target, 300) and GetDistance(target) <= 300 then
+  CastSpell(Rhyd)
+end
+end
+if menu.item.Rhydra.userhcl:Value() and ( menu.Keys.laneclearkey:Value() or menu.Keys.jungleclearkey:Value() ) then
+if Rhyd and IsReady(Rhyd) then
+  if menu.item.Rhydra.Rhydralogic:Value() == 1 and MinionsAround(myHero, 400, MINION_ENEMY) >=1  then
+    CastSpell(Rhyd)
+  elseif menu.item.Rhydra.Rhydralogic:Value() == 2 then
+    if MinionsAround(myHero, 400 , MINION_ENEMY) >=menu.item.Rhydra.minrhydra:Value() then
+      CastSpell(Rhyd)
+    end
+  end
+end
+end
+
+if menu.item.thydra.useth:Value() and menu.Keys.combokey:Value() then
+if Thyd and IsReady(Thyd) and ValidTarget(target, 300) and GetDistance(target) <= 300 then
+  CastSpell(Thyd)
+end
+end
+if menu.item.thydra.usethl:Value() and ( menu.Keys.laneclearkey:Value() or menu.Keys.jungleclearkey:Value() ) then
+if Thyd and IsReady(Thyd) then
+  if menu.item.thydra.Thydralogic:Value() == 1 and MinionsAround(myHero, 400, MINION_ENEMY) >=1  then
+    CastSpell(Thyd)
+  elseif menu.item.thydra.Thydralogic:Value() == 2 then
+    if MinionsAround(myHero, 400, MINION_ENEMY) >=menu.item.thydra.minthydra:Value() then
+      CastSpell(Thyd)
+    end
+  end
+end
+end
+
+if menu.item.btk.usebtk:Value()  and menu.Keys.combokey:Value() then
+if Btk and IsReady(Btk) and ValidTarget(target, 550 ) then
+  CastTargetSpell(target, Btk)
+end
+end
 
 
+if menu.item.randuin.userand:Value()  and menu.Keys.combokey:Value() then
+if Rand and IsReady(Rand) and EnemiesAround(myHero, 450 )>= menu.item.randuin.minrand:Value() then
+  CastSpell(Rand)
+end
+end
 
+elseif mode == "hybrid" then
+ if menu.item.bg.usebg:Value() and menu.Keys.combokey:Value() then
+if Bilgewater and IsReady(Bilgewater) and ValidTarget(target, 550  ) then
+  CastTargetSpell(target, Bilgewater)
+end
+end
+
+ if menu.item.usehg:Value() and menu.Keys.combokey:Value() then
+if Hextech and IsReady(Hextech) and ValidTarget(target, 700 ) then
+  CastTargetSpell(target, Hextech)
+end
+end
+
+if menu.item.enableautozhonya:Value()  then
+if Zhonya and IsReady(Zhonya) and myHero.health <= (myHero.maxHealth * menu.item.autozhonya:Value() / 100) then
+  CastSpell(Zhonya)
+end
+end
+
+      if menu.item.bg.usebg:Value() and menu.Keys.combokey:Value() then
+if Bilgewater and IsReady(Bilgewater) and ValidTarget(target, 550 ) then
+  CastTargetSpell(target, Bilgewater)
+end
+end
+
+if menu.item.tiamat.usetiac:Value() and menu.Keys.combokey:Value() then
+if Tia and IsReady(Tia) and ValidTarget(target, 300) and GetDistance(target) <= 300 then
+  CastSpell(Tia)
+end
+end
+if menu.item.tiamat.usetiacl:Value() and ( menu.Keys.laneclearkey:Value() or menu.Keys.jungleclearkey:Value() ) then
+if Tia and IsReady(Tia) then
+  if menu.item.tiamat.tiamatlogic:Value() == 1 and MinionsAround(myHero, 400, MINION_ENEMY) >=1 then
+    CastSpell(Tia)
+  elseif menu.item.tiamat.tiamatlogic:Value() == 2 then
+    if MinionsAround(myHero, 400, MINION_ENEMY) >=menu.item.tiamat.mintia:Value() then
+      CastSpell(Tia)
+    end
+  end
+end
+end
+
+if menu.item.Rhydra.userhc:Value() and menu.Keys.combokey:Value() then
+if Rhyd and IsReady(Rhyd) and ValidTarget(target, 300) and GetDistance(target) <= 300 then
+  CastSpell(Rhyd)
+end
+end
+if menu.item.Rhydra.userhcl:Value() and ( menu.Keys.laneclearkey:Value() or menu.Keys.jungleclearkey:Value() ) then
+if Rhyd and IsReady(Rhyd) then
+  if menu.item.Rhydra.Rhydralogic:Value() == 1 and MinionsAround(myHero, 400, MINION_ENEMY) >=1  then
+    CastSpell(Rhyd)
+  elseif menu.item.Rhydra.Rhydralogic:Value() == 2 then
+    if MinionsAround(myHero, 400 , MINION_ENEMY) >=menu.item.Rhydra.minrhydra:Value() then
+      CastSpell(Rhyd)
+    end
+  end
+end
+end
+
+if menu.item.thydra.useth:Value() and menu.Keys.combokey:Value() then
+if Thyd and IsReady(Thyd) and ValidTarget(target, 300) and GetDistance(target) <= 300 then
+  CastSpell(Thyd)
+end
+end
+if menu.item.thydra.usethl:Value() and ( menu.Keys.laneclearkey:Value() or menu.Keys.jungleclearkey:Value() ) then
+if Thyd and IsReady(Thyd) then
+  if menu.item.thydra.Thydralogic:Value() == 1 and MinionsAround(myHero, 400, MINION_ENEMY) >=1  then
+    CastSpell(Thyd)
+  elseif menu.item.thydra.Thydralogic:Value() == 2 then
+    if MinionsAround(myHero, 400, MINION_ENEMY) >=menu.item.thydra.minthydra:Value() then
+      CastSpell(Thyd)
+    end
+  end
+end
+end
+
+if menu.item.btk.usebtk:Value()  and menu.Keys.combokey:Value() then
+if Btk and IsReady(Btk) and ValidTarget(target, 550 ) then
+  CastTargetSpell(target, Btk)
+end
+end
+
+
+if menu.item.randuin.userand:Value()  and menu.Keys.combokey:Value() then
+if Rand and IsReady(Rand) and EnemiesAround(myHero, 450 )>= menu.item.randuin.minrand:Value() then
+  CastSpell(Rand)
+end
+end
+end
+  end
+levelSequence = {
+[1]={ _Q,_W,_E,_Q,_Q,_R,_Q,_W,_Q,_W,_R,_W,_W,_E,_E,_R,_E,_E},
+[2]= { _Q,_W,_E,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W},
+[3]={ _W,_E,_Q,_W,_W,_R,_W,_Q,_W,_Q,_R,_Q,_Q,_E,_E,_R,_E,_E},
+[4]={ _W,_E,_Q,_W,_W,_R,_W,_E,_W,_E,_R,_E,_E,_Q,_Q,_R,_Q,_Q},
+[5]={ _E,_Q,_W,_E,_E,_R,_E,_W,_E,_W,_R,_W,_W,_Q,_Q,_R,_Q,_Q},
+[6]= { _E,_Q,_W,_E,_E,_R,_E,_Q,_E,_Q,_R,_Q,_Q,_W,_W,_R,_W,_W}
+}
+levelspecial = {
+["Yasuo"]= { _Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W},
+["Leblanc"]= { _W,_Q,_E,_W,_Q,_R,_W,_W,_Q,_E,_R,_W,_Q,_Q,_E,_R,_E,_E},
+["Viktor"]= { _Q,_E,_E,_W,_E,_R,_E,_Q,_E,_Q,_R,_Q,_W,_Q,_W,_R,_W,_W},
+["Diana"]= { _Q,_W,_E,_Q,_Q,_R,_Q,_W,_Q,_W,_R,_W,_W,_E,_E,_R,_E,_E},
+["Orianna"]= {_Q, _E, _W, _Q, _Q, _R, _Q, _W, _Q, _W, _R, _W, _W, _E, _E, _R, _E, _E},
+["TwistedFate"]= {_W, _Q, _Q, _E, _Q, _R, _Q, _W, _Q, _W, _R, _W, _W, _E, _E, _R, _E, _E},
+["Zed"]=  {_Q, _W, _E, _Q, _Q, _R, _Q, _E, _Q, _E, _R, _E, _E, _W, _W, _R, _W, _W},
+["Lissandra"]= { _Q,_E,_W,_Q,_Q,_R,_Q,_W,_Q,_W,_R,_W,_W,_E,_E,_R,_E,_E},
+["Akali"]= { _Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
+}
+function divelogic(unit)
+if not menu.misc.turretdive.use:Value() then
+  return true
+end
+
+if UnderTurret(unit, true) then
+  for _, turret in pairs(GetTurrets()) do
+    if turret and turret.team ~= myHero.team and GetDistance(turret,myHero) <=1200 then
+      if menu.misc.turretdive.turretdivelogic:Value() == 1 then
+        if MinionsAround(turret, 950, MINION_ALLY) >=menu.misc.turretdive.normalmode:Value() and (myHero.health / myHero.maxHealth >= menu.misc.turretdive.health:Value() /100 ) then
+          return true
+        else return false
+        end
+      elseif  menu.misc.turretdive.turretdivelogic:Value() == 2  then
+        if MinionsAround(turret, 950, MINION_ALLY) >=menu.misc.turretdive.krystramode:Value() and AlliesAround(turret, 950)>=menu.misc.turretdive.krystramode2:Value() and (myHero.health / myHero.maxHealth >= menu.misc.turretdive.health:Value() /100 ) then
+          return true
+        else return false
+        end
+      end
+    end
+  end
+else
+  return true
+end
+end
+ function findorb()
+      if  _G.DAC_Loaded or _G.DAC_Init then
+      loaddac = true
+      menu.orb.selectorb:Info("infoK5", "Deftsu's Auto Carry")
+      DelayAction(function()  PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.." - </b></font><font color=\"#FFFFFF\">Deftsu's Auto Carry integration has been finished succesfully") end , 5)
+    else
+      loadiow = true
+      LoadIOW()
+      menu.orb.selectorb:Info("infoK5", "Insprieds Orb Walker")
+     DelayAction(function()   PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.." - </b></font><font color=\"#FFFFFF\">Insprieds Orb Walker integration has been finished succesfully")end , 5)
+    end
+  end
+function autolevel()
+if GetLevelPoints(myHero) >= 1 then
+  if(  menu.misc.autolevel.uselevel:Value()  and not  menu.misc.autolevel.logic:Value() == 7 and os.clock()-Last_LevelSpell > 0.5 ) then
+    LevelSpell(levelSequence[menu.misc.autolevel.logic:Value()][GetLevel(myHero)-GetLevelPoints(myHero)+1])
+    Last_LevelSpell = os.clock()
+  end
+  if( menu.misc.autolevel.uselevel:Value() and menu.misc.autolevel.logic:Value() == 7 and os.clock()-Last_LevelSpell > 0.5 ) then
+    local levelSequence =   { _Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
+    LevelSpell(levelspecial[myHero.charName][GetLevel(myHero)-GetLevelPoints(myHero)+1])
+    Last_LevelSpell = os.clock()
+  end
+end
+end
+function Antiafk()
+                    if os.clock() < Clock or not menu.misc.antiafk.useafk:Value()  then return end
+                    Clock = os.clock() + math.random(60,120)
+                    MoveToXYZ(myHeroPos())
+                  end
+
+       function skinhack()
+                    if ((CurrentTimeInMillis() - lastTimeTickCalled) > 200) then
+                      lastTimeTickCalled = CurrentTimeInMillis()
+                      if  menu.misc.skinhack.useskin:Value() then
+                        if menu.misc.skinhack['selected' .. myHero.charName .. 'Skin'] ~= lastSkin then
+                          lastSkin = menu.misc.skinhack['selected' .. myHero.charName .. 'Skin']:Value()
+                          HeroSkinChanger(GetMyHero(),menu.misc.skinhack['selected' .. myHero.charName .. 'Skin']:Value()-1)
+                        end
+                      end
+                    end
+                  end
+                  function autopot()
+              if os.clock() - lastPotion < 15 then return end
+              for SLOT = ITEM_1, ITEM_6 do
+                if myHero:GetSpellData(SLOT).name == "RegenerationPotion" and menu.item.autopot.enableautopothp:Value() then
+                  if myHero:CanUseSpell(SLOT) == READY and (myHero.health / myHero.maxHealth < menu.item.autopot.autopothp:Value() /100 )  then
+                    CastSpell(SLOT)
+                    lastPotion = os.clock()
+                  end
+                end
+              end
+            end
       function pointOnLine(myHero, unit, minion, extra)
         local tominion = {x = minion.x - unit.x, z = minion.z - unit.z}
         local tomyHero = {x = myHero.x - unit.x, z = myHero.z - unit.z}
