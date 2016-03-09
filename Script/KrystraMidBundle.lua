@@ -7,18 +7,18 @@ libloaded = true
  else
    DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Common/KLib.lua", COMMON_PATH .. "KLib.lua", function() print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> :Hello <font color=\"#FF0000\"><b>"..GetUser().."</b></font> , KLib has been downloaded succesfully. In order to use script , please 2x F6 ")  return end)
 end
-local loaddac = false 
+local loaddac = false
 local loadiow = false
-Version = "1.31"
+Version = "1.32"
 LVersion = " 6.4"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
 list = "Leblanc , Lissandra , Viktor, Akali, Diana, Yasuo,Zed, Orianna , Twisted Fate "
 link = "http://gamingonsteroids.com/topic/10502-beta-stage-krystra-mid-series-leblanc-viktor-lissandra-diana-akali-multi-prediction-orbwalk-support-expert-drawings-and-much-more/"
 date = "09.03.2016"
-
-function AutoUpdate(data)
-  if not libloaded  then return end
+  OnLoad(function()
+  function AutoUpdate(data)
+  if not libloaded or not libupdated then return end
     if tonumber(data) > tonumber(Version) then
         print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : New version has been found " .. data) 
         DelayAction(function()  print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Downloading update, please wait...") end, 1)
@@ -32,6 +32,8 @@ function AutoUpdate(data)
 end
 
 GetWebResultAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Version/midbundle.version", AutoUpdate)
+   end)
+
 
 
 
