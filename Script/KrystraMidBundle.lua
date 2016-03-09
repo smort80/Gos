@@ -7,7 +7,7 @@ libloaded = true
  else
    DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Common/KLib.lua", COMMON_PATH .. "KLib.lua", function() print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> :Hello <font color=\"#FF0000\"><b>"..GetUser().."</b></font> , KLib has been downloaded succesfully. In order to use script , please 2x F6 ")  return end)
 end
-local loaddac = false
+local loaddac = false 
 local loadiow = false
 Version = "1.31"
 LVersion = " 6.4"
