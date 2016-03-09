@@ -5,11 +5,9 @@ local libversion = "2.01"
 local LibName = "Krystra Library"
 function AutoUpdate2(data)
     if tonumber(data) > tonumber(libversion) then
-        print("<font color=\"#FF0000\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : New version has been found " .. data) 
-        DelayAction(function()  print("<font color=\"#FF0000\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : Downloading update, please wait...") end, 1)
-       DelayAction(function() DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Common/KLib.lua", COMMON_PATH .. "KLib.lua", function() print("<font color=\"#FF0000\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : Updated succesfully to ".. data..". Please do 2x F6 to reload." ) return end)  end, 3)
-    else
-        DelayAction(function()   print("<font color=\"#FF0000\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : Hello <font color=\"#FF0000\"><b>"..GetUser().."</b></font> ,  [".. libversion.."] version has succesfully loaded, Good luck and don't forget to give a feedback :) ") end, 1.5)
+        print("<font color=\"#00FFFF\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : New version has been found " .. data) 
+        DelayAction(function()  print("<font color=\"#00FFFF\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : Downloading update, please wait...") end, 1)
+       DelayAction(function() DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Common/KLib.lua", COMMON_PATH .. "KLib.lua", function() print("<font color=\"#00FFFF\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : Updated succesfully to ".. data..". Please do 2x F6 to reload." ) return end)  end, 3)
     end
 end
 
