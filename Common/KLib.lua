@@ -12,237 +12,7 @@ function AutoUpdate2(data)
 end
 
 GetWebResultAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Version/Klib.version", AutoUpdate2)
-     ---//==================================================\\---
---|| > English Translation details               ||--
----\\==================================================//---
-loc_eng = {  
-  --General Menu(Combo) // 8 // 1
-  "Combo Settings", "Use Q in Combo", "Use W in Combo", "Use E in Combo", "Use R in Combo" ,
-  "Use Ignite if target killable","Combo logic","Mana Manager %",
-  --General Menu(Harass) // 5 // 9
-  "Harass Settings","Harass With Q","Harass With W","Harass With E","Harass With R",
-  --General Menu(Clear) // 16 // 14
-  "Farm Settings","LaneClear Settings","Use Q on Laneclear","Use W on Laneclear","Use E on Laneclear","Use R on Laneclear",
-  "JungleClear Settings","Use Q on jungleclear","Use W on jungleclear","Use E on jungleclear","Use R on jungleclear",
-  "Lasthit Settings","Use Q on Lasthit","Use W on Lasthit","Use E on Lasthit","Use R on Lasthit",
-  --General Menu(Escape) // 5 // 30
-  "Escape Settings","Use Q While Escape","Use W While Escape","Use E While Escape","Use R While Escape",
-  --General Menu(Killsteal) // 7 // 35
-  "KillSteal Settings","Killsteal On/Off","Steal With Q","Steal With W","Steal With E","Steal With R","Steal With Ignite",
-  --General Menu(İtem Settings) // 5 // 42
-  "Item Settings","Auto Zhonya", "Zhonya if Health under -> %", "Use Hextech Gunblade", "Use Bilgewater Cutlass",
-  --General Menu(Vıp Settings) // 19 // 47
-  "VIP Settings","Use Packet Casting","To use vip settings, Packet Casting should be open.", "Auto Level Settings","Use Auto Level",
-  "Select Skill Order","Skin Hack Settings","Use Skin Hack","Make sure that using packet casting is ON.",
-  "To use vip settings, You need to be a VIP user on   community.","Select Skin",
-  "Focus Q>W>E", "Focus Q>E>W","Focus W>Q>E","Focus W>E>Q","Focus E>W>Q", "Focus E>Q>W", "Smart" ,
-  --General Menu(Draw Settings) // 12 // 65
-  "Draw Settings","Skill Drawing Settings","Q Skill Drawings","W Skill Drawings","E Skill Drawings","R Skill Drawings","Auto Attack Range",
-  "Draw Combo Mode","Draw Permabox","Draw Permabox ( Needs 2x F9 )","Draw circle for target selected","Target calculation",
-  --General Menu(Target Selectors) // 2 // 77
-  "Targetselectors","Left Click For Target Selection",
-  --General Menu(Key Settings) // 13 // 79
-  "Keys Settings", "    [Combo Key Settings]","Combo Key","    [Harass Key Settings]",
-  "Smart Harass Key","      [Clear Key Settings]","LaneClear Key","JungleClear Key",
-  "      [Other Key Settings]","Escape Key", " Keys are Same As Here","OrwWalkerKey Settings",
-  "Auto Harass Q",
-  --General Menu(Misc Settings) // 7 // 92
-  "Misc Settings", "[" .. myHero.charName.. "] - Auto-Interrupt","Interrupt with Q Skill","Interrupt with W Skill","Interrupt with E Skill",
-  "Interrupt with R Skill","       [Supported Skills]",
-  -- General Menu(Skill Logic) // 6 // 99
-  "Skill Logics","Q Skill Logic","W Skill Logic","E Skill Logic","R Skill Logic","Health Manager %",
-  -- General Menu(Hitchance Settings) // 5 // 105
-  "Hitchance","Q Hitchance","W Hitchance","E Hitchance","R Hitchance",
-  -- General Menu(Orbwalk Settings) // 5  // 110
-  "OrbWalkerKey Settings",
-  "                 Script Version:         ","            Script was made by          ",
-  "       Leauge Of Legends Version:         ","Current Orbwalker:                      Sidas Auto Carry",
-  "Current Orbwalker:                             SxOrbWalk",
-  -- Leblanc Menu // 13 // 116
-  "Q>E>W>R", "Q>R>E>W", "E>Q>W>R", "E>W>Q>R" ,"Random Skill Order","W Skill turn back settings"," Q>E>W>R mode ",
-  " Q>R>E>W mode "," E>Q>W>R mode "," E>W>Q>R mode ",
-  " Random Skill Order mode ","Steal With QW","Only use E Skill (Only Stun)"," Select Combomode Key",
-  -- Akali Menu // 9
-  "2 enemy", "3 enemy" , "4 enemy","5 enemy","Use R if Q is on target", "Rush Skills","Use Stealth if enemy >","Use Stealth if healt %","Use Stealth (W)",
-  -- Diana Menu // 4
-  "Smart Combo", "Use R if target marked" , "Spam everything fast","Use E only if enemy distance > 280",
-  -- Lissandraa Menu // 17
-  "E Logic for combo mode","E Logic for harass mode","Engage with second E", "Do not use Second E ( Recomended)" ,
-  "Do not use Second E ( Recomended)", "Engage with second E" ,"Smart", "save for yourself", "Use for enemy" ,"Auto R for yourself",
-  "AutoR if Health under -> %", "Engage with second E option is still on Beta..", "R Logic for combo mode", "For using Smart R logic, AutoR should be open..",
-  "Use W for Anti GapClose","This Function is on beta..",
-  -- Viktor Menu // 5
-  "Ulti Logic","Use Ulti If Target Is Killable","Use Ulti Directly" ,"E HitChance (Default value = 1.6)","E HitChance (Default value = 2)","Smart Auto Harass",
-  -- language menu// 5
-  "Language(Needs 2xF9)","English", "Turkish","German","Korean",
-  -- Extrass//
-  "Start Engage With Your Ulti ",
-  -- rework// 171
-  "Auto W back if health >","Always","Depends on local Settings","Never","Enemy Number","Auto W back if enemy >","   [Local Back Settings]","W>R>Q>E mode ",
-  " W>Q>R>E mode ","Minimum minion to Q >","Minimum minion to W >","Minimum minion to E >","Minimum minion to R >","           [Mana Manager]",
-  "Q Skill Mana Manager  %","W Skill Mana Manager  %","E Skill Mana Manager  %","R Skill Mana Manager  %","Use Auto Lasthit","Only if cannot AA","Lasthit Logic","Auto Potion","Use Auto Potion",
-  "Auto Potion if Health under -> %","Anti-AFK Settings","Use Anti Afk","E -Target draw","Color Settings","Q Color","W Color","E Color","R Color","E -Target Color","Auto Attack Color",
-  "Selected Target Color","Draw Width Settings","E -Target Width","Selected Target Width","Auto Attack Width","Q Skill Width","W Skill Width","E Skill Width","R Skill Width","Draw Damage Indicator",
-  "Lasthit Key","Click For Instructions","Use if needed","Clear Key Settings","[" .. myHero.charName.. "] - Anti Gap-Close","Gap-Close With W Skill","Humanizer for Anti Gap Close",
-  "Auto W Settings","Use Auto W ","Auto W if enemy >","R -Target draw","R -Target Color","R -Target Width"
-}
 
-lbspot = {
-  {x = 3078.2177734375 , y = 95.748046875, z = 4303.9643554688},
-  {x = 2153.0966796875 , y = 95.748046875, z = 4493.1884765625},
-  {x = 4395.9223632813 , y = 95.748168945313, z = 3125.4541015625},
-  {x = 4524.7241210938 , y = 95.748168945313, z = 2084.6958007813},
-  {x = 5380.0322265625 , y = 51.261352539063, z = 2490.5747070313},
-  {x = 6214.2373046875 , y = 50.011840820313, z = 3461.103515625},
-  {x = 6281.7963867188 , y = 48.528076171875, z = 5089.8540039063},
-  {x = 7254.994140625 , y = 52.451171875, z = 5991.65625},
-  {x = 8116.4321289063 , y = 52.890258789063, z = 5751.265625},
-  {x = 8965.8251953125 , y = 52.623413085938, z = 4474.44921875},
-  {x = 9034.9921875 , y = 53.795166015625, z = 3890.2607421875},
-  {x = 9287.0341796875 , y = 58.37451171875, z = 3511.9157714844},
-  {x = 9867.59765625 , y = 57.9990234375, z = 3118.6665039063},
-  {x = 8189.5307617188 , y = 51.60595703125, z = 3209.5812988281},
-  {x = 3359.3425292969 , y = 52.47412109375, z = 6241.1318359375},
-  {x = 3771.423828125 , y = 51.000732421875, z = 7254.4926757813},
-  {x = 4495.3837890625 , y = 49.123657226563, z = 8071.3657226563},
-  {x = 5118.5659179688 , y = 51.157348632813, z = 7832.5595703125},
-  {x = 5629.3662109375 , y = 51.654296875, z = 7679.3193359375},
-  {x = 8539.6025390625 , y = 51.1298828125, z = 2087.4418945313},
-  {x = 10205.384765625 , y = 49.22314453125, z = 2187.3041992188},
-  {x = 7604.810546875 , y = 51.273681640625, z = 2096.0678710938},
-  {x = 7557.9194335938 , y = 48.730102539063, z = 4686.337890625},
-  {x = 2212.1691894531 , y = 50.411865234375, z = 7797.4438476563},
-  {x = 1652.8302001953 , y = 52.838134765625, z = 8647.6708984375},
-  {x = 2160.7019042969 , y = 53.1201171875, z = 10001.190429688},
-  {x = 2514.5668945313 , y = 51.77490234375, z = 9193.083984375},
-  {x = 3071.609375 , y = 52.812622070313, z = 9864.0703125},
-  {x = 2831.2150878906 , y = 54.32568359375, z = 10353.356445313},
-  {x = 8954.75390625 , y = 51.528076171875, z = 4903.7778320313},
-  {x = 8418.10546875 , y = 53.97119140625, z = 3763.158203125},
-  -- -------------------------------------mavi taraf bitti
-  {x = 10224.888671875 , y = 91.430053710938, z = 12704.100585938},
-  {x = 10429.840820313 , y = 91.429809570313, z = 11703.564453125},
-  {x = 11582.235351563 , y = 91.429809570313, z = 10554.192382813},
-  {x = 12668.779296875 , y = 91.430053710938, z = 10328.741210938},
-  {x = 11852.047851563 , y = 50.3076171875, z = 8894.05859375},
-  {x = 12117.778320313 , y = 52.48046875, z = 8043.8427734375},
-  {x = 11148.4140625 , y = 52.204711914063, z = 7751.361328125},
-  {x = 10362.048828125 , y = 61.070068359375, z = 8575.6318359375},
-  {x = 10950.1953125 , y = 52.203979492188, z = 7506.3989257813},
-  {x = 10353.25390625 , y = 51.999267578125, z = 6711.8408203125},
-  {x = 10437.215820313 , y = 53.444458007813, z = 9096.6904296875},
-  {x = 12971.645507813 , y = 51.981201171875, z = 6886.2333984375},
-  {x = 13101.166015625 , y = 53.143432617188, z = 5653.0639648438},
-  {x = 12408.293945313 , y = 51.729370117188, z = 5222.7763671875},
-  {x = 12139.694335938 , y = 51.7294921875, z = 4567.697265625},
-  {x = 11617.538085938 , y = 51.679321289063, z = 5176.0625},
-  {x = 9070.85546875 , y = 53.036010742188, z = 7165.3149414063},
-  {x = 7072.7900390625 , y = 52.87255859375, z = 8811.623046875},
-  {x = 7598.4057617188 , y = 52.872436523438, z = 8878.0712890625},
-  {x = 8826.94140625 , y = 52.596069335938, z = 9295.0693359375},
-  {x = 8573.7900390625 , y = 51.770141601563, z = 11260.03515625},
-  {x = 9409.0888671875 , y = 52.306396484375, z = 12289.697265625},
-  {x = 6559.1030273438 , y = 53.944580078125, z = 11621.458007813},
-  {x = 5281.6518554688 , y = 56.848266601563, z = 11749.409179688},
-  {x = 6328.6049804688 , y = 54.5703125, z = 12774.705078125},
-  {x = 7206.1005859375 , y = 56.4765625, z = 12770.250976563},
-  {x = 4976.4399414063 , y = 56.671020507813, z = 11446.337890625},
-  {x = 5699.2983398438 , y = 56.692016601563, z = 10907.643554688},
-  {x = 5812.009765625 , y = 54.16015625, z = 10189.111328125},
-  {x = 7286.1147460938 , y = 51.417358398438, z = 10186.866210938}
-}
-
-lbspotend = {
-  {x = 3360.7543945313 , y = 54.14990234375, z = 4812.75},
-  {x = 2190.0805664063 , y = 52.7880859375, z = 5119.3852539063},
-  {x = 4987.3720703125 , y = 50.947265625, z = 3204.5400390625},
-  {x = 5115.9340820313 , y = 51.991333007813, z = 2112.9604492188},
-  {x = 6006.2861328125 , y = 52.13916015625, z = 2439.6027832031},
-  {x = 6717.298828125 , y = 48.523559570313, z = 3892.9299316406},
-  {x = 6118.3544921875 , y = 51.7763671875, z = 5708.7084960938},
-  {x = 7109.2329101563 , y = 53.19287109375, z = 5437.3901367188},
-  {x = 8229.4609375 , y = -71.240600585938, z = 6389.2055664063},
-  {x = 9430.9189453125 , y = -71.240600585938, z = 4516.9462890625},
-  {x = 9438.8330078125 , y = -70.579711914063, z = 4275.380859375},
-  {x = 9656.0322265625 , y = -70.806518554688, z = 4005.1967773438},
-  {x = 9739.7646484375 , y = 49.222900390625, z = 2702.9108886719},
-  {x = 8254.1640625 , y = 51.130126953125, z = 2679.1723632813},
-  {x = 2864.1623535156 , y = 57.044799804688, z = 5993.6665039063},
-  {x = 3698.5791015625 , y = 52.7587890625, z = 7761.037109375},
-  {x = 4003.1398925781 , y = 51.234252929688, z = 7891.3862304688},
-  {x = 5114.298828125 , y = -40.389038085938, z = 8537.78515625},
-  {x = 5995.3530273438 , y = -68.9873046875, z = 8241.912109375},
-  {x = 8574.029296875 , y = 49.453735351563, z = 1673.580078125},
-  {x = 10102.54296875 , y = 50.260009765625, z = 1717.2194824219},
-  {x = 7392.90625 , y = 49.446655273438, z = 1641.5682373047},
-  {x = 7658.3383789063 , y = 53.982421875, z = 4227.2319335938},
-  {x = 2337.2009277344 , y = 51.789916992188, z = 8228.5986328125},
-  {x = 2047.6506347656 , y = 51.777587890625, z = 8631.96875},
-  {x = 1683.5931396484 , y = 52.83837890625, z = 10189.442382813},
-  {x = 2872.6669921875 , y = 50.676025390625, z = 9213.484375},
-  {x = 3521.923828125 , y = -66.380126953125, z = 10094.618164063},
-  {x = 3020.0129394531 , y = -70.343872070313, z = 10846.442382813},
-  {x = 9041.140625 , y = -71.240600585938, z = 5496.4653320313},
-  {x = 8034.2280273438 , y = 53.720825195313, z = 3940.2602539063},
-  -- ---------------------------------------mavi taraf bitti
-  {x = 9689.9365234375 , y = 52.322875976563, z = 12663.056640625},
-  {x = 9955.4375 , y = 52.30615234375, z = 11460.467773438},
-  {x = 11371.384765625 , y = 52.306274414063, z = 10065.577148438},
-  {x = 12632.4765625 , y = 52.306274414063, z = 9777.009765625},
-  {x = 11431.650390625 , y = 59.111206054688, z = 8522.919921875},
-  {x = 11585.361328125 , y = 52.824584960938, z = 8031.7602539063},
-  {x = 10906.69921875 , y = 62.66259765625, z = 8239.5224609375},
-  {x = 10791.670898438 , y = 63.077880859375, z = 8360.7275390625},
-  {x = 10998.96875 , y = 51.723510742188, z = 7037.748046875},
-  {x = 10872.008789063 , y = 51.72265625, z = 6888.4609375},
-  {x = 10173.395507813 , y = 52.117553710938, z = 9537.7919921875},
-  {x = 12673.555664063 , y = 51.702758789063, z = 6491.19921875},
-  {x = 12617.803710938 , y = 52.173828125, z = 5782.1801757813},
-  {x = 11973.099609375 , y = 53.644165039063, z = 5227.3408203125},
-  {x = 11925.876953125 , y = -68.921142578125, z = 4045.8798828125},
-  {x = 11377.123046875 , y = -71.240600585938, z = 4801.3989257813},
-  {x = 8648.61328125 , y = -71.240600585938, z = 6735.1474609375},
-  {x = 6728.6801757813 , y = -71.240600585938, z = 8495.57421875},
-  {x = 7703.7436523438 , y = 52.408813476563, z = 9384.001953125},
-  {x = 8699.5771484375 , y = 50.383911132813, z = 9775.046875},
-  {x = 8129.8115234375 , y = 50.467163085938, z = 10956.14453125},
-  {x = 8863.501953125 , y = 56.47705078125, z = 12406.870117188},
-  {x = 6391.2529296875 , y = 56.47705078125, z = 12191.615234375},
-  {x = 5376.2807617188 , y = 56.460815429688, z = 12158.2109375},
-  {x = 6293.357421875 , y = 52.837890625, z = 13276.076171875},
-  {x = 7261.732421875 , y = 52.838134765625, z = 13321.002929688},
-  {x = 4941.2719726563 , y = -71.240478515625, z = 10840.948242188},
-  {x = 5309.9711914063 , y = -71.240600585938, z = 10677.38671875},
-  {x = 5346.1616210938 , y = -71.240600585938, z = 10363.08984375},
-  {x = 7158.8759765625 , y = 56.380126953125, z = 10707.299804688}
-}
-
-yasuospot = {
-  {x = 3633.6062011719 , y = 51.888549804688, z = 7397.85546875},-- +
-  {x = 1684.1527099609 , y = 52.838134765625, z = 8451.1015625}, --+
-  {x = 3545.6989746094 , y = 50.916137695313, z = 6976.63671875},
-  {x = 7281.1123046875 , y = 52.48046875, z = 5892.6801757813},
-  {x = 8154.3564453125 , y = 51.550659179688, z = 3142.1145019531},
-
-  {x = 13148.944335938 , y = 54.646240234375, z = 6437.7163085938},
-  {x = 11132.174804688 , y = 52.203369140625, z = 7848.6010742188},
-  {x = 10995.295898438 , y = 52.20361328125, z = 7482.541015625},
-
-}
-
-yasuospotend = {
-  {x = 3589.552734375 , y = 52.169189453125, z = 7707.8466796875},-- +
-  {x = 1992.1899414063 , y = 51.777709960938, z = 8496.0576171875}, --+
-  {x = 3648.572265625 , y = 52.458862304688, z = 6701.93359375},
-  {x = 7104.0532226563 , y = 58.594970703125, z = 5623.9267578125},
-  {x = 8275.32421875 , y = 51.1298828125, z = 2851.9223632813},
-
-  {x = 12853.529296875 , y = 51.646118164063, z = 6436.1352539063},
-  {x = 11079.994140625 , y = 62.517578125, z = 8093.0014648438},
-  {x = 11150.340820313 , y = 51.724975585938, z = 7232.6801757813},
-
-
-}
 class "Global"
 function Global:Commondraw()
             local rs = GetResolution()
@@ -1614,3 +1384,234 @@ end
     ["Zyra"]         = {"Classic", "Wildfire", "Haunted", "SKT T1"},
 
   }
+       ---//==================================================\\---
+--|| > English Translation details               ||--
+---\\==================================================//---
+loc_eng = {  
+  --General Menu(Combo) // 8 // 1
+  "Combo Settings", "Use Q in Combo", "Use W in Combo", "Use E in Combo", "Use R in Combo" ,
+  "Use Ignite if target killable","Combo logic","Mana Manager %",
+  --General Menu(Harass) // 5 // 9
+  "Harass Settings","Harass With Q","Harass With W","Harass With E","Harass With R",
+  --General Menu(Clear) // 16 // 14
+  "Farm Settings","LaneClear Settings","Use Q on Laneclear","Use W on Laneclear","Use E on Laneclear","Use R on Laneclear",
+  "JungleClear Settings","Use Q on jungleclear","Use W on jungleclear","Use E on jungleclear","Use R on jungleclear",
+  "Lasthit Settings","Use Q on Lasthit","Use W on Lasthit","Use E on Lasthit","Use R on Lasthit",
+  --General Menu(Escape) // 5 // 30
+  "Escape Settings","Use Q While Escape","Use W While Escape","Use E While Escape","Use R While Escape",
+  --General Menu(Killsteal) // 7 // 35
+  "KillSteal Settings","Killsteal On/Off","Steal With Q","Steal With W","Steal With E","Steal With R","Steal With Ignite",
+  --General Menu(İtem Settings) // 5 // 42
+  "Item Settings","Auto Zhonya", "Zhonya if Health under -> %", "Use Hextech Gunblade", "Use Bilgewater Cutlass",
+  --General Menu(Vıp Settings) // 19 // 47
+  "VIP Settings","Use Packet Casting","To use vip settings, Packet Casting should be open.", "Auto Level Settings","Use Auto Level",
+  "Select Skill Order","Skin Hack Settings","Use Skin Hack","Make sure that using packet casting is ON.",
+  "To use vip settings, You need to be a VIP user on   community.","Select Skin",
+  "Focus Q>W>E", "Focus Q>E>W","Focus W>Q>E","Focus W>E>Q","Focus E>W>Q", "Focus E>Q>W", "Smart" ,
+  --General Menu(Draw Settings) // 12 // 65
+  "Draw Settings","Skill Drawing Settings","Q Skill Drawings","W Skill Drawings","E Skill Drawings","R Skill Drawings","Auto Attack Range",
+  "Draw Combo Mode","Draw Permabox","Draw Permabox ( Needs 2x F9 )","Draw circle for target selected","Target calculation",
+  --General Menu(Target Selectors) // 2 // 77
+  "Targetselectors","Left Click For Target Selection",
+  --General Menu(Key Settings) // 13 // 79
+  "Keys Settings", "    [Combo Key Settings]","Combo Key","    [Harass Key Settings]",
+  "Smart Harass Key","      [Clear Key Settings]","LaneClear Key","JungleClear Key",
+  "      [Other Key Settings]","Escape Key", " Keys are Same As Here","OrwWalkerKey Settings",
+  "Auto Harass Q",
+  --General Menu(Misc Settings) // 7 // 92
+  "Misc Settings", "[" .. myHero.charName.. "] - Auto-Interrupt","Interrupt with Q Skill","Interrupt with W Skill","Interrupt with E Skill",
+  "Interrupt with R Skill","       [Supported Skills]",
+  -- General Menu(Skill Logic) // 6 // 99
+  "Skill Logics","Q Skill Logic","W Skill Logic","E Skill Logic","R Skill Logic","Health Manager %",
+  -- General Menu(Hitchance Settings) // 5 // 105
+  "Hitchance","Q Hitchance","W Hitchance","E Hitchance","R Hitchance",
+  -- General Menu(Orbwalk Settings) // 5  // 110
+  "OrbWalkerKey Settings",
+  "                 Script Version:         ","            Script was made by          ",
+  "       Leauge Of Legends Version:         ","Current Orbwalker:                      Sidas Auto Carry",
+  "Current Orbwalker:                             SxOrbWalk",
+  -- Leblanc Menu // 13 // 116
+  "Q>E>W>R", "Q>R>E>W", "E>Q>W>R", "E>W>Q>R" ,"Random Skill Order","W Skill turn back settings"," Q>E>W>R mode ",
+  " Q>R>E>W mode "," E>Q>W>R mode "," E>W>Q>R mode ",
+  " Random Skill Order mode ","Steal With QW","Only use E Skill (Only Stun)"," Select Combomode Key",
+  -- Akali Menu // 9
+  "2 enemy", "3 enemy" , "4 enemy","5 enemy","Use R if Q is on target", "Rush Skills","Use Stealth if enemy >","Use Stealth if healt %","Use Stealth (W)",
+  -- Diana Menu // 4
+  "Smart Combo", "Use R if target marked" , "Spam everything fast","Use E only if enemy distance > 280",
+  -- Lissandraa Menu // 17
+  "E Logic for combo mode","E Logic for harass mode","Engage with second E", "Do not use Second E ( Recomended)" ,
+  "Do not use Second E ( Recomended)", "Engage with second E" ,"Smart", "save for yourself", "Use for enemy" ,"Auto R for yourself",
+  "AutoR if Health under -> %", "Engage with second E option is still on Beta..", "R Logic for combo mode", "For using Smart R logic, AutoR should be open..",
+  "Use W for Anti GapClose","This Function is on beta..",
+  -- Viktor Menu // 5
+  "Ulti Logic","Use Ulti If Target Is Killable","Use Ulti Directly" ,"E HitChance (Default value = 1.6)","E HitChance (Default value = 2)","Smart Auto Harass",
+  -- language menu// 5
+  "Language(Needs 2xF9)","English", "Turkish","German","Korean",
+  -- Extrass//
+  "Start Engage With Your Ulti ",
+  -- rework// 171
+  "Auto W back if health >","Always","Depends on local Settings","Never","Enemy Number","Auto W back if enemy >","   [Local Back Settings]","W>R>Q>E mode ",
+  " W>Q>R>E mode ","Minimum minion to Q >","Minimum minion to W >","Minimum minion to E >","Minimum minion to R >","           [Mana Manager]",
+  "Q Skill Mana Manager  %","W Skill Mana Manager  %","E Skill Mana Manager  %","R Skill Mana Manager  %","Use Auto Lasthit","Only if cannot AA","Lasthit Logic","Auto Potion","Use Auto Potion",
+  "Auto Potion if Health under -> %","Anti-AFK Settings","Use Anti Afk","E -Target draw","Color Settings","Q Color","W Color","E Color","R Color","E -Target Color","Auto Attack Color",
+  "Selected Target Color","Draw Width Settings","E -Target Width","Selected Target Width","Auto Attack Width","Q Skill Width","W Skill Width","E Skill Width","R Skill Width","Draw Damage Indicator",
+  "Lasthit Key","Click For Instructions","Use if needed","Clear Key Settings","[" .. myHero.charName.. "] - Anti Gap-Close","Gap-Close With W Skill","Humanizer for Anti Gap Close",
+  "Auto W Settings","Use Auto W ","Auto W if enemy >","R -Target draw","R -Target Color","R -Target Width"
+}
+
+lbspot = {
+  {x = 3078.2177734375 , y = 95.748046875, z = 4303.9643554688},
+  {x = 2153.0966796875 , y = 95.748046875, z = 4493.1884765625},
+  {x = 4395.9223632813 , y = 95.748168945313, z = 3125.4541015625},
+  {x = 4524.7241210938 , y = 95.748168945313, z = 2084.6958007813},
+  {x = 5380.0322265625 , y = 51.261352539063, z = 2490.5747070313},
+  {x = 6214.2373046875 , y = 50.011840820313, z = 3461.103515625},
+  {x = 6281.7963867188 , y = 48.528076171875, z = 5089.8540039063},
+  {x = 7254.994140625 , y = 52.451171875, z = 5991.65625},
+  {x = 8116.4321289063 , y = 52.890258789063, z = 5751.265625},
+  {x = 8965.8251953125 , y = 52.623413085938, z = 4474.44921875},
+  {x = 9034.9921875 , y = 53.795166015625, z = 3890.2607421875},
+  {x = 9287.0341796875 , y = 58.37451171875, z = 3511.9157714844},
+  {x = 9867.59765625 , y = 57.9990234375, z = 3118.6665039063},
+  {x = 8189.5307617188 , y = 51.60595703125, z = 3209.5812988281},
+  {x = 3359.3425292969 , y = 52.47412109375, z = 6241.1318359375},
+  {x = 3771.423828125 , y = 51.000732421875, z = 7254.4926757813},
+  {x = 4495.3837890625 , y = 49.123657226563, z = 8071.3657226563},
+  {x = 5118.5659179688 , y = 51.157348632813, z = 7832.5595703125},
+  {x = 5629.3662109375 , y = 51.654296875, z = 7679.3193359375},
+  {x = 8539.6025390625 , y = 51.1298828125, z = 2087.4418945313},
+  {x = 10205.384765625 , y = 49.22314453125, z = 2187.3041992188},
+  {x = 7604.810546875 , y = 51.273681640625, z = 2096.0678710938},
+  {x = 7557.9194335938 , y = 48.730102539063, z = 4686.337890625},
+  {x = 2212.1691894531 , y = 50.411865234375, z = 7797.4438476563},
+  {x = 1652.8302001953 , y = 52.838134765625, z = 8647.6708984375},
+  {x = 2160.7019042969 , y = 53.1201171875, z = 10001.190429688},
+  {x = 2514.5668945313 , y = 51.77490234375, z = 9193.083984375},
+  {x = 3071.609375 , y = 52.812622070313, z = 9864.0703125},
+  {x = 2831.2150878906 , y = 54.32568359375, z = 10353.356445313},
+  {x = 8954.75390625 , y = 51.528076171875, z = 4903.7778320313},
+  {x = 8418.10546875 , y = 53.97119140625, z = 3763.158203125},
+  -- -------------------------------------mavi taraf bitti
+  {x = 10224.888671875 , y = 91.430053710938, z = 12704.100585938},
+  {x = 10429.840820313 , y = 91.429809570313, z = 11703.564453125},
+  {x = 11582.235351563 , y = 91.429809570313, z = 10554.192382813},
+  {x = 12668.779296875 , y = 91.430053710938, z = 10328.741210938},
+  {x = 11852.047851563 , y = 50.3076171875, z = 8894.05859375},
+  {x = 12117.778320313 , y = 52.48046875, z = 8043.8427734375},
+  {x = 11148.4140625 , y = 52.204711914063, z = 7751.361328125},
+  {x = 10362.048828125 , y = 61.070068359375, z = 8575.6318359375},
+  {x = 10950.1953125 , y = 52.203979492188, z = 7506.3989257813},
+  {x = 10353.25390625 , y = 51.999267578125, z = 6711.8408203125},
+  {x = 10437.215820313 , y = 53.444458007813, z = 9096.6904296875},
+  {x = 12971.645507813 , y = 51.981201171875, z = 6886.2333984375},
+  {x = 13101.166015625 , y = 53.143432617188, z = 5653.0639648438},
+  {x = 12408.293945313 , y = 51.729370117188, z = 5222.7763671875},
+  {x = 12139.694335938 , y = 51.7294921875, z = 4567.697265625},
+  {x = 11617.538085938 , y = 51.679321289063, z = 5176.0625},
+  {x = 9070.85546875 , y = 53.036010742188, z = 7165.3149414063},
+  {x = 7072.7900390625 , y = 52.87255859375, z = 8811.623046875},
+  {x = 7598.4057617188 , y = 52.872436523438, z = 8878.0712890625},
+  {x = 8826.94140625 , y = 52.596069335938, z = 9295.0693359375},
+  {x = 8573.7900390625 , y = 51.770141601563, z = 11260.03515625},
+  {x = 9409.0888671875 , y = 52.306396484375, z = 12289.697265625},
+  {x = 6559.1030273438 , y = 53.944580078125, z = 11621.458007813},
+  {x = 5281.6518554688 , y = 56.848266601563, z = 11749.409179688},
+  {x = 6328.6049804688 , y = 54.5703125, z = 12774.705078125},
+  {x = 7206.1005859375 , y = 56.4765625, z = 12770.250976563},
+  {x = 4976.4399414063 , y = 56.671020507813, z = 11446.337890625},
+  {x = 5699.2983398438 , y = 56.692016601563, z = 10907.643554688},
+  {x = 5812.009765625 , y = 54.16015625, z = 10189.111328125},
+  {x = 7286.1147460938 , y = 51.417358398438, z = 10186.866210938}
+}
+
+lbspotend = {
+  {x = 3360.7543945313 , y = 54.14990234375, z = 4812.75},
+  {x = 2190.0805664063 , y = 52.7880859375, z = 5119.3852539063},
+  {x = 4987.3720703125 , y = 50.947265625, z = 3204.5400390625},
+  {x = 5115.9340820313 , y = 51.991333007813, z = 2112.9604492188},
+  {x = 6006.2861328125 , y = 52.13916015625, z = 2439.6027832031},
+  {x = 6717.298828125 , y = 48.523559570313, z = 3892.9299316406},
+  {x = 6118.3544921875 , y = 51.7763671875, z = 5708.7084960938},
+  {x = 7109.2329101563 , y = 53.19287109375, z = 5437.3901367188},
+  {x = 8229.4609375 , y = -71.240600585938, z = 6389.2055664063},
+  {x = 9430.9189453125 , y = -71.240600585938, z = 4516.9462890625},
+  {x = 9438.8330078125 , y = -70.579711914063, z = 4275.380859375},
+  {x = 9656.0322265625 , y = -70.806518554688, z = 4005.1967773438},
+  {x = 9739.7646484375 , y = 49.222900390625, z = 2702.9108886719},
+  {x = 8254.1640625 , y = 51.130126953125, z = 2679.1723632813},
+  {x = 2864.1623535156 , y = 57.044799804688, z = 5993.6665039063},
+  {x = 3698.5791015625 , y = 52.7587890625, z = 7761.037109375},
+  {x = 4003.1398925781 , y = 51.234252929688, z = 7891.3862304688},
+  {x = 5114.298828125 , y = -40.389038085938, z = 8537.78515625},
+  {x = 5995.3530273438 , y = -68.9873046875, z = 8241.912109375},
+  {x = 8574.029296875 , y = 49.453735351563, z = 1673.580078125},
+  {x = 10102.54296875 , y = 50.260009765625, z = 1717.2194824219},
+  {x = 7392.90625 , y = 49.446655273438, z = 1641.5682373047},
+  {x = 7658.3383789063 , y = 53.982421875, z = 4227.2319335938},
+  {x = 2337.2009277344 , y = 51.789916992188, z = 8228.5986328125},
+  {x = 2047.6506347656 , y = 51.777587890625, z = 8631.96875},
+  {x = 1683.5931396484 , y = 52.83837890625, z = 10189.442382813},
+  {x = 2872.6669921875 , y = 50.676025390625, z = 9213.484375},
+  {x = 3521.923828125 , y = -66.380126953125, z = 10094.618164063},
+  {x = 3020.0129394531 , y = -70.343872070313, z = 10846.442382813},
+  {x = 9041.140625 , y = -71.240600585938, z = 5496.4653320313},
+  {x = 8034.2280273438 , y = 53.720825195313, z = 3940.2602539063},
+  -- ---------------------------------------mavi taraf bitti
+  {x = 9689.9365234375 , y = 52.322875976563, z = 12663.056640625},
+  {x = 9955.4375 , y = 52.30615234375, z = 11460.467773438},
+  {x = 11371.384765625 , y = 52.306274414063, z = 10065.577148438},
+  {x = 12632.4765625 , y = 52.306274414063, z = 9777.009765625},
+  {x = 11431.650390625 , y = 59.111206054688, z = 8522.919921875},
+  {x = 11585.361328125 , y = 52.824584960938, z = 8031.7602539063},
+  {x = 10906.69921875 , y = 62.66259765625, z = 8239.5224609375},
+  {x = 10791.670898438 , y = 63.077880859375, z = 8360.7275390625},
+  {x = 10998.96875 , y = 51.723510742188, z = 7037.748046875},
+  {x = 10872.008789063 , y = 51.72265625, z = 6888.4609375},
+  {x = 10173.395507813 , y = 52.117553710938, z = 9537.7919921875},
+  {x = 12673.555664063 , y = 51.702758789063, z = 6491.19921875},
+  {x = 12617.803710938 , y = 52.173828125, z = 5782.1801757813},
+  {x = 11973.099609375 , y = 53.644165039063, z = 5227.3408203125},
+  {x = 11925.876953125 , y = -68.921142578125, z = 4045.8798828125},
+  {x = 11377.123046875 , y = -71.240600585938, z = 4801.3989257813},
+  {x = 8648.61328125 , y = -71.240600585938, z = 6735.1474609375},
+  {x = 6728.6801757813 , y = -71.240600585938, z = 8495.57421875},
+  {x = 7703.7436523438 , y = 52.408813476563, z = 9384.001953125},
+  {x = 8699.5771484375 , y = 50.383911132813, z = 9775.046875},
+  {x = 8129.8115234375 , y = 50.467163085938, z = 10956.14453125},
+  {x = 8863.501953125 , y = 56.47705078125, z = 12406.870117188},
+  {x = 6391.2529296875 , y = 56.47705078125, z = 12191.615234375},
+  {x = 5376.2807617188 , y = 56.460815429688, z = 12158.2109375},
+  {x = 6293.357421875 , y = 52.837890625, z = 13276.076171875},
+  {x = 7261.732421875 , y = 52.838134765625, z = 13321.002929688},
+  {x = 4941.2719726563 , y = -71.240478515625, z = 10840.948242188},
+  {x = 5309.9711914063 , y = -71.240600585938, z = 10677.38671875},
+  {x = 5346.1616210938 , y = -71.240600585938, z = 10363.08984375},
+  {x = 7158.8759765625 , y = 56.380126953125, z = 10707.299804688}
+}
+
+yasuospot = {
+  {x = 3633.6062011719 , y = 51.888549804688, z = 7397.85546875},-- +
+  {x = 1684.1527099609 , y = 52.838134765625, z = 8451.1015625}, --+
+  {x = 3545.6989746094 , y = 50.916137695313, z = 6976.63671875},
+  {x = 7281.1123046875 , y = 52.48046875, z = 5892.6801757813},
+  {x = 8154.3564453125 , y = 51.550659179688, z = 3142.1145019531},
+
+  {x = 13148.944335938 , y = 54.646240234375, z = 6437.7163085938},
+  {x = 11132.174804688 , y = 52.203369140625, z = 7848.6010742188},
+  {x = 10995.295898438 , y = 52.20361328125, z = 7482.541015625},
+
+}
+
+yasuospotend = {
+  {x = 3589.552734375 , y = 52.169189453125, z = 7707.8466796875},-- +
+  {x = 1992.1899414063 , y = 51.777709960938, z = 8496.0576171875}, --+
+  {x = 3648.572265625 , y = 52.458862304688, z = 6701.93359375},
+  {x = 7104.0532226563 , y = 58.594970703125, z = 5623.9267578125},
+  {x = 8275.32421875 , y = 51.1298828125, z = 2851.9223632813},
+
+  {x = 12853.529296875 , y = 51.646118164063, z = 6436.1352539063},
+  {x = 11079.994140625 , y = 62.517578125, z = 8093.0014648438},
+  {x = 11150.340820313 , y = 51.724975585938, z = 7232.6801757813},
+
+
+}
