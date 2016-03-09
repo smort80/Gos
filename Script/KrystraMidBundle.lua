@@ -9,7 +9,7 @@ libloaded = true
 end
 local loaddac = false
 local loadiow = false
-Version = "1.30"
+Version = "1.31"
 LVersion = " 6.4"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
