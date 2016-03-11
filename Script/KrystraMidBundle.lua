@@ -11,7 +11,8 @@ libloaded = true
 end
 local loaddac = false
 local loadiow = false
-Version = "1.33"
+local blacklist = {}
+Version = "1.34"
 LVersion = " 6.5"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
@@ -4340,7 +4341,18 @@ menu.combo:Boolean("useQ", loc_eng[2], true)
 menu.combo:Boolean("useQ3", "Use Q3 in combo", true)
 menu.combo:Boolean("useE", loc_eng[4], true)
 menu.combo:Boolean("useR", loc_eng[5], true)
+menu.combo:DropDown("rlogic","Ulti Logic",   1, {"Only If Killable","Always"})
 menu.combo:Slider("minr","Minimum Enemy for using R"   , 1, 1, 5, 1)
+menu.combo:Menu("blacklist","Blacklist For Ulti")
+menu.combo.blacklist:Info("blank", "Use Ulti On ;"   )
+  DelayAction(function() for i,enemy in pairs(GetEnemyHeroes()) do
+    table.insert(blacklist, enemy.charName)
+  end
+  for i = 1, #blacklist do
+    local a1 = "a"..i
+    local a2 = ""..blacklist[i]
+    menu.combo.blacklist:Boolean(a1, a2, true)
+  end   end, 0.5)
 menu.combo:Boolean("useI", loc_eng[6], true)
 
 menu:Menu( "harass",loc_eng[9])
@@ -4580,6 +4592,21 @@ function Yasuo:Hasebuff(target)
   end
 end
 end
+function Yasuo:blacklistcheck(enemy)
+  local check = self:blacklist(enemy)
+  if( check == 1 and  menu.combo.blacklist.a1:Value() ) or ( check == 2 and  menu.combo.blacklist.a2:Value() ) or ( check == 3 and  menu.combo.blacklist.a3:Value() ) or ( check == 4 and  menu.combo.blacklist.a4:Value() ) or ( check == 5 and  menu.combo.blacklist.a5:Value() )then
+  return true
+else
+  return false
+end
+end
+function Yasuo:blacklist(enemy)
+  for i = 1, #blacklist do
+    if enemy.charName == blacklist[i] then
+      return i
+    end
+  end
+end
 function Yasuo:getstacks(unit)
 return (estack[GetNetworkID(unit)] or 0)
 end
@@ -4796,7 +4823,7 @@ if menu.misc.autoulti.useR:Value() then
 end
 end
 function Yasuo:autoharass()
-if(GetDistance(target) <= self.Q3.range and menu.harass.useQ3:Value() and IsReady(_Q) ) then
+if(GetDistance(target) <= self.Q3.range and IsReady(_Q) ) then
   self:CastQ3(target)
 end
 end
@@ -4813,6 +4840,7 @@ end
 end
 
 function Yasuo:Combo()
+  local rdmg = self:GetRDmg(target)
 if  GetCastName(myHero,_Q)  == "YasuoQ3W"  then
   if(GetDistance(target) <= self.Q3.range and menu.combo.useQ3:Value()  and  not egap  and IsReady(_Q))then
     self:CastQ3(target)
@@ -4825,18 +4853,36 @@ end
 if(GetDistance(target) <= self.E.range  and menu.combo.useE:Value()   and IsReady(_E))then
   self:CastE(target)
 end
-if menu.combo.useR:Value() then
+if menu.combo.useR:Value() and self:blacklistcheck(target) then
   if(GetDistance(target) <= self.R.range  and IsReady(_R))then
     if knockedup >= menu.combo.minr:Value() then
       if menu.hum.userc:Value() then
         if menu.hum.dtcombo:Value() == 1 then
+          if menu.combo.rlogic:Value()==1 then
+               if rdmg > target.health then
           DelayAction(function ()  self:CastR() end, menu.hum.delayrc:Value()/1000)
+        end
+        elseif menu.combo.rlogic:Value()==2 then
+            DelayAction(function ()  self:CastR() end, menu.hum.delayrc:Value()/1000)
+          end
         elseif  menu.hum.dtcombo:Value() == 2 then
+            if menu.combo.rlogic:Value()==1 then
+               if rdmg > target.health then
           DelayAction(function ()  self:CastR() end,  math.random(0.200,0.650))
+        end
+        elseif menu.combo.rlogic:Value()==2 then
+          DelayAction(function ()  self:CastR() end,  math.random(0.200,0.650))
+        end
         end
       end
       if not menu.hum.userc:Value() then
+        if menu.combo.rlogic:Value()==1 then
+          if rdmg > target.health then
         self:CastR()
+      end
+      elseif menu.combo.rlogic:Value() == 2 then
+          self:CastR()
+        end
       end
     end
   end
@@ -5397,7 +5443,7 @@ end
   end
   function TwistedFate:Combo()
     if not  (myHero.mana / myHero.maxMana >=  menu.combo.Mana:Value() /100 ) then return end
-
+local wdmg =self:GetW2Dmg(Gtarget)
 if menu.combo.card:Value() == 1 then
   combocard= "BlueCardLock"
   elseif menu.combo.card:Value() == 2 then
@@ -5413,6 +5459,8 @@ if menu.combo.card:Value() == 1 then
             elseif not  menu.combo.useblue:Value() or (myHero.mana / myHero.maxMana  >=   menu.combo.bluemana:Value() /100 )  then
                self:CastW(combocard)
                  AttackUnit(Gtarget) 
+               elseif  menu.combo.userandom:Value() and wdmg > Gtarget.health then
+                CastSpell(_W)
              end
               end
 if menu.combo.qmode:Value() == 1  then
@@ -5749,6 +5797,17 @@ Global:Commondraw()
                 return 0
               end
                 if  IsReady(_W)  then
+                local FinalDamage = (7.5 + (GetCastLevel(myHero, _W) * 7.5) + (GetBonusAP(myHero))* .5)+ (myHero.totalDamage) 
+                return CalcDamage(myHero,target,0, FinalDamage)
+              else
+                return 0
+              end
+            end
+                  function TwistedFate:GetW2Dmg(target)
+              if GetCastLevel(myHero, _W) < 1 then
+                return 0
+              end
+                if  IsReady(_W)  then
        local FinalDamage = (15 + (GetCastLevel(myHero, _W) * 15) + (GetBonusAP(myHero))* .5)+ (myHero.totalDamage) 
                 return CalcDamage(myHero,target,0, FinalDamage)
               else
@@ -5869,6 +5928,7 @@ function TwistedFate:LoadMenu()
               menu.combo:Boolean("blockaa", "Block AA in card selection", true)
               menu.combo:Boolean("useblue", "Use Blue Card if Mana <= % ", true)
               menu.combo:Slider("bluemana","Use Blue Card if Mana <= % ", 20, 10, 100, 1)
+              menu.combo:Boolean("userandom", "Use Random Card if enemy die", true)
               menu.combo:Boolean("useI", loc_eng[6], true)
               menu.combo:Slider("Mana",loc_eng[8], 10, 10, 100, 1)
 
@@ -7254,7 +7314,7 @@ function Zed:JungleClear()
         Wcastpos = mousePos
       end
     end
-    if IsReady(_R) then
+    if IsReady(_R) and self:blacklistcheck(target) then
       if(GetDistance(target) <= 615 and menu.combo.useR:Value())then
         self:CastR(target)
       end
@@ -7328,6 +7388,21 @@ if    menu.combo.turnback.swaphp:Value()  then
       end
     end
   end
+  function Zed:blacklistcheck(enemy)
+  local check = self:blacklist(enemy)
+  if( check == 1 and  menu.combo.blacklist.a1:Value() ) or ( check == 2 and  menu.combo.blacklist.a2:Value() ) or ( check == 3 and  menu.combo.blacklist.a3:Value() ) or ( check == 4 and  menu.combo.blacklist.a4:Value() ) or ( check == 5 and  menu.combo.blacklist.a5:Value() )then
+  return true
+else
+  return false
+end
+end
+function Zed:blacklist(enemy)
+  for i = 1, #blacklist do
+    if enemy.charName == blacklist[i] then
+      return i
+    end
+  end
+end
   function Zed:comboitems()
         if menu.combo.useitem:Value() then
  if IsReady(_R)  then
@@ -7791,7 +7866,16 @@ end
       menu.combo:Boolean("useitem", "Use Items After R", true)
       menu.combo:Boolean("wgap", "Use W to Gap Close", false)
       menu.combo:Slider("Mana","Energy Manager %"   , 10, 10, 100, 1)
-
+menu.combo:Menu("blacklist","Blacklist For Ulti")
+menu.combo.blacklist:Info("blank", "Use Ulti On ;"   )
+  DelayAction(function() for i,enemy in pairs(GetEnemyHeroes()) do
+    table.insert(blacklist, enemy.charName)
+  end
+  for i = 1, #blacklist do
+    local a1 = "a"..i
+    local a2 = ""..blacklist[i]
+    menu.combo.blacklist:Boolean(a1, a2, true)
+  end   end, 0.5)
       menu:Menu( "harass",loc_eng[9])
       menu.harass:Menu( "autoharass","Auto Harass Settings")
       menu.harass.autoharass:Boolean("use", "Use Special Auto Harass", false)
