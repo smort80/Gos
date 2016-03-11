@@ -1,7 +1,7 @@
    local lastTimeTickCalled = 0
    local spellLevel = 0
    local lastPotion = 0
-local libversion = "2.01"
+local libversion = "2.02"
 local LibName = "Krystra Library"
 function AutoUpdate2(data)
     if tonumber(data) > tonumber(libversion) then
@@ -351,7 +351,8 @@ levelspecial = {
 ["TwistedFate"]= {_W, _Q, _Q, _E, _Q, _R, _Q, _W, _Q, _W, _R, _W, _W, _E, _E, _R, _E, _E},
 ["Zed"]=  {_Q, _W, _E, _Q, _Q, _R, _Q, _E, _Q, _E, _R, _E, _E, _W, _W, _R, _W, _W},
 ["Lissandra"]= { _Q,_E,_W,_Q,_Q,_R,_Q,_W,_Q,_W,_R,_W,_W,_E,_E,_R,_E,_E},
-["Akali"]= { _Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
+["Akali"]= { _Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W},
+["Irelia"]= { _Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
 }
 function divelogic(unit)
 if not menu.misc.turretdive.use:Value() then
@@ -378,6 +379,7 @@ else
   return true
 end
 end
+
  function findorb()
   if libupdated then
       if  _G.DAC_Loaded or _G.DAC_Init then
@@ -392,6 +394,20 @@ end
     end
   end
 end
+ function findorbtop()
+  if libupdated then
+      if  _G.DAC_Loaded or _G.DAC_Init then
+      loaddac = true
+      menu.advance.orb.selectorb:Info("infoK5", "Deftsu's Auto Carry")
+      DelayAction(function()  PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.." - </b></font><font color=\"#FFFFFF\">Deftsu's Auto Carry integration has been finished succesfully") end , 5)
+    else
+      loadiow = true
+      LoadIOW()
+      menu.advance.orb.selectorb:Info("infoK5", "Insprieds Orb Walker")
+     DelayAction(function()   PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.." - </b></font><font color=\"#FFFFFF\">Insprieds Orb Walker integration has been finished succesfully")end , 5)
+    end
+  end
+end
 function autolevel()
 if GetLevelPoints(myHero) >= 1 then
   if(  menu.misc.autolevel.uselevel:Value()  and not  menu.misc.autolevel.logic:Value() == 7 and os.clock()-Last_LevelSpell > 0.5 ) then
@@ -399,7 +415,6 @@ if GetLevelPoints(myHero) >= 1 then
     Last_LevelSpell = os.clock()
   end
   if( menu.misc.autolevel.uselevel:Value() and menu.misc.autolevel.logic:Value() == 7 and os.clock()-Last_LevelSpell > 0.5 ) then
-    local levelSequence =   { _Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
     LevelSpell(levelspecial[myHero.charName][GetLevel(myHero)-GetLevelPoints(myHero)+1])
     Last_LevelSpell = os.clock()
   end
