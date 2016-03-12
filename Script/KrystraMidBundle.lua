@@ -12,7 +12,7 @@ end
 local loaddac = false
 local loadiow = false
 local blacklist = {}
-Version = "1.34"
+Version = "1.35"
 LVersion = " 6.5"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
@@ -31,7 +31,7 @@ date = "09.03.2016"
     else
         DelayAction(function()   print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Hello <font color=\"#FF0000\"><b>"..GetUser().."</b></font> ,  [".. Version.."] version has succesfully loaded, Good luck and don't forget to give a feedback :) ") end, 1.5)
         if GetGameTimer() <= 137 then
-        PlaySound(COMMON_PATH .. "welcome")
+        PlaySound(COMMON_PATH .. "welcome.wav")
       end
     end
 end
@@ -5785,7 +5785,7 @@ Global:Commondraw()
               elseif self:CardUsed(self.red)and IsReady(_W)  then
                 local FinalDamage = (15 + (GetCastLevel(myHero, _W) * 15) + (GetBonusAP(myHero))* .5)+ (myHero.totalDamage) 
                 return CalcDamage(myHero,target,0, FinalDamage)
-                   elseif self:CardUsed(self.red)and IsReady(_W)  then
+                   elseif self:CardUsed(self.yellow)and IsReady(_W)  then
                 local FinalDamage = (7.5 + (GetCastLevel(myHero, _W) * 7.5) + (GetBonusAP(myHero))* .5)+ (myHero.totalDamage) 
                 return CalcDamage(myHero,target,0, FinalDamage)
               else
