@@ -3,17 +3,17 @@
    local lastPotion = 0
 local libversion = "2.04"
 local LibName = "Krystra Library"
+
 function AutoUpdate2(data)
     if tonumber(data) > tonumber(libversion) then
-        print("<font color=\"#00FFFF\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : New version has been found " .. data) 
-        DelayAction(function()  print("<font color=\"#00FFFF\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : Downloading update, please wait...") end, 1)
-       DelayAction(function() DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Common/Krystralib.lua", COMMON_PATH .. "Krystralib.lua", 
-        function() DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Common/welcome.wav", COMMON_PATH .. "Welcome.wav",
-          function() print("<font color=\"#00FFFF\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : Updated succesfully to ".. data..". Please do 2x F6 to reload." ) return end) end) end, 3)
-     else
-      libupdated = true
+       print("<font color=\"#00FFFF\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : New version has been found " .. data) 
+        print("<font color=\"#00FFFF\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : Downloading update, please wait...")
+        DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Common/Krystralib.lua", COMMON_PATH .. "Krystralib.lua", function() print("<font color=\"#00FFFF\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : Updated succesfully to ".. data..". Please do 2x F6 to reload." ) return end)
+    else
+        libupdated = true
     end
 end
+
 
 GetWebResultAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Version/Klib.version", AutoUpdate2)
 
