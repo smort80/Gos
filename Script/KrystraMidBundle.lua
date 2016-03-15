@@ -12,7 +12,7 @@ end
 local loaddac = false
 local loadiow = false
 local blacklist = {}
-Version = "1.35"
+Version = "1.36"
 LVersion = " 6.5"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
@@ -548,7 +548,7 @@ GetWebResultAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Versi
       end
     end
     function Viktor:onload()
-     findorb()
+    DelayAction(function()  findorb() end, 0.5)
     end
     function Viktor:LoadMenu()
       menu=MenuConfig( "menu",""..Scriptname.." [" .. myHero.charName.."]")
@@ -739,7 +739,7 @@ end
 --|| > Leblanc Menu                            ||--
 ---\\==================================================//---
 function Leblanc:onload()
-  findorb()
+ DelayAction(function()  findorb() end, 0.5)
 end
 function Leblanc:LoadMenu()
   menu=MenuConfig("menu",""..Scriptname.." [" .. myHero.charName.."]" )
@@ -2177,7 +2177,7 @@ function Leblanc:combomode()
               --Callback.Add("ProcessSpellComplete", function(x,y) self:ProcessSpellComplete(x,y) end)
             end
             function Diana:onload()
-              findorb()
+           DelayAction(function()  findorb() end, 0.5)
             end
             function Diana:LoadMenu()
               menu=MenuConfig("menu",""..Scriptname.." [" .. myHero.charName.."]" )
@@ -3445,7 +3445,7 @@ Global:Commondraw()
               end
             end
             function Lissandra:onload()
-              findorb()
+             DelayAction(function()  findorb() end, 0.5)
             end
             function Lissandra:LoadMenu()
               menu=MenuConfig("menu",""..Scriptname.." [" .. myHero.charName.."]" )
@@ -4119,7 +4119,7 @@ end, 0.35)
       end
     end
     function Akali:onload()
-      findorb()
+      DelayAction(function()  findorb() end, 0.5)
     end
     function Akali:LoadMenu()
       menu=MenuConfig( "menu",""..Scriptname.." [" .. myHero.charName.."]")
@@ -4332,7 +4332,7 @@ Callback.Add("DeleteObj", function(obj) self:DeleteObj(obj) end)
 self:LoadMenu()
 end
 function Yasuo:onload()
-findorb()
+DelayAction(function()  findorb() end, 0.5)
 end
 function Yasuo:LoadMenu()
 menu=MenuConfig("menu",""..Scriptname.." [" .. myHero.charName.."]" )
@@ -5452,7 +5452,7 @@ if menu.combo.card:Value() == 1 then
   combocard= "GoldCardLock"
      end
 
-   if( IsReady(_W) and  GetDistance(target) <= 850 and menu.combo.useW:Value()  )then
+   if( IsReady(_W) and  GetDistance(Gtarget) <= 850 and menu.combo.useW:Value()  )then
       if  menu.combo.useblue:Value() and (myHero.mana / myHero.maxMana <=  menu.combo.bluemana:Value() /100 )  then
                 self:CastW(self.blue)
                  AttackUnit(Gtarget)  
@@ -5728,7 +5728,7 @@ end
 end
 end
                 function TwistedFate:onload()
-  findorb()
+     DelayAction(function()  findorb() end, 0.5)
 end
   function TwistedFate:Draw()
         if menu.other.draw.qdraw:Value() and IsReady(_Q) then
@@ -6145,7 +6145,7 @@ self:LoadMenu()
  self.Ball = myHero
 end
   function Orianna:onload()
-    findorb()
+DelayAction(function()  findorb() end, 0.5)
   end
 function Orianna:Checks()
   Gtarget = self.tsg:GetTarget()
@@ -7711,7 +7711,7 @@ end
     end
   end
   function Zed:onload()
-    findorb()
+  DelayAction(function()  findorb() end, 0.5)
   end
   function Zed:GetQ2Dmg(target)
     if GetCastLevel(myHero, _Q)< 1 then
