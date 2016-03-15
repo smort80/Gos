@@ -1,7 +1,7 @@
    local lastTimeTickCalled = 0
    local spellLevel = 0
    local lastPotion = 0
-local libversion = "2.02"
+local libversion = "2.03"
 local LibName = "Krystra Library"
 function AutoUpdate2(data)
     if tonumber(data) > tonumber(libversion) then
@@ -63,17 +63,17 @@ function Activator:Loadmenu(mode)
       menu.item.autopot:Boolean("enableautopothp", loc_eng[193], false)
       menu.item.autopot:Slider("autopothp", loc_eng[194] , 10, 0, 100, 1)
       menu.item:Menu( "tiamat","Tiamat Settings")
-      menu.item.tiamat:Boolean("usetiac", "Use Tiamat in combo",  false)
+      menu.item.tiamat:Boolean("usetiac", "Use Tiamat in combo",  true)
       menu.item.tiamat:Boolean("usetiacl", "Use Tiamat in clear",  false)
       menu.item.tiamat:DropDown("tiamatlogic","Tiamat logic for clear",   1, {"Always","Depends on Minion Count"})
       menu.item.tiamat:Slider("mintia","Minimum Minion to Tiamat"   , 1, 1, 6, 1)
       menu.item:Menu( "Rhydra","Ravenous Hydra Settings")
-      menu.item.Rhydra:Boolean("userhc", "Use Ravenous Hydra in combo ",  false)
+      menu.item.Rhydra:Boolean("userhc", "Use Ravenous Hydra in combo ",  true)
       menu.item.Rhydra:Boolean("userhcl", "Use Ravenous Hydra in clear ",  false)
       menu.item.Rhydra:DropDown("Rhydralogic","Ravenous Hydra logic for clear",   1, {"Always","Depends on Minion Count"})
       menu.item.Rhydra:Slider("minrhydra","Minimum Minion to Ravenous Hydra"   , 1, 1, 6, 1)
       menu.item:Menu( "thydra","Titanic Hydra Settings")
-      menu.item.thydra:Boolean("useth", "Use Titanic Hydra in combo",  false)
+      menu.item.thydra:Boolean("useth", "Use Titanic Hydra in combo",  true)
       menu.item.thydra:Boolean("usethl", "Use Titanic Hydra in clear",  false)
       menu.item.thydra:DropDown("Thydralogic","Titanic Hydra logic for clear",   1, {"Always","Depends on Minion Count"})
       menu.item.thydra:Slider("minthydra","Minimum Minion to Titanic Hydra"   , 1, 1, 6, 1)
@@ -101,17 +101,17 @@ function Activator:Loadmenu(mode)
       menu.item:Menu( "bg","Bilgewater Settings")
       menu.item.bg:Boolean("usebg", loc_eng[46],  false)
       menu.item:Menu( "tiamat","Tiamat Settings")
-      menu.item.tiamat:Boolean("usetiac", "Use Tiamat in combo",  false)
+      menu.item.tiamat:Boolean("usetiac", "Use Tiamat in combo",  true)
       menu.item.tiamat:Boolean("usetiacl", "Use Tiamat in clear",  false)
       menu.item.tiamat:DropDown("tiamatlogic","Tiamat logic for clear",   1, {"Always","Depends on Minion Count"})
       menu.item.tiamat:Slider("mintia","Minimum Minion to Tiamat"   , 1, 1, 6, 1)
       menu.item:Menu( "Rhydra","Ravenous Hydra Settings")
-      menu.item.Rhydra:Boolean("userhc", "Use Ravenous Hydra in combo ",  false)
+      menu.item.Rhydra:Boolean("userhc", "Use Ravenous Hydra in combo ",  true)
       menu.item.Rhydra:Boolean("userhcl", "Use Ravenous Hydra in clear ",  false)
       menu.item.Rhydra:DropDown("Rhydralogic","Ravenous Hydra logic for clear",   1, {"Always","Depends on Minion Count"})
       menu.item.Rhydra:Slider("minrhydra","Minimum Minion to Ravenous Hydra"   , 1, 1, 6, 1)
       menu.item:Menu( "thydra","Titanic Hydra Settings")
-      menu.item.thydra:Boolean("useth", "Use Titanic Hydra in combo",  false)
+      menu.item.thydra:Boolean("useth", "Use Titanic Hydra in combo",  true)
       menu.item.thydra:Boolean("usethl", "Use Titanic Hydra in clear",  false)
       menu.item.thydra:DropDown("Thydralogic","Titanic Hydra logic for clear",   1, {"Always","Depends on Minion Count"})
       menu.item.thydra:Slider("minthydra","Minimum Minion to Titanic Hydra"   , 1, 1, 6, 1)
@@ -137,7 +137,7 @@ Bilgewater=GetItemSlot(myHero,3144) > 0 and GetItemSlot(myHero,3144) or nil
           Tia = GetItemSlot(myHero,3077) > 0 and GetItemSlot(myHero,3077) or nil
 Rhyd = GetItemSlot(myHero,3074) > 0 and GetItemSlot(myHero,3074) or nil
 Bilgewater=GetItemSlot(myHero,3144) > 0 and GetItemSlot(myHero,3144) or nil
-Thyd = GetItemSlot(myHero,3053) > 0 and GetItemSlot(myHero,3053) or nil
+Thyd = GetItemSlot(myHero,3748) > 0 and GetItemSlot(myHero,3748) or nil
 Btk = GetItemSlot(myHero,3153) > 0 and GetItemSlot(myHero,3153) or nil
 Rand = GetItemSlot(myHero,3143) > 0 and GetItemSlot(myHero,3143) or nil
 Qss = GetItemSlot(myHero,3140) > 0 and GetItemSlot(myHero,3140) or GetItemSlot(myHero,3139) > 0 and GetItemSlot(myHero,3139) or nil
@@ -147,7 +147,7 @@ Hextech=GetItemSlot(myHero,3146) > 0 and GetItemSlot(myHero,3146) or nil
 Bilgewater=GetItemSlot(myHero,3144) > 0 and GetItemSlot(myHero,3144) or nil
   Tia = GetItemSlot(myHero,3077) > 0 and GetItemSlot(myHero,3077) or nil
 Rhyd = GetItemSlot(myHero,3074) > 0 and GetItemSlot(myHero,3074) or nil
-Thyd = GetItemSlot(myHero,3053) > 0 and GetItemSlot(myHero,3053) or nil
+Thyd = GetItemSlot(myHero,3748) > 0 and GetItemSlot(myHero,3748) or nil
 Btk = GetItemSlot(myHero,3153) > 0 and GetItemSlot(myHero,3153) or nil
 Rand = GetItemSlot(myHero,3143) > 0 and GetItemSlot(myHero,3143) or nil
 Qss = GetItemSlot(myHero,3140) > 0 and GetItemSlot(myHero,3140) or GetItemSlot(myHero,3139) > 0 and GetItemSlot(myHero,3139) or nil
@@ -213,10 +213,11 @@ if Rhyd and IsReady(Rhyd) then
   end
 end
 end
-
+if myHero.charName ~= "Fiora" then
 if menu.item.thydra.useth:Value() and menu.Keys.combokey:Value() then
 if Thyd and IsReady(Thyd) and ValidTarget(target, 300) and GetDistance(target) <= 300 then
   CastSpell(Thyd)
+end
 end
 end
 if menu.item.thydra.usethl:Value() and ( menu.Keys.laneclearkey:Value() or menu.Keys.jungleclearkey:Value() ) then
@@ -352,7 +353,8 @@ levelspecial = {
 ["Zed"]=  {_Q, _W, _E, _Q, _Q, _R, _Q, _E, _Q, _E, _R, _E, _E, _W, _W, _R, _W, _W},
 ["Lissandra"]= { _Q,_E,_W,_Q,_Q,_R,_Q,_W,_Q,_W,_R,_W,_W,_E,_E,_R,_E,_E},
 ["Akali"]= { _Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W},
-["Irelia"]= { _Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
+["Irelia"]= { _Q,_E,_W,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W},
+["Fiora"]=  {_Q,_W,_E,_Q,_Q,_R,_Q,_E,_Q,_E,_R,_E,_E,_W,_W,_R,_W,_W}
 }
 function divelogic(unit)
 if not menu.misc.turretdive.use:Value() then
@@ -410,7 +412,7 @@ end
 end
 function autolevel()
 if GetLevelPoints(myHero) >= 1 then
-  if(  menu.misc.autolevel.uselevel:Value()  and not  menu.misc.autolevel.logic:Value() == 7 and os.clock()-Last_LevelSpell > 0.5 ) then
+  if(  menu.misc.autolevel.uselevel:Value()  and   menu.misc.autolevel.logic:Value() ~= 7 and os.clock()-Last_LevelSpell > 0.5 ) then
     LevelSpell(levelSequence[menu.misc.autolevel.logic:Value()][GetLevel(myHero)-GetLevelPoints(myHero)+1])
     Last_LevelSpell = os.clock()
   end
@@ -420,6 +422,13 @@ if GetLevelPoints(myHero) >= 1 then
   end
 end
 end
+  function ResetAA()
+      if loaddac then
+                  DAC:ResetAA() 
+                  elseif loadiow then
+                    IOW:ResetAA()
+                  end
+    end
 function Antiafk()
                     if os.clock() < Clock or not menu.misc.antiafk.useafk:Value()  then return end
                     Clock = os.clock() + math.random(60,120)
@@ -1405,6 +1414,9 @@ end
     ["Zyra"]         = {"Classic", "Wildfire", "Haunted", "SKT T1"},
 
   }
+ 
+
+
        ---//==================================================\\---
 --|| > English Translation details               ||--
 ---\\==================================================//---
