@@ -5,7 +5,7 @@ require ('IPrediction')
 local loaddac = false
 local loadiow = false
 local blacklist = {}
-local Version = "1.36"
+local Version = "1.37"
 local LVersion = "6.5"
 local Scriptname = "Krystra Mid Series"
 local Author = "Krystra"
