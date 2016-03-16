@@ -1,44 +1,49 @@
 require ('Inspired')
 require ('OpenPredict')
 require ('IPrediction')
-if FileExist(COMMON_PATH .. "Krystralib.lua") then
-require ('Krystralib')
-libloaded = true
- else
-   DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Common/KLib.lua", COMMON_PATH .. "Krystralib.lua", 
-      function() DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Common/welcome.wav", COMMON_PATH .. "Welcome.wav",
-        function() print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> :Hello <font color=\"#FF0000\"><b>"..GetUser().."</b></font> , Krystralib has been downloaded succesfully. In order to use script , please 2x F6 ")  return end) end )
-end
+
 local loaddac = false
 local loadiow = false
 local blacklist = {}
-Version = "1.36"
-LVersion = " 6.5"
-Scriptname = "Krystra Mid Series"
-Author = "Krystra"
-list = "Leblanc , Lissandra , Viktor, Akali, Diana, Yasuo,Zed, Orianna , Twisted Fate "
-link = "http://gamingonsteroids.com/topic/10502-beta-stage-krystra-mid-series-leblanc-viktor-lissandra-diana-akali-multi-prediction-orbwalk-support-expert-drawings-and-much-more/"
-date = "09.03.2016"
-  OnLoad(function()
-  function AutoUpdate(data)
-  if not libloaded or not libupdated then return end
+local Version = "1.36"
+local LVersion = "6.5"
+local Scriptname = "Krystra Mid Series"
+local Author = "Krystra"
+local list = "Leblanc, Lissandra, Viktor, Akali, Diana, Yasuo, Zed, Orianna, Twisted Fate"
+local link = "http://gamingonsteroids.com/topic/10502-beta-stage-krystra-mid-series-leblanc-viktor-lissandra-diana-akali-multi-prediction-orbwalk-support-expert-drawings-and-much-more/"
+local date = "09.03.2016"
+
+if FileExist(COMMON_PATH .. "Krystralib.lua") then
+    require ('Krystralib')
+    libloaded = true
+else
+    DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Common/Krystralib.lua", COMMON_PATH .. "Krystralib.lua", PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> :Hello <font color=\"#FF0000\"><b>"..GetUser().."</b></font> , Krystralib has been downloaded succesfully. In order to use script , please 2x F6 "))
+    return
+end
+
+if not FileExist(COMMON_PATH .. "Welcome.wav") then 
+    DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Common/welcome.wav", COMMON_PATH .. "Welcome.wav", PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> :Hello <font color=\"#FF0000\"><b>"..GetUser().."</b></font> , Krystrasounds has been downloaded succesfully. In order to use script , please 2x F6 "))
+    return
+end
+
+function AutoUpdate(data)
+    if not libloaded or not libupdated then
+        return
+    end
     if tonumber(data) > tonumber(Version) then
-        print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : New version has been found " .. data) 
-        DelayAction(function()  print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Downloading update, please wait...") end, 1)
-       DelayAction(function() DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua", SCRIPT_PATH .. "KrystraMidBundle.lua",
-       function() DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Common/welcome.wav", COMMON_PATH .. "Welcome.wav",
-        function() print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Updated succesfully to ".. data..". Please do 2x F6 to reload." ) return  end) end) end, 3)
+        PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : New version has been found " .. tonumber(data)) 
+        PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Downloading update, please wait...")
+        DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua", SCRIPT_PATH .. "KrystraMidBundle.lua", PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Updated succesfully to ".. tonumber(data) ..". Please do 2x F6 to reload." ))
+        return
     else
-        DelayAction(function()   print("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Hello <font color=\"#FF0000\"><b>"..GetUser().."</b></font> ,  [".. Version.."] version has succesfully loaded, Good luck and don't forget to give a feedback :) ") end, 1.5)
+        PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Hello <font color=\"#FF0000\"><b>"..GetUser().."</b></font> ,  [".. tonumber(Version) .."] version has succesfully loaded, Good luck and don't forget to give a feedback :) ")
         if GetGameTimer() <= 137 then
-        PlaySound(COMMON_PATH .. "welcome.wav")
-      end
+            PlaySound(COMMON_PATH .. "Welcome.wav")
+        end
     end
 end
 
 GetWebResultAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Version/midbundle.version", AutoUpdate)
-   end)
-
 
 
 
