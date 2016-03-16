@@ -5,13 +5,13 @@ require ('IPrediction')
 local loaddac = false
 local loadiow = false
 local blacklist = {}
-local Version = "1.37"
-local LVersion = "6.5"
-local Scriptname = "Krystra Mid Series"
-local Author = "Krystra"
-local list = "Leblanc, Lissandra, Viktor, Akali, Diana, Yasuo, Zed, Orianna, Twisted Fate"
-local link = "http://gamingonsteroids.com/topic/10502-beta-stage-krystra-mid-series-leblanc-viktor-lissandra-diana-akali-multi-prediction-orbwalk-support-expert-drawings-and-much-more/"
-local date = "09.03.2016"
+Version = "1.38"
+LVersion = "6.5"
+Scriptname = "Krystra Mid Series"
+Author = "Krystra"
+list = "Leblanc, Lissandra, Viktor, Akali, Diana, Yasuo, Zed, Orianna, Twisted Fate"
+link = "http://gamingonsteroids.com/topic/10502-beta-stage-krystra-mid-series-leblanc-viktor-lissandra-diana-akali-multi-prediction-orbwalk-support-expert-drawings-and-much-more/"
+date = "09.03.2016"
 
 if FileExist(COMMON_PATH .. "Krystralib.lua") then
     require ('Krystralib')
