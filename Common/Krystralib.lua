@@ -9,7 +9,6 @@ function AutoUpdate2(data)
        PrintChat("<font color=\"#00FFFF\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : New version has been found " .. tonumber(data)) 
         PrintChat("<font color=\"#00FFFF\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : Downloading update, please wait...")
         DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Common/Krystralib.lua", COMMON_PATH .. "Krystralib.lua",function() PrintChat("<font color=\"#00FFFF\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : Updated succesfully to ".. tonumber(data) ..". Please do 2x F6 to reload." ) return end ) 
-        return 
     else
         libupdated = true
     end
