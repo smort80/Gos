@@ -1,4 +1,4 @@
-require ('Inspired')
+require ('Inspired') 
 require ('OpenPredict')
 require ('IPrediction')
 
