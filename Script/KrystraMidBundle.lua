@@ -1,4 +1,4 @@
-require ('Inspired') 
+require ('Inspired')
 require ('OpenPredict')
 require ('IPrediction')
 
@@ -17,24 +17,28 @@ if FileExist(COMMON_PATH .. "Krystralib.lua") then
     require ('Krystralib')
     libloaded = true
 else
-    DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Common/Krystralib.lua", COMMON_PATH .. "Krystralib.lua", PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> :Hello <font color=\"#FF0000\"><b>"..GetUser().."</b></font> , Krystralib has been downloaded succesfully. In order to use script , please 2x F6 "))
+
+    DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Common/Krystralib.lua", COMMON_PATH .. "Krystralib.lua",function()  PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> :Hello <font color=\"#FF0000\"><b>"..GetUser().."</b></font> , Krystralib has been downloaded succesfully. In order to use script , please 2x F6 ")return end)
     return
 end
 
-if not FileExist(COMMON_PATH .. "Welcome.wav") then 
-    DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Common/welcome.wav", COMMON_PATH .. "Welcome.wav", PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> :Hello <font color=\"#FF0000\"><b>"..GetUser().."</b></font> , Krystrasounds has been downloaded succesfully. In order to use script , please 2x F6 "))
+if FileExist(COMMON_PATH .. "Welcome.wav") then 
+  soundsloaded = true
+else
+    DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Common/welcome.wav", COMMON_PATH .. "Welcome.wav", function() PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> :Hello <font color=\"#FF0000\"><b>"..GetUser().."</b></font> , Krystrasounds has been downloaded succesfully. In order to use script , please 2x F6 ")return end)
     return
 end
+
 
 OnLoad(function(myHero)
 function AutoUpdate(data)
-    if not libloaded or not libupdated then
+    if not libloaded or not libupdated or  not soundsloaded then
         return
     end
     if tonumber(data) > tonumber(Version) then
         PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : New version has been found " .. tonumber(data)) 
         PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Downloading update, please wait...")
-        DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua", SCRIPT_PATH .. "KrystraMidBundle.lua", PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Updated succesfully to ".. tonumber(data) ..". Please do 2x F6 to reload." ))
+        DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua", SCRIPT_PATH .. "KrystraMidBundle.lua", function() PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Updated succesfully to ".. tonumber(data) ..". Please do 2x F6 to reload." )return end)
     else
         PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Hello <font color=\"#FF0000\"><b>"..GetUser().."</b></font> ,  [".. tonumber(Version) .."] version has succesfully loaded, Good luck and don't forget to give a feedback :) ")
         if GetGameTimer() <= 137 then
