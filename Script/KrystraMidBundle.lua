@@ -5,7 +5,7 @@ require ('IPrediction')
 local loaddac = false
 local loadiow = false
 local blacklist = {}
-Version = "1.38"
+Version = "1.39"
 LVersion = "6.5"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
@@ -5448,7 +5448,6 @@ end
   end
   function TwistedFate:Combo()
     if not  (myHero.mana / myHero.maxMana >=  menu.combo.Mana:Value() /100 ) then return end
-local wdmg =self:GetW2Dmg(Gtarget)
 if menu.combo.card:Value() == 1 then
   combocard= "BlueCardLock"
   elseif menu.combo.card:Value() == 2 then
@@ -5456,8 +5455,9 @@ if menu.combo.card:Value() == 1 then
      elseif menu.combo.card:Value() == 3 then
   combocard= "GoldCardLock"
      end
-
+if Gtarget~= nil then
    if( IsReady(_W) and  GetDistance(Gtarget) <= 850 and menu.combo.useW:Value()  )then
+    local wdmg =self:GetW2Dmg(Gtarget)
       if  menu.combo.useblue:Value() and (myHero.mana / myHero.maxMana <=  menu.combo.bluemana:Value() /100 )  then
                 self:CastW(self.blue)
                  AttackUnit(Gtarget)  
@@ -5468,6 +5468,7 @@ if menu.combo.card:Value() == 1 then
                 CastSpell(_W)
              end
               end
+            end
 if menu.combo.qmode:Value() == 1  then
   if ValidTarget(Gtarget,1600) and IsReady(_Q) and menu.combo.useQ:Value() then
     if IsImmobile(target) or (  CanUseSpell(myHero, _W) == ONCOOLDOWN and GetCastLevel(myHero, _W) >= 1) then
@@ -5757,6 +5758,13 @@ Global:Commondraw()
                 end
               end
             end
+local drawpos=WorldToScreen(1,myHero.x, myHero.y, myHero.z)
+             if not IsDead(myHero) and  menu.other.estack:Value() and myHero:GetSpellData(_E).ammo ~= 3 and myHero:GetSpellData(_E).level > 0 then
+            DrawText3D("E Stacks: "..myHero:GetSpellData(_E).ammo, myHero.x, myHero.y,myHero.z, 15, 0xff00ff00)
+        end
+        if not IsDead(myHero) and  menu.other.estack:Value() and myHero:GetSpellData(_E).ammo == 3 and myHero:GetSpellData(_E).level > 0 then
+            DrawText3D("E Stacks: Stacked!",myHero.x, myHero.y, myHero.z, 15, 0xff00ff00)
+        end
 
             if menu.other.targetcal:Value() and not myHero.dead then
               if target and target ~= nil then
@@ -6049,6 +6057,7 @@ end, 0.35)
               -- menu.other.width:Slider("STwidth", loc_eng[208], 1, 1, 10, 1)
              -- menu.other:Boolean("target",loc_eng[75],true)
               --menu.other:Boolean("minimap","Draw R range ( Minimap )",true)
+              menu.other:Boolean("estack","Draw Estacks",true)
               menu.other:Boolean("damage",loc_eng[214],true)
               menu.other:Boolean("targetcal",loc_eng[76],true)
               --          menu.other:Menu( "perma",loc_eng[73])
