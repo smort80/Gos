@@ -5,7 +5,7 @@ require ('IPrediction')
 local loaddac = false
 local loadiow = false
 local blacklist = {}
-Version = "1.39"
+Version = "1.38"
 LVersion = "6.5"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
@@ -26,6 +26,7 @@ if not FileExist(COMMON_PATH .. "Welcome.wav") then
     return
 end
 
+OnLoad(function(myHero)
 function AutoUpdate(data)
     if not libloaded or not libupdated then
         return
@@ -34,7 +35,6 @@ function AutoUpdate(data)
         PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : New version has been found " .. tonumber(data)) 
         PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Downloading update, please wait...")
         DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua", SCRIPT_PATH .. "KrystraMidBundle.lua", PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Updated succesfully to ".. tonumber(data) ..". Please do 2x F6 to reload." ))
-        return
     else
         PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Hello <font color=\"#FF0000\"><b>"..GetUser().."</b></font> ,  [".. tonumber(Version) .."] version has succesfully loaded, Good luck and don't forget to give a feedback :) ")
         if GetGameTimer() <= 137 then
@@ -42,8 +42,9 @@ function AutoUpdate(data)
         end
     end
 end
-
 GetWebResultAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Version/midbundle.version", AutoUpdate)
+end)
+
 
 
 
