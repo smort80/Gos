@@ -40,7 +40,7 @@ OnLoad(function(myHero)
     if tonumber(data) > tonumber(Version) then
         PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : New version has been found " .. data) 
         PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Downloading update, please wait...")
-        DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua", SCRIPT_PATH .. "KrystraMidBundle.lua", function() PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Updated succesfully to ".. Version ..". Please do 2x F6 to reload." )return end)
+        DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua", SCRIPT_PATH .. "KrystraMidBundle.lua", function() PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Updated succesfully to ".. data ..". Please do 2x F6 to reload." )return end)
     else
         PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Hello <font color=\"#FF0000\"><b>"..GetUser().."</b></font> ,  ["..Version .."] version has succesfully loaded, Good luck and don't forget to give a feedback :) ")
       --  if GetGameTimer() <= 137 then
