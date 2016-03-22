@@ -1,14 +1,14 @@
    local lastTimeTickCalled = 0
    local spellLevel = 0
    local lastPotion = 0
-local libversion = "2.05"
+local libversion = "2.06"
 local LibName = "Krystra Library"
 
 function AutoUpdate2(data)
     if tonumber(data) > tonumber(libversion) then
-       PrintChat("<font color=\"#00FFFF\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : New version has been found " .. tonumber(data)) 
+       PrintChat("<font color=\"#00FFFF\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : New version has been found " .. data) 
         PrintChat("<font color=\"#00FFFF\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : Downloading update, please wait...")
-        DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Common/Krystralib.lua", COMMON_PATH .. "Krystralib.lua",function() PrintChat("<font color=\"#00FFFF\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : Updated succesfully to ".. tonumber(data) ..". Please do 2x F6 to reload." ) return end ) 
+        DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Common/Krystralib.lua", COMMON_PATH .. "Krystralib.lua",function() PrintChat("<font color=\"#00FFFF\"><b> "..LibName.."   </b></font><font color=\"#FFFFFF\"> : Updated succesfully to ".. libversion ..". Please do 2x F6 to reload." ) return end ) 
     else
         libupdated = true
     end
@@ -210,13 +210,6 @@ if Rhyd and IsReady(Rhyd) then
       CastSpell(Rhyd)
     end
   end
-end
-end
-if myHero.charName ~= "Fiora" then
-if menu.item.thydra.useth:Value() and menu.Keys.combokey:Value() then
-if Thyd and IsReady(Thyd) and ValidTarget(target, 300) and GetDistance(target) <= 300 then
-  CastSpell(Thyd)
-end
 end
 end
 if menu.item.thydra.usethl:Value() and ( menu.Keys.laneclearkey:Value() or menu.Keys.jungleclearkey:Value() ) then
@@ -421,6 +414,21 @@ if GetLevelPoints(myHero) >= 1 then
   end
 end
 end
+function blockmove(state)
+  if loaddac then
+    if state == "true" then
+             DAC:MovementEnabled(false)
+           elseif state == "false"  then
+              DAC:MovementEnabled(true)
+            end
+                  elseif loadiow then
+                  if state == "true" then
+            IOW.movementEnabled = false
+           elseif state == "false" then
+               IOW.movementEnabled = true
+            end
+                  end
+    end
   function ResetAA()
       if loaddac then
                   DAC:ResetAA() 
