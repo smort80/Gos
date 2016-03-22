@@ -2,10 +2,11 @@ require ('Inspired')
 require ('OpenPredict')
 require ('IPrediction')
 
-local loaddac = false
-local loadiow = false
+
 local blacklist = {}
-Version = "1.39"
+ loaddac = false
+ loadiow = false
+Version = "1.40"
 LVersion = "6.5"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
@@ -30,20 +31,21 @@ else
 end
 
 
+
 OnLoad(function(myHero)
-function AutoUpdate(data)
+  function AutoUpdate(data)
     if not libloaded or not libupdated or  not soundsloaded then
         return
     end
     if tonumber(data) > tonumber(Version) then
-        PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : New version has been found " .. tonumber(data)) 
+        PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : New version has been found " .. data) 
         PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Downloading update, please wait...")
-        DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua", SCRIPT_PATH .. "KrystraMidBundle.lua", function() PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Updated succesfully to ".. tonumber(data) ..". Please do 2x F6 to reload." )return end)
+        DownloadFileAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Script/KrystraMidBundle.lua", SCRIPT_PATH .. "KrystraMidBundle.lua", function() PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Updated succesfully to ".. Version ..". Please do 2x F6 to reload." )return end)
     else
-        PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Hello <font color=\"#FF0000\"><b>"..GetUser().."</b></font> ,  [".. tonumber(Version) .."] version has succesfully loaded, Good luck and don't forget to give a feedback :) ")
-        if GetGameTimer() <= 137 then
-            PlaySound(COMMON_PATH .. "Welcome.wav")
-        end
+        PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.."   </b></font><font color=\"#FFFFFF\"> : Hello <font color=\"#FF0000\"><b>"..GetUser().."</b></font> ,  ["..Version .."] version has succesfully loaded, Good luck and don't forget to give a feedback :) ")
+      --  if GetGameTimer() <= 137 then
+           -- PlaySound(COMMON_PATH .. "Welcome.wav")
+       -- end
     end
 end
 GetWebResultAsync("https://raw.githubusercontent.com/Lonsemaria/Gos/master/Version/midbundle.version", AutoUpdate)
