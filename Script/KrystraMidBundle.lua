@@ -2,11 +2,15 @@ require ('Inspired')
 require ('OpenPredict')
 require ('IPrediction')
 
+if not (IOW_Loaded or DAC_Loaded) then
+  print("I'm sorry " .. GetObjectBaseName(myHero) .. " but you must use DAC or IOW to use this script until I have fully updated it, please select one of the 2 from the Orbwalker main menu")
+  return
+end
 
 local blacklist = {}
  loaddac = false
  loadiow = false
-Version = "1.40"
+Version = "1.41"
 LVersion = "6.5"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
