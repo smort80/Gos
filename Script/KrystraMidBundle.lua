@@ -10,13 +10,13 @@ end
 local blacklist = {}
  loaddac = false
  loadiow = false
-Version = "1.41"
-LVersion = "6.5"
+Version = "1.42"
+LVersion = "6.6"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
 list = "Leblanc, Lissandra, Viktor, Akali, Diana, Yasuo, Zed, Orianna, Twisted Fate"
 link = "http://gamingonsteroids.com/topic/10502-beta-stage-krystra-mid-series-leblanc-viktor-lissandra-diana-akali-multi-prediction-orbwalk-support-expert-drawings-and-much-more/"
-date = "09.03.2016"
+date = "01.04.2016"
 
 if FileExist(COMMON_PATH .. "Krystralib.lua") then
     require ('Krystralib')
@@ -100,7 +100,7 @@ end)
       autolevel()
       skinhack()
       autopot()
-      Activator:Useitems("ap")
+     -- Activator:Useitems("ap")
       if(menu.combo.combokey:Value() )then
         self:combo()
       end
