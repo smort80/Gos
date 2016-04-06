@@ -1,7 +1,7 @@
    local lastTimeTickCalled = 0
    local spellLevel = 0
    local lastPotion = 0
-local libversion = "2.06"
+local libversion = "2.07"
 local LibName = "Krystra Library"
 
 function AutoUpdate2(data)
@@ -376,29 +376,44 @@ end
 
  function findorb()
   if libupdated then
-      if  _G.DAC_Loaded or _G.DAC_Init then
+      if  _G.DAC_Loaded then
       loaddac = true
       menu.orb.selectorb:Info("infoK5", "Deftsu's Auto Carry")
       DelayAction(function()  PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.." - </b></font><font color=\"#FFFFFF\">Deftsu's Auto Carry integration has been finished succesfully") end , 5)
-    else
+    elseif  _G.IOW_Loaded  then
       loadiow = true
       LoadIOW()
       menu.orb.selectorb:Info("infoK5", "Insprieds Orb Walker")
      DelayAction(function()   PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.." - </b></font><font color=\"#FFFFFF\">Insprieds Orb Walker integration has been finished succesfully")end , 5)
+         elseif  _G.PW_Loaded then
+      --loadiow = true
+      --LoadIOW()
+      menu.orb.selectorb:Info("infoK5", "Platy Orb Walker")
+     DelayAction(function()   PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.." - </b></font><font color=\"#FFFFFF\">Platy Orb Walker integration has been finished succesfully")end , 5)
+              elseif  _G.GoSWalkLoaded then
+      --loadiow = true
+     -- LoadIOW()
+      menu.orb.selectorb:Info("infoK5", "GosWalk")
+     DelayAction(function()   PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.." - </b></font><font color=\"#FFFFFF\">GosWalk integration has been finished succesfully")end , 5)
     end
   end
 end
  function findorbtop()
   if libupdated then
-      if  _G.DAC_Loaded or _G.DAC_Init then
+      if  _G.DAC_Loaded then
       loaddac = true
-      menu.advance.orb.selectorb:Info("infoK5", "Deftsu's Auto Carry")
+      menu.orb.selectorb:Info("infoK5", "Deftsu's Auto Carry")
       DelayAction(function()  PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.." - </b></font><font color=\"#FFFFFF\">Deftsu's Auto Carry integration has been finished succesfully") end , 5)
-    else
+    elseif  _G.IOW_Loaded  then
       loadiow = true
       LoadIOW()
-      menu.advance.orb.selectorb:Info("infoK5", "Insprieds Orb Walker")
+      menu.orb.selectorb:Info("infoK5", "Insprieds Orb Walker")
      DelayAction(function()   PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.." - </b></font><font color=\"#FFFFFF\">Insprieds Orb Walker integration has been finished succesfully")end , 5)
+              elseif  _G.GoSWalkLoaded then
+      loadgos = true
+     -- LoadIOW()
+      menu.orb.selectorb:Info("infoK5", "GosWalk")
+     DelayAction(function()   PrintChat("<font color=\"#FF0000\"><b> "..Scriptname.." - </b></font><font color=\"#FFFFFF\">GosWalk integration has been finished succesfully")end , 5)
     end
   end
 end
@@ -434,6 +449,8 @@ function blockmove(state)
                   DAC:ResetAA() 
                   elseif loadiow then
                     IOW:ResetAA()
+                    elseif loadgos then
+                      _G.GoSWalk:ResetAttack()
                   end
     end
 function Antiafk()
