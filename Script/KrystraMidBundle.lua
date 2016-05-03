@@ -2,16 +2,17 @@ require ('Inspired')
 require ('OpenPredict')
 require ('IPrediction')
 
-if not (IOW_Loaded or DAC_Loaded) then
-  print("I'm sorry " .. GetObjectBaseName(myHero) .. " but you must use DAC or IOW to use this script until I have fully updated it, please select one of the 2 from the Orbwalker main menu")
+ if _G.PW_Loaded  then
+  print("I'm sorry " .. GetObjectBaseName(myHero) .. " this script do not support platywalk, please select another Orbwalker from main self.Config")
   return
 end
 
 local blacklist = {}
  loaddac = false
  loadiow = false
-Version = "1.42"
-LVersion = "6.6"
+ loadgos = false
+Version = "1.43"
+LVersion = "6.8"
 Scriptname = "Krystra Mid Series"
 Author = "Krystra"
 list = "Leblanc, Lissandra, Viktor, Akali, Diana, Yasuo, Zed, Orianna, Twisted Fate"
