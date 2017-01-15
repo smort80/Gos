@@ -1,5 +1,5 @@
 local Scriptname,Version,Author,LVersion = "Krystra Auto Leveler","Beta Release","Krystra","7.1"
-local Last_LevelSpell = 0
+local leveltracker = 0
 
 
 class "KrystraLevel"
@@ -17,7 +17,7 @@ function KrystraLevel:LevelLogic()
   local logicorder = levelSequenceOrder[self.Config.logic:Value()][myHero.levelData.lvl-myHero.levelData.lvlPts+1]
   local logicspecial =levelSpecialOrder[myHero.charName][myHero.levelData.lvl-myHero.levelData.lvlPts+1]
   if myHero.levelData.lvlPts >0 then
-    if os.clock()-Last_LevelSpell >0.75 and self.Config.uselevel:Value() and (logicorder  ~= nil and logicspecial  ~= nil)then
+    if os.clock()-leveltracker >0.75 and self.Config.uselevel:Value() and (logicorder  ~= nil and logicspecial  ~= nil)then
       if (self.Config.donot:Value() and myHero.levelData.lvl ==1) then return end
       Control.KeyDown(HK_LUS)
       if self.Config.logic:Value() == 7 then
@@ -27,7 +27,7 @@ function KrystraLevel:LevelLogic()
         Control.KeyDown(logicorder)
         slotcheck =logicorder
       end
-      Last_LevelSpell = os.clock()
+      leveltracker = os.clock()
     end
   else
     if Control.IsKeyDown(HK_LUS) then
